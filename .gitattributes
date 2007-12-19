@@ -1,0 +1,15 @@
+* text=auto !eol
+/AUTHORS -text
+/INSTALL -text
+/LICENSE -text
+/NBbuildConfig.py -text
+/NBcbcRunTimes.py -text
+/NBcheckResult.py -text
+/NBemail.py -text
+/NBlogMessages.py -text
+/NBosCommand.py -text
+/NBprojectConfig.py -text
+/NBsvnCommand.py -text
+/NBuserParametersDefault.py -text
+/README -text
+/nightlyBuild.py -text
