@@ -63,6 +63,12 @@ CFG_BLD_TEST['DyLP']=[
                              NBcheckResult.standardSuccessMessage,
                              NBcheckResult.noSolverInterfaceTestingIssueMessage] } ]
 
+CFG_BLD_INSTALL['DyLP']=[
+                  {'dir':'',
+                   'cmd':'make install',
+                   'check':[ NBcheckResult.rc0,
+                             NBcheckResult.standardSuccessMessage ] } ]
+
 #does not have references to third party packages
 
 #----------------------------------------------------------------------
@@ -78,6 +84,12 @@ CFG_BLD_TEST['Clp']=[
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage,
                              NBcheckResult.endWithWoodw] } ]
+CFG_BLD_INSTALL['Clp']=[
+                  {'dir':'',
+                   'cmd':'make install',
+                   'check':[ NBcheckResult.rc0,
+                             NBcheckResult.standardSuccessMessage ] } ]
+
 SLN_BLD_TEST['Clp']=[
                   {'dir':r'Clp\MSVisualStudio\v8\clp\Release',
                    'cmd':'clp -dirSample=_SAMPLEDIR_ -unitTest -dirNetlib=_NETLIBDIR_ -netlib',
@@ -101,6 +113,13 @@ CFG_BLD_TEST['SYMPHONY']=[
                    'cmd':'make fulltest',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
+
+CFG_BLD_INSTALL['SYMPHONY']=[
+                  {'dir':'',
+                   'cmd':'make install',
+                   'check':[ NBcheckResult.rc0,
+                             NBcheckResult.standardSuccessMessage ] } ]
+
 SLN_BLD_TEST['SYMPHONY']=[ {
                    'dir':r'SYMPHONY\MSVisualStudio\v8\Release',
                    'cmd':r'symphony -F _NETLIBDIR_\25fv47.mps',
@@ -115,6 +134,12 @@ CFG_BLD_TEST['Vol']=[
                   {'dir':'',
                    'cmd':'make test',
                    'check':[ NBcheckResult.rc0 ] } ]
+
+CFG_BLD_INSTALL['Vol']=[
+                  {'dir':'',
+                   'cmd':'make install',
+                   'check':[ NBcheckResult.rc0,
+                             NBcheckResult.standardSuccessMessage ] } ]
 #does not have references to third party packages
 
 #----------------------------------------------------------------------
@@ -131,6 +156,12 @@ CFG_BLD_TEST['Osi']=[
                              NBcheckResult.standardSuccessMessage,
                              NBcheckResult.noSolverInterfaceTestingIssueMessage] } ]
 
+CFG_BLD_INSTALL['Osi']=[
+                  {'dir':'',
+                   'cmd':'make install',
+                   'check':[ NBcheckResult.rc0,
+                             NBcheckResult.standardSuccessMessage ] } ]
+
 SLN_BLD_TEST['Osi']=[
                   {'dir':r'Osi\MSVisualStudio\v8\OsiExamplesBuild\Release',
                    'cmd':'OsiExamplesBuild',
@@ -144,6 +175,12 @@ PROJECT_EMAIL_ADDRS['Cgl'] = 'robinlh _AT_ us _DOT_ ibm _DOT_ com'
 CFG_BLD_TEST['Cgl']=[
                   {'dir':'',
                    'cmd':'make test',
+                   'check':[ NBcheckResult.rc0,
+                             NBcheckResult.standardSuccessMessage ] } ]
+
+CFG_BLD_INSTALL['Cgl']=[
+                  {'dir':'',
+                   'cmd':'make install',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 #does not have references to third party packages
@@ -160,6 +197,12 @@ CFG_BLD_TEST['Cbc']=[
                    'cmd':'./cbc -unitTest -dirMiplib=_MIPLIB3DIR_ -miplib',
                    'check':[ NBcheckResult.rc0to2 ] } ]
 
+CFG_BLD_INSTALL['Cbc']=[
+                  {'dir':'',
+                   'cmd':'make install',
+                   'check':[ NBcheckResult.rc0,
+                             NBcheckResult.standardSuccessMessage ] } ]
+
 SLN_BLD_TEST['Cbc']=[
                   {'dir':r'Cbc\MSVisualStudio\v8\cbcSolve\Release',
                    'cmd':'cbcSolve -dirSample=_SAMPLEDIR_ -unitTest -dirMiplib=_MIPLIB3DIR_ -miplib',
@@ -175,6 +218,13 @@ CFG_BLD_TEST['Ipopt']=[
                   {'dir':'',
                    'cmd':'make test',
                    'check':[ NBcheckResult.rc0 ] } ]
+
+CFG_BLD_INSTALL['Ipopt']=[
+                  {'dir':'',
+                   'cmd':'make install',
+                   'check':[ NBcheckResult.rc0,
+                             NBcheckResult.standardSuccessMessage ] } ]
+
 #third party packages are not optional here
 
 #----------------------------------------------------------------------
@@ -184,6 +234,12 @@ CFG_BLD_TEST['Bonmin']=[
                   {'dir':'',
                    'cmd':'make test',
                    'check':[ NBcheckResult.rc0 ] } ]
+
+CFG_BLD_INSTALL['Bonmin']=[
+                  {'dir':'',
+                   'cmd':'make install',
+                   'check':[ NBcheckResult.rc0,
+                             NBcheckResult.standardSuccessMessage ] } ]
 #third party packages are not optional here
 
 #----------------------------------------------------------------------
@@ -194,6 +250,13 @@ CFG_BLD_TEST['FlopC++']=[
                    'cmd':'make test',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
+
+CFG_BLD_INSTALL['FlopC++']=[
+                  {'dir':'',
+                   'cmd':'make install',
+                   'check':[ NBcheckResult.rc0,
+                             NBcheckResult.standardSuccessMessage ] } ]
+
 SLN_FILE['FlopC++']=r'FlopCpp.sln'
 SLN_DIR['FlopC++']=r'FlopCpp\MSVisualStudio\v8'
 SLN_BLD_TEST['FlopC++']=[
@@ -239,12 +302,24 @@ CFG_BLD_TEST['LaGO']=[
                    'cmd':'make test',
                    'check':[ NBcheckResult.rc0 ] } ]
 
+CFG_BLD_INSTALL['LaGO']=[
+                  {'dir':'',
+                   'cmd':'make install',
+                   'check':[ NBcheckResult.rc0,
+                             NBcheckResult.standardSuccessMessage ] } ]
+
 #----------------------------------------------------------------------
 PROJECT_EMAIL_ADDRS['CoinAll'] = 'tkr2 _AT_ lehigh _DOT_ edu'
 CFG_BLD_TEST['CoinAll']=[
                   {'dir':'',
                    'cmd':'make test',
                    'check':[ NBcheckResult.rc0 ] } ]
+
+CFG_BLD_INSTALL['CoinAll']=[
+                  {'dir':'',
+                   'cmd':'make install',
+                   'check':[ NBcheckResult.rc0,
+                             NBcheckResult.standardSuccessMessage ] } ]
 
 #----------------------------------------------------------------------
 PROJECT_EMAIL_ADDRS['CppAD'] = 'bradbell _AT_ washington _DOT_ edu'
@@ -256,6 +331,12 @@ CFG_BLD_TEST['CppAD']=[
                   {'dir':'',
                    'cmd':'./test_more/test_more',
                    'check':[ NBcheckResult.rc0 ] } ]
+
+CFG_BLD_INSTALL['CppAD']=[
+                  {'dir':'',
+                   'cmd':'make install',
+                   'check':[ NBcheckResult.rc0,
+                             NBcheckResult.standardSuccessMessage ] } ]
 #does not have references to third party packages
 
 #----------------------------------------------------------------------
@@ -266,6 +347,13 @@ CFG_BLD_TEST['Smi']=[
                    'cmd':'make test',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.endWithStarDoneStar ] } ]
+
+CFG_BLD_INSTALL['Smi']=[
+                  {'dir':'',
+                   'cmd':'make install',
+                   'check':[ NBcheckResult.rc0,
+                             NBcheckResult.standardSuccessMessage ] } ]
+
 SLN_BLD_TEST['Smi']=[
                   {'dir':r'Smi\test',
                    'cmd':r'..\MSVisualStudio\v8\unitTestSmi\Release\smiUnitTest',

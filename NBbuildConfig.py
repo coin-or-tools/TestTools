@@ -530,7 +530,12 @@ def run(configuration) :
     #---------------------------------------------------------------------
     # Build the binary distribution
     # We assume a Unix distribution
+    # TO DO:
+    #  1.  Put in test to make sure there is no ThirdParty Software
+    #  2.  Build the doc directory when Andreas is done
     #---------------------------------------------------------------------
+
+
       directories = ""   
       # when doing this right make sure the example, include, and lib directories
       # are there.
@@ -577,7 +582,8 @@ def run(configuration) :
       tarCmd = "tar -czvf "
       #do something better with tar file name
       svnVersionFlattened = cleanUpName(configuration['svnVersion'])
-      tarFileName =  configuration['project'] + "-" + svnVersionFlattened + "-" + sys.platform + ".tgz"
+      #tarFileName =  configuration['project'] + "-" + svnVersionFlattened + "-" + sys.platform + ".tgz"
+      tarFileName =   configuration['project'] + "-" + buildDir + "-" + sys.platform + ".tgz"
       tarCmd += os.path.join(outputDirectory, tarFileName)
       tarCmd += directories
 
