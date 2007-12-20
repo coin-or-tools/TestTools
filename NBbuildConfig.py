@@ -16,7 +16,8 @@ import NBosCommand
 import NBsvnCommand
 import NBcheckResult
 
-import NBuserParameters
+execfile('NBuserParametersDefault.py')
+execfile('NBuserParameters.py')
 
 #---------------------------------------------------------------------
 # Keep history so same project is not repeatedly getting code from
@@ -531,76 +532,75 @@ def run(configuration) :
     # Build the binary distribution
     # We assume a Unix distribution
     # TO DO:
-    #  1.  Put in test to make sure there is no ThirdParty Software
+    #  1.  Figure out best way to guard against including ThirdParty software
+    #      that should not be there
     #  2.  Build the doc directory when Andreas is done
     #---------------------------------------------------------------------
 
+      if BUILD_BINARIES == 1 :
+        #Bail out if we have ThirdParty software -- modify this later
+        if 'noThirdParty' in configuration : 
+          if configuration['noThirdParty'] :
+            directories = ""   
 
-      directories = ""   
-      # when doing this right make sure the example, include, and lib directories
-      # are there.
-      
-      # if the lib  directory is there, add it
-      # delete these if already there
-      if os.path.isdir( "lib") == True :
-        directories  += " lib "
+            # if the lib  directory is there, add it
+            # delete these if already there
+            if os.path.isdir( "lib") == True :
+              directories  += " lib "
 
-      # if the include directory is there, add it
-      if os.path.isdir( "include") == True :
-        directories +=  " include "
+            # if the include directory is there, add it
+            if os.path.isdir( "include") == True :
+              directories +=  " include "
 
-      # if the examples directory is there, add it
-      if os.path.isdir( "examples") == True :
-        directories +=  " examples "
+            # if the examples directory is there, add it
+            if os.path.isdir( "examples") == True :
+              directories +=  " examples "
 
-      # if the bin directory is there, add it
-      if os.path.isdir( "bin") == True :
-        directories +=  " bin "
+            # if the bin directory is there, add it
+            if os.path.isdir( "bin") == True :
+              directories +=  " bin "
 
-      # don't forget to add LICENSE and AUTHORS file
-      # Andreas is going to add a directory where these reside from doing
-      # make install
+            # don't forget to add LICENSE and AUTHORS file
+            # Andreas is going to add a directory where these reside from doing
+            # make install
 
-      #if the binary directory is not there create it
-      binariesDir=os.path.join(projectBaseDir,"binaries")
+            #if the directory that stores the binaries is not there create it
+            binariesDir=os.path.join(projectBaseDir,"binaries")
 
-      if not os.path.isdir( binariesDir ) :
-        os.makedirs( binariesDir )
+            if not os.path.isdir( binariesDir ) :
+              os.makedirs( binariesDir )
 
-      #configuration['project']
-      outputDirectory = os.path.join(binariesDir, configuration['project'])
-      print outputDirectory
-
-
-      if not os.path.isdir( outputDirectory) :
-        os.makedirs( outputDirectory)
-
-      # create the output directory
-      
-      # tar it up
-      # buidDir should be name of tar file -- make unique
-      tarCmd = "tar -czvf "
-      #do something better with tar file name
-      svnVersionFlattened = cleanUpName(configuration['svnVersion'])
-      #tarFileName =  configuration['project'] + "-" + svnVersionFlattened + "-" + sys.platform + ".tgz"
-      tarFileName =   configuration['project'] + "-" + buildDir + "-" + sys.platform + ".tgz"
-      tarCmd += os.path.join(outputDirectory, tarFileName)
-      tarCmd += directories
+            #configuration['project']
+            outputDirectory = os.path.join(binariesDir, configuration['project'])
+            print outputDirectory
 
 
+            if not os.path.isdir( outputDirectory) :
+              os.makedirs( outputDirectory)
 
- 
-      NBlogMessages.writeMessage( '  '+ tarCmd )
-      commandHistory+=[ tarCmd ]
-      result=NBosCommand.run( tarCmd)
-      writeResults(result, tarCmd)
-      if result['returnCode'] != 0 :
-          result['svn version']=configuration['svnVersion']
-          # figure out what tarResultFail should be
-          #result['tar']=tarResultFail
-          result['command history']=commandHistory
-          NBemail.sendCmdMsgs(configuration['project'],result,  tarCmd)
-          return
+            # create the output directory
+            
+            # tar it up
+            # buidDir should be name of tar file -- make unique
+            tarCmd = "tar -czvf "
+            #do something better with tar file name
+            buildInfo = ''
+            if len(BUILD_INFORMATION) > 0 : buildInfo = '-' + BUILD_INFORMATION 
+            tarFileName =   configuration['project'] + "-" + buildDir + "-" + sys.platform + buildInfo +".tgz"
+            tarCmd += os.path.join(outputDirectory, tarFileName)
+            tarCmd += directories
+
+            NBlogMessages.writeMessage( '  '+ tarCmd )
+            commandHistory+=[ tarCmd ]
+            result=NBosCommand.run( tarCmd)
+            writeResults(result, tarCmd)
+            if result['returnCode'] != 0 :
+                result['svn version']=configuration['svnVersion']
+                # figure out what tarResultFail should be
+                #result['tar']=tarResultFail
+                result['command history']=commandHistory
+                NBemail.sendCmdMsgs(configuration['project'],result,  tarCmd)
+                return
 
   
   #---------------------------------------------------------------------

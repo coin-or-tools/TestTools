@@ -249,3 +249,21 @@ SENDER_EMAIL_ADDR='xxx _AT_ yyyy _DOT_ edu'
 MY_EMAIL_ADDR = SENDER_EMAIL_ADDR
 
 SEND_MAIL_TO_PROJECT_MANAGER = 0
+
+
+#----------------------------------------------------------------------
+# The nightlyBuild will not build a binary by default
+# If you want binaries built set the flag
+# BUILD_BINARIES = 1
+# It is 0 by default
+# Note: Binaries of project containing ThirdParty software will not be built
+#----------------------------------------------------------------------
+
+BUILD_BINARIES = 0
+
+#----------------------------------------------------------------------
+# You may wish to include compiler or other build information in the binary build name
+# By default it is null
+#----------------------------------------------------------------------
+
+BUILD_INFORMATION = ''
