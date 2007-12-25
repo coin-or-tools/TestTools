@@ -290,7 +290,17 @@ def run(configuration) :
             if d=='.svn' : continue
             thirdPartyDir=os.path.join(thirdPartyBaseDir,d)
             if not os.path.isdir(thirdPartyDir) : continue
-            install3rdPartyCmd=os.path.join(".","get."+d)
+
+            if configuration['buildMethod']=='mingw' :
+              install3rdPartyCmd = os.path.join(".","get."+d)
+              #what a pain replace("\\", "/") does not work
+              # we must split and then join, ugh
+              pathParts = install3rdPartyCmd.split("\\")
+              sep = '/'
+              install3rdPartyCmd = sep.join(pathParts)
+              install3rdPartyCmd = "sh -c " + "'" +   install3rdPartyCmd    +  "'"
+            else:
+              install3rdPartyCmd=os.path.join(".","get."+d)
             os.chdir(thirdPartyDir)
             # If the install command has been updated since the last
             # install, then do a new install
