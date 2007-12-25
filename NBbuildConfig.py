@@ -9,6 +9,7 @@ import os
 import sys
 import re
 import shutil
+import hashlib
 
 import NBlogMessages
 import NBemail
@@ -141,7 +142,12 @@ def run(configuration) :
   buildDir=svnVersionFlattened
 
   if configuration['buildMethod']=='unixConfig' or configuration['buildMethod']=='mingw' :
-    buildDir+=configuration['configOptions']['unique']
+  
+   
+    if len( configuration['configOptions']['unique']) > 150 :
+       buildDir += hashlib.md5( configuration['configOptions']['unique']).hexdigest()
+    else:
+      buildDir+=configuration['configOptions']['unique']
     if 'SkipProjects' in configuration :
       buildDir+="No"+configuration['SkipProjects']
     if 'noThirdParty' in configuration : 
@@ -149,7 +155,8 @@ def run(configuration) :
         buildDir+='-NoThirdParty'
     buildDir=cleanUpName(buildDir)
     if buildDir==svnVersionFlattened : buildDir+='-default'
-
+    
+  
   fullBuildDir = os.path.join(projectBaseDir,buildDir)
 
   NBlogMessages.writeMessage('  SVN source URL: '+svnCheckOutUrl)
