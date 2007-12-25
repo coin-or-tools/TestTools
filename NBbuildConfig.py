@@ -368,7 +368,9 @@ def run(configuration) :
     #start kipp change
     #
     if configuration['buildMethod']=='mingw' :
-      configCmd = os.path.join(projectCheckOutDir,"configure ")
+      #configCmd = os.path.join(projectCheckOutDir,"configure ")
+      configCmd = os.path.join("..",svnVersionFlattened,"configure ")
+       # svnVersionFlattened
       #what a pain replace("\\", "/") does not work
       # we must split and then join, ugh
       pathParts = configCmd.split("\\")
