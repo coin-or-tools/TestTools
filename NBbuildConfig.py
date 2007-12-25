@@ -290,17 +290,7 @@ def run(configuration) :
             if d=='.svn' : continue
             thirdPartyDir=os.path.join(thirdPartyBaseDir,d)
             if not os.path.isdir(thirdPartyDir) : continue
-
-            if configuration['buildMethod']=='mingw' :
-              install3rdPartyCmd = os.path.join(".","get."+d)
-              #what a pain replace("\\", "/") does not work
-              # we must split and then join, ugh
-              pathParts = install3rdPartyCmd.split("\\")
-              sep = '/'
-              install3rdPartyCmd = sep.join(pathParts)
-              install3rdPartyCmd = "sh -c " + "'" +   install3rdPartyCmd    +  "'"
-            else:
-              install3rdPartyCmd=os.path.join(".","get."+d)
+            install3rdPartyCmd=os.path.join(".","get."+d)
             os.chdir(thirdPartyDir)
             # If the install command has been updated since the last
             # install, then do a new install
@@ -311,6 +301,14 @@ def run(configuration) :
               if os.path.isfile(install3rdPartyCmd) :
                 NBlogMessages.writeMessage('  '+install3rdPartyCmd)
                 commandHistory+=[ install3rdPartyCmd ]
+                if configuration['buildMethod']=='mingw' :
+                  install3rdPartyCmd = os.path.join(".","get."+d)
+                  #what a pain replace("\\", "/") does not work
+                  # we must split and then join, ugh
+                  pathParts = install3rdPartyCmd.split("\\")
+                  sep = '/'
+                  install3rdPartyCmd = sep.join(pathParts)
+                  install3rdPartyCmd = "sh -c " + "'" +   install3rdPartyCmd    +  "'"
                 installReturn = NBosCommand.run(install3rdPartyCmd)
                 if installReturn['returnCode'] :
                   NBlogMessages.writeMessage('  warning: Install of 3rd party code in '+thirdPartyDir+' returned '+installReturn['returnCode'])
