@@ -83,7 +83,7 @@ if sys.platform=='win32' :
   configuration['buildMethod']='msSln'
   # see if we are running Mingw/cygwin/msys
   # assume Bourne shell in path
-  if FORCE_VCBUILD != 1
+  if FORCE_VCBUILD != 1 :
     result=NBosCommand.run( "sh -c ls" )
     if result['returnCode'] == 0 : configuration['buildMethod']='mingw'
 else :
