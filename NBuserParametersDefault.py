@@ -275,4 +275,4 @@ BUILD_INFORMATION = ''
 # if msys/cygwin/mingw is present
 #----------------------------------------------------------------------
 
-FORCE_MSSLN = 1
+FORCE_VCBUILD = 1
