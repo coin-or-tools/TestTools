@@ -80,13 +80,12 @@ configurations = Set([""])
 # unixConfig: use sequence "./configure", "make", "make test"
 #------------------------------------------------------------------------
 if sys.platform=='win32' :
-  # see if we are running Mingw
+  configuration['buildMethod']='msSln'
+  # see if we are running Mingw/cygwin/msys
   # assume Bourne shell in path
-  result=NBosCommand.run( "sh -c ls" )
-  if result['returnCode'] == 0 :
-    configuration['buildMethod']='mingw'
-  else:
-    configuration['buildMethod']='msSln'
+  if FORCE_VCBUILD != 1
+    result=NBosCommand.run( "sh -c ls" )
+    if result['returnCode'] == 0 : configuration['buildMethod']='mingw'
 else :
   configuration['buildMethod']='unixConfig'
 

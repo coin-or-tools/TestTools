@@ -267,3 +267,12 @@ BUILD_BINARIES = 0
 #----------------------------------------------------------------------
 
 BUILD_INFORMATION = ''
+
+
+
+#----------------------------------------------------------------------
+# When this parameter is set 1 we force the use of vcbuild in Windows if
+# if msys/cygwin/mingw is present
+#----------------------------------------------------------------------
+
+FORCE_MSSLN = 1
