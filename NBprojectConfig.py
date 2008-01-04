@@ -8,6 +8,14 @@
 import os
 import NBcheckResult
 
+try :
+  # Can not import this on some platforms because they may not have MySQLdb
+  import NBcbcRunTimes
+except ImportError:
+  importedCbcRunTimes=False
+else :
+  importedCbcRunTimes=True
+
 #----------------------------------------------------------------------
 # This file defines variables which describe how the specific
 # coin-or projects are to be tested and who are their managers.
@@ -196,6 +204,10 @@ CFG_BLD_TEST['Cbc']=[
                   {'dir':'Cbc/src',
                    'cmd':'./cbc -unitTest -dirMiplib=_MIPLIB3DIR_ -miplib',
                    'check':[ NBcheckResult.rc0to2 ] } ]
+
+if importedCbcRunTimes :
+  CFG_BLD_TEST['Cbc'][1]['check'].append(NBcbcRunTimes.cbcSaveRuntimes)
+
 
 CFG_BLD_INSTALL['Cbc']=[
                   {'dir':'',

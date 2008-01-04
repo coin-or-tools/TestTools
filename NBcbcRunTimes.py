@@ -2,6 +2,7 @@ import re
 import os
 import sys
 import platform
+import datetime
 import MySQLdb
 
 import NBsvnCommand
@@ -85,7 +86,6 @@ def updateBuildTables(db,svnSrcDir,buildDir) :
   execModTimeEpoch=os.path.getmtime(execFilename)
   execModTime=str(datetime.datetime.fromtimestamp(execModTimeEpoch))
   configOptions=getConfigOptions(buildDir)
-  print configOptions
 
   # Does this build already exist in database?
   x=cursor.execute("""SELECT buildId from build WHERE svnRevision='%s' and svnUrl='%s' and executableTimeStamp='%s' and configOptions='%s'"""%
@@ -151,7 +151,7 @@ def updateDb(dbPwDir,svnSrcDir,buildDir,cbcStdout) :
   cursor = db.cursor() 
   for t in x:
     # execute SQL statement
-    cursor.execute("INSERT INTO cbcUnitTest (mpsName,time,buildId,machineId) VALUES (%s,%s,%s,%s)",
+    cursor.execute("INSERT INTO cbcUnitTest (mpsName,runTime,buildId,machineId) VALUES (%s,%s,%s,%s)",
                   (t, x[t],str(buildId),str(machineId)))
 
 ##  cursor.execute("SELECT mpsName, time from cbcUnitTest")
@@ -166,8 +166,15 @@ def updateDb(dbPwDir,svnSrcDir,buildDir,cbcStdout) :
   db.close()
 
 
-x=getCbcStdout('/home/jp/COIN/Cbc/trunkNoThirdParty/Cbc/src/NBstdout-.-cbcunitTestdirMiplib--home-jp-COIN-Data-miplib3miplib')
-updateDb("/home/jp/testScripts","/home/jp/COIN/Cbc/trunk","/home/jp/COIN/Cbc/trunkNoThirdParty",x)
+def cbcSaveRuntimes(result,configuration) :
+    updateDb("/home/jp/testScripts",
+             result["srcDir"],
+             result["buildDir"],
+             result["stdout"])
+
+
+#x=getCbcStdout('/home/jp/COIN/Cbc/trunkNoThirdParty/Cbc/src/NBstdout-.-cbcunitTestdirMiplib--home-jp-COIN-Data-miplib3miplib')
+#updateDb("/home/jp/testScripts","/home/jp/COIN/Cbc/trunk","/home/jp/COIN/Cbc/trunkNoThirdParty",x)
 
 # http://pleac.sourceforge.net/pleac_python/datesandtimes.html
 

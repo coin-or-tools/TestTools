@@ -9,7 +9,13 @@ import os
 import sys
 import re
 import shutil
-import hashlib
+try :
+  # Many older but currently used versions of python does not have hashlib
+  import hashlib
+except ImportError:
+  importedHashlib=False
+else :
+  importedHashlib=True
 
 import NBlogMessages
 import NBemail
@@ -144,8 +150,8 @@ def run(configuration) :
   if configuration['buildMethod']=='unixConfig' or configuration['buildMethod']=='mingw' :
   
    
-    if len( configuration['configOptions']['unique']) > 150 :
-       buildDir += hashlib.md5( configuration['configOptions']['unique']).hexdigest()
+    if len( configuration['configOptions']['unique']) > 150 and importedHashlib :
+      buildDir += hashlib.md5( configuration['configOptions']['unique']).hexdigest()
     else:
       buildDir+=configuration['configOptions']['unique']
     if 'SkipProjects' in configuration :
@@ -311,7 +317,7 @@ def run(configuration) :
                   install3rdPartyCmd = "sh -c " + "'" +   install3rdPartyCmd    +  "'"
                 installReturn = NBosCommand.run(install3rdPartyCmd)
                 if installReturn['returnCode'] :
-                  NBlogMessages.writeMessage('  warning: Install of 3rd party code in '+thirdPartyDir+' returned '+installReturn['returnCode'])
+                  NBlogMessages.writeMessage('  warning: Install of 3rd party code in '+thirdPartyDir+' returned '+str(installReturn['returnCode']))
                 else :
                   f=open('NBinstalldone','w')
                   f.close()
@@ -505,6 +511,8 @@ def run(configuration) :
 
         
       for testFunc in configuration['test'][t]['check'] :
+        result['buildDir']=fullBuildDir
+        result['srcDir']=projectCheckOutDir
         testResultFail=testFunc(result,configuration['project'])
         if testResultFail :
           result['svn version']=configuration['svnVersion']
