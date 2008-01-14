@@ -13,7 +13,7 @@ def getTestCaseRunTimes(cbcStdout):
   # Look for pattern
   #   processing mps file: p0201 (31 out of 44)
   # cbc_clp 13.75 = 13.75 ; okay - took 17.83 seconds.
-  r1=r'(cbc_clp (.+) = (.+) ; okay - took (\d*\.\d*) seconds.)'
+  r1=r'(cbc_clp (.+) = (.+) ; okay - took (\d*\.?\d*) seconds.)'
   
   r2=r'(.+ processing mps file: (.+) \((\d*) out of (\d*)\))'
   r='('+r1+'|'+r2+')'

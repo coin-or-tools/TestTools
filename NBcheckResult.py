@@ -61,7 +61,7 @@ def endWithStarDoneStar(result,project) :
 # '../../Data/Netlib/woodw took 0.47 seconds using algorithm either'
 def endWithWoodw(result,project) :
   retVal = None
-  reexp = r"(.|\n)*(\\|/)Data(\\|/)Netlib(\\|/)woodw took (\d*\.\d*) seconds using algorithm either(.|\n)*"
+  reexp = r"(.|\n)*(\\|/)Data(\\|/)Netlib(\\|/)woodw took (\d*\.?\d*) seconds using algorithm either(.|\n)*"
   msgTail = result['stdout'][-500:]
   if not re.compile(reexp).match(msgTail,1) :
     # message not found, assume test failed
@@ -73,7 +73,7 @@ def endWithWoodw(result,project) :
 # 'cbc_clp solved 2 out of 2 and took XX.XX seconds.'
 def cbcMakeTestSuccessMessage(result,project) :
   retVal=None
-  reexp=r"(.|\n)*cbc_clp solved 2 out of 2 and took (\d*\.\d*) seconds."
+  reexp=r"(.|\n)*cbc_clp solved 2 out of 2 and took (\d*\.?\d*) seconds."
   msgTail = result['stdout'][-600:]
   if not re.compile(reexp).match(msgTail,1) :
     # message not found, assume test failed
@@ -98,7 +98,7 @@ def noSolverInterfaceTestingIssueMessage(result,project):
 def OsiUnitTestSuccessMessages(result,project):
   retVal = None
   # Look for pattern "<solver> solved NN out of 90 and took nnn.xx seconds"
-  r=r'((.+) solved (\d+) out of 90 and took (\d*\.\d*) seconds)'
+  r=r'((.+) solved (\d+) out of 90 and took (\d*\.?\d*) seconds)'
   osisSummaryResult=re.findall(r,result['stdout'][-800:])
   expectedOsis=['clp','sym','dylp','cbcclp']
   for osi in osisSummaryResult :
