@@ -377,3 +377,20 @@ SLN_BLD_TEST['Smi']=[
                              NBcheckResult.endWithStarDoneStar ] } ]
 #does not have references to third party packages
 #TODO: need some check whether make test was successful; what is the behaviour in Smi's unittest if it fails?
+
+#----------------------------------------------------------------------
+PROJECT_EMAIL_ADDRS['GAMSlinks'] = 'stefan _AT_ math _DOT_ hu-berlin _DOT_ de'
+
+CFG_BLD_TEST['GAMSlinks']=[
+                  {'dir':'',
+                   'cmd':'make install; make gams-install; make test',
+                   'check':[ NBcheckResult.rc0 ] } ]
+
+CFG_BLD_INSTALL['GAMSlinks']=[
+                  {'dir':'',
+                   'cmd':'make install',
+                   'check':[ NBcheckResult.rc0,
+                             NBcheckResult.standardSuccessMessage ] } ]
+
+SLN_BLD_TEST['GAMSlinks']=[ ]
+#does have references to third party packages

@@ -28,6 +28,22 @@ NIGHTLY_BUILD_ROOT_DIR = '/xxx'
 PROJECTS = ['CoinUtils','Clp','Osi','DyLP','SYMPHONY','Vol','Cgl','Cbc','Smi','FlopC++','Ipopt','Bonmin','OS','CppAD','CoinAll']
 
 #----------------------------------------------------------------------
+# Addition of GAMSlinks project to list of projects
+# Note that testing and sometimes the compilation of the GAMSlinks
+# project requires a GAMS system installed in your system.
+# A demo system can be obtained from www.gams.com and is sufficent
+# to run the tests.
+# Further, GAMSlinks needs to know the location of your GAMS system.
+# The easiest way is to have this path in your PATH environment variable.
+# Note also, that the tests for the GAMSlinks project automatically
+# attempt to install the solver links in your GAMS system before testing.
+# Finally, GAMSlinks builds only on some selected platforms, see website.
+# Windows is very likely to fail. 
+#----------------------------------------------------------------------
+
+#PROJECTS.append('GAMSlinks')
+
+#----------------------------------------------------------------------
 #  Define how a COIN-OR project is to be built and tested.
 #  A project can be built multiple times in different ways.
 #
@@ -176,6 +192,10 @@ BUILDS = {
    'Smi' : 
      [ 
        { 'Reference' : 'CoinUtils' }
+     ],
+   'GAMSlinks' : 
+     [ 
+       { 'Reference' : 'Ipopt' }
      ]
   }
 
