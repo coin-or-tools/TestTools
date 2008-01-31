@@ -222,6 +222,9 @@ CONFIGURE_FLAGS = ''
 
 CLEAR_PREVIOUS_BUILD = 0
 
+
+
+
 #----------------------------------------------------------------------
 # LOGPRINT:
 #   switch for logoutput to stdout. If set to 1 (default) log will go to
@@ -296,3 +299,14 @@ BUILD_INFORMATION = ''
 #----------------------------------------------------------------------
 
 FORCE_VCBUILD = 1
+
+
+
+
+#----------------------------------------------------------------------
+# Sometimes an svn update does not work and we need to try a second 
+# or third time. The default is just one.  Increase this number if
+# desired in your NBuserParameters.py file.
+#----------------------------------------------------------------------
+
+SVN_UPDATE_TRIALS = 1
