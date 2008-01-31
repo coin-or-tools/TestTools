@@ -14,6 +14,7 @@ import NBlogMessages
 import NBemail
 import NBosCommand
 
+execfile('NBuserParametersDefault.py')
 execfile('NBuserParameters.py')
 
 #------------------------------------------------------------------------
