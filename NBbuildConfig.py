@@ -406,12 +406,24 @@ def run(configuration) :
         error_msg['configure flags']=configOptions
         error_msg['svn version']=configuration['svnVersion']
         error_msg['command history']=commandHistory 
-        # Add contents of log file to message
         logFileName = 'config.log'
         if os.path.isfile(logFileName) :
           logFilePtr = open(logFileName,'r')
-          error_msg['config.log'] = logFilePtr.read()
+          logFileContent = logFilePtr.read()
           logFilePtr.close()
+          # try to find out which subproject has failed and read corresponding config.log file
+          r=r'configure:.* error: .*[/\\](\w+)[\\/]configure.? failed for .*'
+          matches=re.findall(r,logFileContent)
+          if len(matches)>0 :
+            failedProject=matches[-1]
+            NBlogMessages.writeMessage("  configure failed for subproject "+failedProject)
+            logFileName = os.path.join(failedProject,"config.log") 
+            logFilePtr = open(logFileName,'r')
+            logFileContent = logFilePtr.read()
+            logFilePtr.close()
+
+          # Add contents of log file to message
+          error_msg['config.log'] = logFileContent
         NBemail.sendCmdMsgs(configuration['project'],error_msg,configCmd)
         return
 
