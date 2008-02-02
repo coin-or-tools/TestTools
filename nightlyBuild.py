@@ -26,7 +26,6 @@ execfile('NBuserParameters.py')
 
 
 # TODO:
-#   -Reduce size of email messages.
 #   -Get config style build working on Windows
 
 
