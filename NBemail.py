@@ -10,12 +10,26 @@ import sys
 from socket import gethostname 
 import smtplib
 
-from email import encoders
-from email.message import Message
-from email.mime.base import MIMEBase
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.generator import Generator
+#in python 2.4 some filenames started with a capital letter, while this changed in python 2.5 :-(
+try :  #python 2.5 style
+  from email import encoders
+  from email.message import Message
+  from email.generator import Generator
+  from email.mime.base import MIMEBase
+  from email.mime.multipart import MIMEMultipart
+  from email.mime.text import MIMEText
+except ImportError :  #python 2.4 style
+  from email import Encoders
+  from email.Message import Message
+  from email.Generator import Generator
+  email_firstletter_capital = True
+
+  from email.MIMEBase import MIMEBase
+  from email.MIMEMultipart import MIMEMultipart
+  from email.MIMEText import MIMEText
+else :
+  email_firstletter_capital = False
+  
 from cStringIO import StringIO
 
 from gzip import GzipFile
@@ -139,7 +153,10 @@ def sendCmdMsgs(project,cmdMsgs,cmd):
     attachment = MIMEBase('application', 'octet-stream')
     attachment.set_payload(fp.getvalue())
     fp.close()
-    encoders.encode_base64(attachment)
+    if email_firstletter_capital :
+      Encoders.encode_base64(attachment)
+    else :
+      encoders.encode_base64(attachment)
     attachment.add_header('Content-Disposition', 'attachment', filename='stdout.log.gz')
     emailFull.attach(attachment)
   
@@ -152,7 +169,10 @@ def sendCmdMsgs(project,cmdMsgs,cmd):
       attachment = MIMEBase('application', 'octet-stream')
       attachment.set_payload(fp.getvalue())
       fp.close()
-      encoders.encode_base64(attachment)
+      if email_firstletter_capital :
+        Encoders.encode_base64(attachment)
+      else :
+        encoders.encode_base64(attachment)
       attachment.add_header('Content-Disposition', 'attachment', filename='config.log.gz')
       emailFull.attach(attachment)
     
