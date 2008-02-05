@@ -207,6 +207,14 @@ BUILDS = {
 
 CONFIGURE_FLAGS = ''
 
+#---------------------------------------------------------------------
+#On some systems, e.g. Windows/msys32, you might want to specify the
+#name of the make program. 
+#example: MAKECMD='gmake'
+#---------------------------------------------------------------------
+
+MAKECMD = 'make'
+
 #----------------------------------------------------------------------
 #Normally, nightlyBuild does not remove old builds before rebuilding
 #a configuration, instead configure might be called and make needs to

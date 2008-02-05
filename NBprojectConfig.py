@@ -16,6 +16,10 @@ except ImportError:
 else :
   importedCbcRunTimes=True
 
+#to get MAKECMD  
+execfile('NBuserParametersDefault.py')
+execfile('NBuserParameters.py')
+
 #----------------------------------------------------------------------
 # This file defines variables which describe how the specific
 # coin-or projects are to be tested and who are their managers.
@@ -35,13 +39,13 @@ PROJECT_EMAIL_ADDRS['CoinUtils'] = 'ladanyi _AT_ us _DOT_ ibm _DOT_ com'
 
 CFG_BLD_TEST['CoinUtils']=[
                   {'dir':'',
-                   'cmd':'make test',
+                   'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 
 CFG_BLD_INSTALL['CoinUtils']=[
                   {'dir':'',
-                   'cmd':'make install',
+                   'cmd': MAKECMD+' install',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 
@@ -61,7 +65,7 @@ PROJECT_EMAIL_ADDRS['DyLP'] = 'lou _AT_ cs _DOT_ sfu _DOT_ ca'
 
 CFG_BLD_TEST['DyLP']=[
                   {'dir':'',
-                   'cmd':'make test',
+                   'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage,
                              NBcheckResult.noSolverInterfaceTestingIssueMessage ] },
@@ -73,7 +77,7 @@ CFG_BLD_TEST['DyLP']=[
 
 CFG_BLD_INSTALL['DyLP']=[
                   {'dir':'',
-                   'cmd':'make install',
+                   'cmd': MAKECMD+' install',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 
@@ -84,7 +88,7 @@ PROJECT_EMAIL_ADDRS['Clp'] = 'jjforre _AT_ us _DOT_ ibm _DOT_ com'
 
 CFG_BLD_TEST['Clp']=[
                   {'dir':'',
-                   'cmd':'make test',
+                   'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] },
                   {'dir':'Clp/src',
@@ -94,7 +98,7 @@ CFG_BLD_TEST['Clp']=[
                              NBcheckResult.endWithWoodw] } ]
 CFG_BLD_INSTALL['Clp']=[
                   {'dir':'',
-                   'cmd':'make install',
+                   'cmd': MAKECMD+' install',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 
@@ -114,17 +118,17 @@ SLN_BLD_TEST['Clp']=[
 PROJECT_EMAIL_ADDRS['SYMPHONY'] = 'tkr2 _AT_ lehigh _DOT_ edu'
 CFG_BLD_TEST['SYMPHONY']=[
                   {'dir':'',
-                   'cmd':'make test',
+                   'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] },
                   {'dir':'',
-                   'cmd':'make fulltest',
+                   'cmd': MAKECMD+' fulltest',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 
 CFG_BLD_INSTALL['SYMPHONY']=[
                   {'dir':'',
-                   'cmd':'make install',
+                   'cmd': MAKECMD+' install',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 
@@ -140,12 +144,12 @@ SLN_BLD_TEST['SYMPHONY']=[ {
 PROJECT_EMAIL_ADDRS['Vol'] = 'barahon _AT_ us _DOT_ ibm _DOT_ com'
 CFG_BLD_TEST['Vol']=[
                   {'dir':'',
-                   'cmd':'make test',
+                   'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0 ] } ]
 
 CFG_BLD_INSTALL['Vol']=[
                   {'dir':'',
-                   'cmd':'make install',
+                   'cmd': MAKECMD+' install',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 #does not have references to third party packages
@@ -154,7 +158,7 @@ CFG_BLD_INSTALL['Vol']=[
 PROJECT_EMAIL_ADDRS['Osi'] = 'mjs _AT_ ces _DOT_ clemson _DOT_ edu'
 CFG_BLD_TEST['Osi']=[
                   {'dir':'',
-                   'cmd':'make test',
+                   'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage,
                              NBcheckResult.noSolverInterfaceTestingIssueMessage ] },
@@ -166,7 +170,7 @@ CFG_BLD_TEST['Osi']=[
 
 CFG_BLD_INSTALL['Osi']=[
                   {'dir':'',
-                   'cmd':'make install',
+                   'cmd': MAKECMD+' install',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 
@@ -182,13 +186,13 @@ SLN_BLD_TEST['Osi']=[
 PROJECT_EMAIL_ADDRS['Cgl'] = 'robinlh _AT_ us _DOT_ ibm _DOT_ com'
 CFG_BLD_TEST['Cgl']=[
                   {'dir':'',
-                   'cmd':'make test',
+                   'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 
 CFG_BLD_INSTALL['Cgl']=[
                   {'dir':'',
-                   'cmd':'make install',
+                   'cmd': MAKECMD+' install',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 #does not have references to third party packages
@@ -198,7 +202,7 @@ PROJECT_EMAIL_ADDRS['Cbc'] = 'jjforre _AT_ us _DOT_ ibm _DOT_ com'
 
 CFG_BLD_TEST['Cbc']=[
                   {'dir':'',
-                   'cmd':'make test',
+                   'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.cbcMakeTestSuccessMessage ] },
                   {'dir':'Cbc/src',
@@ -211,7 +215,7 @@ if importedCbcRunTimes :
 
 CFG_BLD_INSTALL['Cbc']=[
                   {'dir':'',
-                   'cmd':'make install',
+                   'cmd': MAKECMD+' install',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 
@@ -228,12 +232,12 @@ PROJECT_EMAIL_ADDRS['Ipopt'] = 'andreasw _AT_ us _DOT_ ibm _DOT_ com'
 
 CFG_BLD_TEST['Ipopt']=[
                   {'dir':'',
-                   'cmd':'make test',
+                   'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0 ] } ]
 
 CFG_BLD_INSTALL['Ipopt']=[
                   {'dir':'',
-                   'cmd':'make install',
+                   'cmd': MAKECMD+' install',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 
@@ -244,12 +248,12 @@ PROJECT_EMAIL_ADDRS['Bonmin'] = 'pbonami _AT_ us _DOT_ ibm _DOT_ com'
 
 CFG_BLD_TEST['Bonmin']=[
                   {'dir':'',
-                   'cmd':'make test',
+                   'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0 ] } ]
 
 CFG_BLD_INSTALL['Bonmin']=[
                   {'dir':'',
-                   'cmd':'make install',
+                   'cmd': MAKECMD+' install',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 #third party packages are not optional here
@@ -259,13 +263,13 @@ PROJECT_EMAIL_ADDRS['FlopC++'] = 'Tim _DOT_ Hultberg _AT_ eumetsat _DOT_ int'
 
 CFG_BLD_TEST['FlopC++']=[
                   {'dir':'',
-                   'cmd':'make test',
+                   'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 
 CFG_BLD_INSTALL['FlopC++']=[
                   {'dir':'',
-                   'cmd':'make install',
+                   'cmd': MAKECMD+' install',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 
@@ -287,12 +291,12 @@ SLN_BLD_TEST['FlopC++']=[
 PROJECT_EMAIL_ADDRS['OS'] = 'kipp _DOT_ martin _AT_ chicagogsb _DOT_ edu'
 CFG_BLD_TEST['OS']=[
                   {'dir':'',
-                   'cmd':'make test',
+                   'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 CFG_BLD_INSTALL['OS']=[
                   {'dir':'',
-                   'cmd':'make install',
+                   'cmd': MAKECMD+' install',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 
@@ -311,12 +315,12 @@ SLN_BLD_TEST['OS']=[
 PROJECT_EMAIL_ADDRS['LaGO'] = 'stefan _AT_ math _DOT_ hu-berlin _DOT_ de'
 CFG_BLD_TEST['LaGO']=[
                   {'dir':'',
-                   'cmd':'make test',
+                   'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0 ] } ]
 
 CFG_BLD_INSTALL['LaGO']=[
                   {'dir':'',
-                   'cmd':'make install',
+                   'cmd': MAKECMD+' install',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 
@@ -324,12 +328,12 @@ CFG_BLD_INSTALL['LaGO']=[
 PROJECT_EMAIL_ADDRS['CoinAll'] = 'tkr2 _AT_ lehigh _DOT_ edu'
 CFG_BLD_TEST['CoinAll']=[
                   {'dir':'',
-                   'cmd':'make test',
+                   'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0 ] } ]
 
 CFG_BLD_INSTALL['CoinAll']=[
                   {'dir':'',
-                   'cmd':'make install',
+                   'cmd': MAKECMD+' install',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 
@@ -346,7 +350,7 @@ CFG_BLD_TEST['CppAD']=[
 
 CFG_BLD_INSTALL['CppAD']=[
                   {'dir':'',
-                   'cmd':'make install',
+                   'cmd': MAKECMD+' install',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 #does not have references to third party packages
@@ -356,13 +360,13 @@ PROJECT_EMAIL_ADDRS['Smi'] = 'kingaj _AT_ us _DOT_ ibm _DOT_ com'
 
 CFG_BLD_TEST['Smi']=[
                   {'dir':'',
-                   'cmd':'make test',
+                   'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.endWithStarDoneStar ] } ]
 
 CFG_BLD_INSTALL['Smi']=[
                   {'dir':'',
-                   'cmd':'make install',
+                   'cmd': MAKECMD+' install',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 
@@ -383,12 +387,12 @@ PROJECT_EMAIL_ADDRS['GAMSlinks'] = 'stefan _AT_ math _DOT_ hu-berlin _DOT_ de'
 
 CFG_BLD_TEST['GAMSlinks']=[
                   {'dir':'',
-                   'cmd':'make install; make gams-install; make test',
+                   'cmd': MAKECMD+' install; '+MAKECMD+' gams-install; '+MAKECMD+' test',
                    'check':[ NBcheckResult.rc0 ] } ]
 
 CFG_BLD_INSTALL['GAMSlinks']=[
                   {'dir':'',
-                   'cmd':'make install',
+                   'cmd': MAKECMD+' install',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 

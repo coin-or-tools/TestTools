@@ -430,15 +430,15 @@ def run(configuration) :
     #---------------------------------------------------------------------
     # Run make part of build
     #---------------------------------------------------------------------
-    NBlogMessages.writeMessage( '  make' )
-    commandHistory+=[ 'make' ]
+    NBlogMessages.writeMessage( '  '+MAKECMD )
+    commandHistory+=[ MAKECMD ]
     
     #
     # start kipp
     if configuration['buildMethod']=='mingw' :
-      result=NBosCommand.run('sh -c make') 
+      result=NBosCommand.run('sh -c '+MAKECMD) 
     else:
-      result=NBosCommand.run('make')
+      result=NBosCommand.run(MAKECMD)
       
     # end kipp
     # 
