@@ -69,8 +69,8 @@ CFG_BLD_TEST['DyLP']=[
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage,
                              NBcheckResult.noSolverInterfaceTestingIssueMessage ] },
-                  {'dir':'Osi/test',
-                   'cmd':'./unitTest -testOsiSolverInterface -netlibDir=_NETLIBDIR_ -cerr2cout',
+                  {'dir': os.path.join('Osi','test'),
+                   'cmd': '.'+os.sep+'unitTest -testOsiSolverInterface -netlibDir=_NETLIBDIR_ -cerr2cout',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage,
                              NBcheckResult.noSolverInterfaceTestingIssueMessage] } ]
@@ -91,8 +91,8 @@ CFG_BLD_TEST['Clp']=[
                    'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] },
-                  {'dir':'Clp/src',
-                   'cmd':'./clp -unitTest -dirNetlib=_NETLIBDIR_ -netlib',
+                  {'dir': os.path.join('Clp','src'),
+                   'cmd': '.'+os.sep+'clp -unitTest -dirNetlib=_NETLIBDIR_ -netlib',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage,
                              NBcheckResult.endWithWoodw] } ]
@@ -162,8 +162,8 @@ CFG_BLD_TEST['Osi']=[
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage,
                              NBcheckResult.noSolverInterfaceTestingIssueMessage ] },
-                  {'dir':'Osi/test',
-                   'cmd':'./unitTest -testOsiSolverInterface -netlibDir=_NETLIBDIR_ -cerr2cout',
+                  {'dir': os.path.join('Osi','test'),
+                   'cmd': '.'+os.sep+'unitTest -testOsiSolverInterface -netlibDir=_NETLIBDIR_ -cerr2cout',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage,
                              NBcheckResult.noSolverInterfaceTestingIssueMessage] } ]
@@ -205,8 +205,8 @@ CFG_BLD_TEST['Cbc']=[
                    'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.cbcMakeTestSuccessMessage ] },
-                  {'dir':'Cbc/src',
-                   'cmd':'./cbc -unitTest -dirMiplib=_MIPLIB3DIR_ -miplib',
+                  {'dir': os.path.join('Cbc','src'),
+                   'cmd': '.'+os.sep+'cbc -unitTest -dirMiplib=_MIPLIB3DIR_ -miplib',
                    'check':[ NBcheckResult.rc0to2 ] } ]
 
 if importedCbcRunTimes :
@@ -342,10 +342,10 @@ PROJECT_EMAIL_ADDRS['CppAD'] = 'bradbell _AT_ washington _DOT_ edu'
 
 CFG_BLD_TEST['CppAD']=[
                   {'dir':'',
-                   'cmd':'./example/example',
+                   'cmd': os.path.join('.','example','example'),
                    'check':[ NBcheckResult.rc0 ] }, 
                   {'dir':'',
-                   'cmd':'./test_more/test_more',
+                   'cmd': os.path.join('.','test_more','test_more'),
                    'check':[ NBcheckResult.rc0 ] } ]
 
 CFG_BLD_INSTALL['CppAD']=[
