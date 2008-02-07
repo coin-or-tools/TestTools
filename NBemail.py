@@ -63,7 +63,7 @@ def sendCmdMsgs(project,cmdMsgs,cmd):
     unscrambledEmailAddress=unscrambleAddress(scrambledEmailAddress)
     toAddrs.append(unscrambledEmailAddress)
 
-  emailSubject = "NightlyBuild on "+sys.platform+". "+project
+  emailSubject = "NightlyBuild on "+gethostname()+". "+sys.platform+". "+project
   if cmdMsgs.has_key('svn version') :
     emailSubject += " "+cmdMsgs['svn version']
   emailSubject+=". Problem with '" + cmd +"'"
