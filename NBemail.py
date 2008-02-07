@@ -116,7 +116,7 @@ def sendCmdMsgs(project,cmdMsgs,cmd):
   emailText +=NBlogMessages.getMessages()
   emailText +="\n"
 
-  if True :  
+  if False :  
     emailText += "stdout messages are:\n"
     emailText += cmdMsgs['stdout']
     
