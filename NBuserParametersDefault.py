@@ -38,7 +38,9 @@ PROJECTS = ['CoinUtils','Clp','Osi','DyLP','SYMPHONY','Vol','Cgl','Cbc','Smi','F
 # Note also, that the tests for the GAMSlinks project automatically
 # attempt to install the solver links in your GAMS system before testing.
 # Finally, GAMSlinks builds only on some selected platforms, see website.
-# Windows is very likely to fail. 
+# Windows is very likely to fail.
+# Adding -DDISALLOW_PRINTING to the CXXFLAGS truns off printing to stdout in Cbc.
+# It might be required to pass the tests. 
 #----------------------------------------------------------------------
 
 #PROJECTS.append('GAMSlinks')
@@ -172,7 +174,8 @@ BUILDS = {
      ],
    'Bonmin' : 
      [ 
-       { 'Reference' : 'Ipopt' }
+       { 'SvnVersion': 'trunk',        'OptLevel': 'Default', 'ThirdParty':'Yes' }
+      #,{ 'SvnVersion': 'branches/0.9', 'OptLevel': 'Default', 'ThirdParty':'Yes' }
      ],
    'OS' :
      [ 
