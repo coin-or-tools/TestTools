@@ -75,7 +75,7 @@ def writeResults(result,filenameSuffix) :
 #  Given a configuration, build and test it.
 #
 #  configuration['project']= name of project.
-#   examples: "Clp", "Ipopt"
+#   examples: "Clp", "Ipopt"f
 #
 #  configuration['rootDir']= root directory of nightlyBuild.
 #   This is where the project will be checked out from svn, and
@@ -571,11 +571,10 @@ def run(configuration) :
     # TO DO:
     #  1.  Figure out best way to guard against including ThirdParty software
     #      that should not be there
-    #  2.  Build the doc directory when Andreas is done
     #---------------------------------------------------------------------
 
       if BUILD_BINARIES == 1 :
-        #Bail out if we have ThirdParty software -- modify this later
+        # Only build binary if no third party software
         if 'noThirdParty' in configuration : 
           if configuration['noThirdParty'] :
             directories = ""   
@@ -597,9 +596,11 @@ def run(configuration) :
             if os.path.isdir( "bin") == True :
               directories +=  " bin "
 
-            # don't forget to add LICENSE and AUTHORS file
-            # Andreas is going to add a directory where these reside from doing
-            # make install
+            # if the share directory is there, add it
+            if os.path.isdir( "share") == True :
+              directories +=  " share "
+
+
 
             #if the directory that stores the binaries is not there create it
             binariesDir=os.path.join(projectBaseDir,"binaries")
