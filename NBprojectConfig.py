@@ -289,11 +289,22 @@ SLN_BLD_TEST['FlopC++']=[
 
 #----------------------------------------------------------------------
 PROJECT_EMAIL_ADDRS['OS'] = 'kipp _DOT_ martin _AT_ chicagogsb _DOT_ edu'
+
+
+
 CFG_BLD_TEST['OS']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
+
+
+CFG_BLD_VALGRIND_TEST['OS']=[
+                  {'dir':'',
+                   'cmd': ' valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ' +MAKECMD+' test',
+                   'check':[] } ]
+
+
 CFG_BLD_INSTALL['OS']=[
                   {'dir':'',
                    'cmd': MAKECMD+' install',

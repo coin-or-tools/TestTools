@@ -216,6 +216,17 @@ for p in PROJECTS :
         # No test executables so remove from configuration
         configuration.pop('install')
 
+      #---------------------------------------------------------------------
+      # Set up valgring executables
+      #---------------------------------------------------------------------
+      configuration['valgrind']={}
+      if NBprojectConfig.CFG_BLD_VALGRIND_TEST.has_key(p) :
+        configuration['valgrind']=NBprojectConfig.CFG_BLD_INSTALL[p]
+      else :
+        # No test executables so remove from configuration
+        configuration.pop('valgrind')
+
+
 
     if configuration['buildMethod']=='msSln' :
       #--------------------------------------------------------------------
