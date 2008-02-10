@@ -66,7 +66,11 @@ def sendCmdMsgs(project,cmdMsgs,cmd):
   emailSubject = "NightlyBuild on "+gethostname()+". "+sys.platform+". "+project
   if cmdMsgs.has_key('svn version') :
     emailSubject += " "+cmdMsgs['svn version']
-  emailSubject+=". Problem with '" + cmd +"'"
+  # don't include Problem with if we are running valgrind
+  if cmd.find('valgrind') == -1 :
+    emailSubject+=". Problem with '" + cmd +"'"
+  else :
+     emailSubject+=".  '" + cmd +"'"
 
 #  emailMsg = "Subject: "+subject+"\n\n"
   emailText = "Dear "+project+" Project Manager,\n\n" \
