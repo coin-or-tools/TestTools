@@ -30,6 +30,7 @@ PROJECT_EMAIL_ADDRS = {}
 SLN_BLD_TEST = {}
 CFG_BLD_TEST = {}
 CFG_BLD_INSTALL = {}
+CFG_BLD_VALGRIND_TEST = {}
 SLN_FILE = {}
 SLN_DIR = {}
 
@@ -300,7 +301,7 @@ CFG_BLD_TEST['OS']=[
 
 
 CFG_BLD_VALGRIND_TEST['OS']=[
-                  {'dir':'',
+                  {'dir':'/OS/test',
                    'cmd': ' valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ' +MAKECMD+' test',
                    'check':[] } ]
 
