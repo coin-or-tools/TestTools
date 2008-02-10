@@ -541,7 +541,7 @@ def run(configuration) :
 
 
   #only do this if we have valgrind
-  result=NBosCommand.run( "valgrind" )
+  result=NBosCommand.run( "valgrind --help" )
   if result['returnCode'] == 0 :
     if configuration['buildMethod']=='unixConfig' :
       if "valgrind" in configuration :

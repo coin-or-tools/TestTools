@@ -302,7 +302,7 @@ CFG_BLD_TEST['OS']=[
 
 CFG_BLD_VALGRIND_TEST['OS']=[
                   {'dir':'OS/test',
-                   'cmd': ' valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ' +MAKECMD+' test',
+                   'cmd': ' valgrind --tool=memcheck --leak-check=full  --show-reachable=yes unitTest',
                    'check':[] } ]
 
 
