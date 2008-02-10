@@ -221,7 +221,7 @@ for p in PROJECTS :
       #---------------------------------------------------------------------
       configuration['valgrind']={}
       if NBprojectConfig.CFG_BLD_VALGRIND_TEST.has_key(p) :
-        configuration['valgrind']=NBprojectConfig.CFG_BLD_INSTALL[p]
+        configuration['valgrind']=NBprojectConfig.CFG_BLD_VALGRIND_TEST[p]
       else :
         # No test executables so remove from configuration
         configuration.pop('valgrind')
