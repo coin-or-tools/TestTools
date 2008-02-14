@@ -132,8 +132,8 @@ def sendCmdMsgs(project,cmdMsgs,cmd):
     
   else :
     emailText += "last stdout messages are:\n"
-    # find latest line end before last 500 characters of stdout 
-    lineendindex=cmdMsgs['stdout'].rfind('\n',0,-500)
+    # find latest line end before last 1000 characters of stdout 
+    lineendindex=cmdMsgs['stdout'].rfind('\n',0,-1000)
     if lineendindex >= 0 :
       emailText += cmdMsgs['stdout'][lineendindex+1:]
     else :

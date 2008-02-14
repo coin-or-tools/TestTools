@@ -245,7 +245,7 @@ CFG_BLD_INSTALL['Ipopt']=[
 #third party packages are not optional here
 
 #----------------------------------------------------------------------
-PROJECT_EMAIL_ADDRS['Bonmin'] = 'pbonami _AT_ us _DOT_ ibm _DOT_ com'
+PROJECT_EMAIL_ADDRS['Bonmin'] = 'pierre _DOT_ bonami _AT_ lif _DOT_ univ-mrs _DOT_ fr'
 
 CFG_BLD_TEST['Bonmin']=[
                   {'dir':'',
