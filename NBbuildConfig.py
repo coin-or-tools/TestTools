@@ -545,32 +545,30 @@ def run(configuration) :
   if result['returnCode'] == 0 :
     if configuration['buildMethod']=='unixConfig' :
       if "valgrind" in configuration :
-        #only in debug mode
-        #if configuration['OptLevel']=='Debug' :
-          for t in range( len(configuration['valgrind']) ) :
-            valgrindRelDir=configuration['valgrind'][t]['dir']
-            valgrindDir = os.path.join(fullBuildDir, valgrindRelDir)
-            valgrindCmd=configuration['valgrind'][t]['cmd']
-            if not os.path.isdir( valgrindDir) :
-              NBlogMessages.writeMessage('  Directory to run valgrind on unitTest from does not exist:')
-              NBlogMessages.writeMessage('    fullBuild directory: ' + fullBuildDir)
-              NBlogMessages.writeMessage('    Intended directory: ' + valgrindDir)
-              NBlogMessages.writeMessage('    Intended command: ' + valgrindCmd)
-              continue
-            os.chdir( valgrindDir)
-            NBlogMessages.writeMessage('  cd ' + valgrindDir)
-            NBlogMessages.writeMessage( '  ' + valgrindCmd )
-            commandHistory+=[ valgrindCmd ]
-            result = NBosCommand.run(valgrindCmd)
-            writeResults(result, valgrindCmd)
-            result['svn version']=configuration['svnVersion']
-            result['command history'] = commandHistory
-            NBemail.sendCmdMsgs(configuration['project'], result, valgrindCmd)
-            #if result['returnCode'] != 0 :
-            #    result['svn version']=configuration['svnVersion']
-            #    result['command history'] = commandHistory
-            #    NBemail.sendCmdMsgs(configuration['project'], result, valgrindCmd)
-            #    return
+        for t in range( len(configuration['valgrind']) ) :
+          valgrindRelDir=configuration['valgrind'][t]['dir']
+          valgrindDir = os.path.join(fullBuildDir, valgrindRelDir)
+          valgrindCmd=configuration['valgrind'][t]['cmd']
+          if not os.path.isdir( valgrindDir) :
+            NBlogMessages.writeMessage('  Directory to run valgrind on unitTest from does not exist:')
+            NBlogMessages.writeMessage('    fullBuild directory: ' + fullBuildDir)
+            NBlogMessages.writeMessage('    Intended directory: ' + valgrindDir)
+            NBlogMessages.writeMessage('    Intended command: ' + valgrindCmd)
+            continue
+          os.chdir( valgrindDir)
+          NBlogMessages.writeMessage('  cd ' + valgrindDir)
+          NBlogMessages.writeMessage( '  ' + valgrindCmd )
+          commandHistory+=[ valgrindCmd ]
+          result = NBosCommand.run(valgrindCmd)
+          writeResults(result, valgrindCmd)
+          result['svn version']=configuration['svnVersion']
+          result['command history'] = commandHistory
+          NBemail.sendCmdMsgs(configuration['project'], result, valgrindCmd)
+          #if result['returnCode'] != 0 :
+          #    result['svn version']=configuration['svnVersion']
+          #    result['command history'] = commandHistory
+          #    NBemail.sendCmdMsgs(configuration['project'], result, valgrindCmd)
+          #    return
 
   
 

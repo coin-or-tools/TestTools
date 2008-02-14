@@ -218,13 +218,15 @@ for p in PROJECTS :
 
       #---------------------------------------------------------------------
       # Set up valgring executables
+      # Don't bother if not in debug mode
       #---------------------------------------------------------------------
-      configuration['valgrind']={}
-      if NBprojectConfig.CFG_BLD_VALGRIND_TEST.has_key(p) :
-        configuration['valgrind']=NBprojectConfig.CFG_BLD_VALGRIND_TEST[p]
-      else :
-        # No test executables so remove from configuration
-        configuration.pop('valgrind')
+      if bc['OptLevel'] == "Debug":
+        configuration['valgrind']={}
+        if NBprojectConfig.CFG_BLD_VALGRIND_TEST.has_key(p) :
+          configuration['valgrind']=NBprojectConfig.CFG_BLD_VALGRIND_TEST[p]
+        else :
+          # No test executables so remove from configuration
+          configuration.pop('valgrind')
 
 
 
