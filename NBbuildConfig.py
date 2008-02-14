@@ -546,7 +546,7 @@ def run(configuration) :
     if configuration['buildMethod']=='unixConfig' :
       if "valgrind" in configuration :
         #only in debug mode
-        if configuration['OptLevel']=='Debug' :
+        #if configuration['OptLevel']=='Debug' :
           for t in range( len(configuration['valgrind']) ) :
             valgrindRelDir=configuration['valgrind'][t]['dir']
             valgrindDir = os.path.join(fullBuildDir, valgrindRelDir)
