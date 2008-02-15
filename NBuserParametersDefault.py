@@ -321,3 +321,10 @@ FORCE_VCBUILD = 2
 #----------------------------------------------------------------------
 
 SVN_UPDATE_TRIALS = 1
+
+#----------------------------------------------------------------------
+# Below is a list of acceptable Third Party code to include
+# in the binary distribution
+#----------------------------------------------------------------------
+
+ThirdPartyAllowed = ['ASL', 'Blas', 'Lapack', 'Mumps']

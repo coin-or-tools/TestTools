@@ -50,6 +50,12 @@ CFG_BLD_INSTALL['CoinUtils']=[
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
 
+CFG_BLD_VALGRIND_TEST['CoinUtils']=[
+                  {'dir':'CoinUtils/test',
+                   'cmd': ' valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
+                   'check':[] } ]
+
+
 SLN_BLD_TEST['CoinUtils']=[
                   {'dir':r'CoinUtils\MSVisualStudio',
                    'cmd':'v8\unitTestCoinUtils\Release\unitTestCoinUtils',

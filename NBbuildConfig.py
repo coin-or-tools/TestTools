@@ -268,6 +268,7 @@ def run(configuration) :
   #---------------------------------------------------------------------
   # If there are third party apps, then get these apps
   #---------------------------------------------------------------------
+  buildThirdParty = True
   if 'noThirdParty' in configuration :
     if not configuration['noThirdParty'] :
       thirdPartyBaseDir=os.path.join(projectCheckOutDir,'ThirdParty')
@@ -296,6 +297,16 @@ def run(configuration) :
             if d=='.svn' : continue
             thirdPartyDir=os.path.join(thirdPartyBaseDir,d)
             if not os.path.isdir(thirdPartyDir) : continue
+
+            # everything okay if we skip this project
+            if 'SkipProjects' in configuration :
+              if d not in configuration['SkipProjects']  and d not in ThirdPartyAllowed  :
+                NBlogMessages.writeMessage('warning: we cannot build a binary distribution because of: ' + d)
+                buildThirdParty  = False
+            else :
+              if d not in ThirdPartyAllowed   :
+                NBlogMessages.writeMessage('warning: we cannot build a binary distribution because of: ' + d)
+                buildThirdParty  = False        
             install3rdPartyCmd=os.path.join(".","get."+d)
             os.chdir(thirdPartyDir)
             # If the install command has been updated since the last
@@ -607,17 +618,12 @@ def run(configuration) :
     #---------------------------------------------------------------------
     # Build the binary distribution
     # We assume a Unix distribution
-    # TO DO:
-    #  1.  Figure out best way to guard against including ThirdParty software
-    #      that should not be there
     #---------------------------------------------------------------------
 
       if BUILD_BINARIES == 1 :
-        # Only build binary if no third party software
-        if 'noThirdParty' in configuration : 
-          if configuration['noThirdParty'] :
+        # Only build binary if we are using allowed third party software
+        if buildThirdParty  == True :
             directories = ""   
-
             # if the lib  directory is there, add it
             # delete these if already there
             if os.path.isdir( "lib") == True :
@@ -628,8 +634,11 @@ def run(configuration) :
               directories +=  " include "
 
             # if the examples directory is there, add it
-            if os.path.isdir( "examples") == True :
-              directories +=  " examples "
+            examplesDir =  os.path.join(projectBaseDir, 'examples')
+            NBlogMessages.writeMessage(' project Base Directory is ' + projectBaseDir)
+            NBlogMessages.writeMessage(' project Examples Directory is ' + examplesDir)
+            if os.path.isdir( examplesDir) == True :
+              directories +=  examplesDir
 
             # if the bin directory is there, add it
             if os.path.isdir( "bin") == True :
