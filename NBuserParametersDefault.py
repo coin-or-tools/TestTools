@@ -312,8 +312,6 @@ BUILD_INFORMATION = ''
 FORCE_VCBUILD = 2
 
 
-
-
 #----------------------------------------------------------------------
 # Sometimes an svn update does not work and we need to try a second 
 # or third time. The default is just one.  Increase this number if
@@ -321,6 +319,14 @@ FORCE_VCBUILD = 2
 #----------------------------------------------------------------------
 
 SVN_UPDATE_TRIALS = 1
+
+
+#----------------------------------------------------------------------
+# In Linux you may wish to run valgrind to check for memory leaks.
+# This feature if off by default
+#----------------------------------------------------------------------
+
+VALGRIND_TEST = False
 
 #----------------------------------------------------------------------
 # Below is a list of acceptable Third Party code to include

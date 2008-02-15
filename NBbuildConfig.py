@@ -33,6 +33,11 @@ execfile('NBuserParameters.py')
 SVN_HISTORY = {}
 THIRD_PARTY_HISTORY = []
 
+#---------------------------------------------------------------------
+# Keep ThirdParty directories for testing for building binaries
+#---------------------------------------------------------------------
+THIRD_PARTY_DIRECTORIES = []
+
 
 #---------------------------------------------------------------------
 # cleanUpName:
@@ -141,6 +146,9 @@ def run(configuration) :
   projectBaseDir=os.path.join(configuration['rootDir'],configuration['project'])
   projectCheckOutDir=os.path.join(projectBaseDir,svnVersionFlattened)
 
+
+
+
   svnCheckOutUrl='https://projects.coin-or.org/svn/'+\
                  configuration['project']+'/'+\
                  configuration['svnVersion']
@@ -165,9 +173,16 @@ def run(configuration) :
   
   fullBuildDir = os.path.join(projectBaseDir,buildDir)
 
+
+
+
+
   NBlogMessages.writeMessage('  SVN source URL: '+svnCheckOutUrl)
   NBlogMessages.writeMessage('  Checkout directory: '+projectCheckOutDir)
   NBlogMessages.writeMessage('  Build directory: '+fullBuildDir)
+
+
+
   
   #for a list of commands that have been executed
   commandHistory = []
@@ -274,7 +289,6 @@ def run(configuration) :
       thirdPartyBaseDir=os.path.join(projectCheckOutDir,'ThirdParty')
       if os.path.isdir(thirdPartyBaseDir) :
         if thirdPartyBaseDir not in THIRD_PARTY_HISTORY :
-          THIRD_PARTY_HISTORY.append(thirdPartyBaseDir)
           thirdPartyDirs = os.listdir(thirdPartyBaseDir)
           #clean up: take care of .svn, .OLD, and non-directory entries
           for d in thirdPartyDirs[:] :
@@ -293,12 +307,14 @@ def run(configuration) :
                 os.remove(fileToBeRemoved)
               thirdPartyDirs.remove(d)
               continue
+            THIRD_PARTY_HISTORY.append( d)
           for d in thirdPartyDirs :
             if d=='.svn' : continue
             thirdPartyDir=os.path.join(thirdPartyBaseDir,d)
             if not os.path.isdir(thirdPartyDir) : continue
 
             # everything okay if we skip this project
+            THIRD_PARTY_DIRECTORIES.append(thirdPartyBaseDir)
             if 'SkipProjects' in configuration :
               if d not in configuration['SkipProjects']  and d not in ThirdPartyAllowed  :
                 NBlogMessages.writeMessage('warning: we cannot build a binary distribution because of: ' + d)
@@ -337,7 +353,23 @@ def run(configuration) :
               NBlogMessages.writeMessage('  skipped a new download of '+d)
         else :
           NBlogMessages.writeMessage('  Skipped a new download into '+thirdPartyBaseDir)
-
+          # but we still need to test for building binaries even if we already
+          # got the ThirdParty code
+          buildThirdParty  = True
+          for d in THIRD_PARTY_DIRECTORIES :
+            if d=='.svn' : continue
+            thirdPartyDir=os.path.join(thirdPartyBaseDir,d)
+            if not os.path.isdir(thirdPartyDir) : continue
+            # everything okay if we skip this project
+            if 'SkipProjects' in configuration :
+              if d not in configuration['SkipProjects']  and d not in ThirdPartyAllowed  :
+                NBlogMessages.writeMessage('warning: we cannot build a binary distribution because of: ' + d)
+                buildThirdParty  = False
+            else :
+              if d not in ThirdPartyAllowed   :
+                NBlogMessages.writeMessage('warning: we cannot build a binary distribution because of: ' + d)
+          #
+          #
     
   #---------------------------------------------------------------------
   # Create the build directory if it doesn't exist
@@ -552,34 +584,36 @@ def run(configuration) :
 
 
   #only do this if we have valgrind
-  result=NBosCommand.run( "valgrind --help" )
-  if result['returnCode'] == 0 :
-    if configuration['buildMethod']=='unixConfig' :
-      if "valgrind" in configuration :
-        for t in range( len(configuration['valgrind']) ) :
-          valgrindRelDir=configuration['valgrind'][t]['dir']
-          valgrindDir = os.path.join(fullBuildDir, valgrindRelDir)
-          valgrindCmd=configuration['valgrind'][t]['cmd']
-          if not os.path.isdir( valgrindDir) :
-            NBlogMessages.writeMessage('  Directory to run valgrind on unitTest from does not exist:')
-            NBlogMessages.writeMessage('    fullBuild directory: ' + fullBuildDir)
-            NBlogMessages.writeMessage('    Intended directory: ' + valgrindDir)
-            NBlogMessages.writeMessage('    Intended command: ' + valgrindCmd)
-            continue
-          os.chdir( valgrindDir)
-          NBlogMessages.writeMessage('  cd ' + valgrindDir)
-          NBlogMessages.writeMessage( '  ' + valgrindCmd )
-          commandHistory+=[ valgrindCmd ]
-          result = NBosCommand.run(valgrindCmd)
-          writeResults(result, valgrindCmd)
-          result['svn version']=configuration['svnVersion']
-          result['command history'] = commandHistory
-          NBemail.sendCmdMsgs(configuration['project'], result, valgrindCmd)
-          #if result['returnCode'] != 0 :
-          #    result['svn version']=configuration['svnVersion']
-          #    result['command history'] = commandHistory
-          #    NBemail.sendCmdMsgs(configuration['project'], result, valgrindCmd)
-          #    return
+  if VALGRIND_TEST == True :
+    #check to make sure valgrind is reaally there
+    result=NBosCommand.run( "valgrind --help" )
+    if result['returnCode'] == 0 :
+      if configuration['buildMethod']=='unixConfig' :
+        if "valgrind" in configuration :
+          for t in range( len(configuration['valgrind']) ) :
+            valgrindRelDir=configuration['valgrind'][t]['dir']
+            valgrindDir = os.path.join(fullBuildDir, valgrindRelDir)
+            valgrindCmd=configuration['valgrind'][t]['cmd']
+            if not os.path.isdir( valgrindDir) :
+              NBlogMessages.writeMessage('  Directory to run valgrind on unitTest from does not exist:')
+              NBlogMessages.writeMessage('    fullBuild directory: ' + fullBuildDir)
+              NBlogMessages.writeMessage('    Intended directory: ' + valgrindDir)
+              NBlogMessages.writeMessage('    Intended command: ' + valgrindCmd)
+              continue
+            os.chdir( valgrindDir)
+            NBlogMessages.writeMessage('  cd ' + valgrindDir)
+            NBlogMessages.writeMessage( '  ' + valgrindCmd )
+            commandHistory+=[ valgrindCmd ]
+            result = NBosCommand.run(valgrindCmd)
+            writeResults(result, valgrindCmd)
+            result['svn version']=configuration['svnVersion']
+            result['command history'] = commandHistory
+            NBemail.sendCmdMsgs(configuration['project'], result, valgrindCmd)
+            #if result['returnCode'] != 0 :
+            #    result['svn version']=configuration['svnVersion']
+            #    result['command history'] = commandHistory
+            #    NBemail.sendCmdMsgs(configuration['project'], result, valgrindCmd)
+            #    return
 
   
 
@@ -634,11 +668,22 @@ def run(configuration) :
               directories +=  " include "
 
             # if the examples directory is there, add it
-            examplesDir =  os.path.join(projectBaseDir, 'examples')
-            NBlogMessages.writeMessage(' project Base Directory is ' + projectBaseDir)
+            examplesDir = projectCheckOutDir
+            
+
+            examplesDir = os.path.join(projectCheckOutDir, configuration['project'], 'examples')
+            print examplesDir
             NBlogMessages.writeMessage(' project Examples Directory is ' + examplesDir)
+            # copy the examples directory
             if os.path.isdir( examplesDir) == True :
-              directories +=  examplesDir
+              NBlogMessages.writeMessage(' copy ' + examplesDir + ' to examples')
+              copyCmd = 'cp -r '
+              copyCmd  += examplesDir
+              copyCmd += ' examples'
+              result = NBosCommand.run( copyCmd)
+              writeResults(result, copyCmd)
+              commandHistory+=[ copyCmd ]
+              if os.path.isdir( 'examples') == True :  directories +=  " examples"
 
             # if the bin directory is there, add it
             if os.path.isdir( "bin") == True :
@@ -647,8 +692,6 @@ def run(configuration) :
             # if the share directory is there, add it
             if os.path.isdir( "share") == True :
               directories +=  " share "
-
-
 
             #if the directory that stores the binaries is not there create it
             binariesDir=os.path.join(projectBaseDir,"binaries")
@@ -668,7 +711,7 @@ def run(configuration) :
             
             # tar it up
             # buidDir should be name of tar file -- make unique
-            tarCmd = "tar -czvf "
+            tarCmd = 'tar  --exclude=.svn -czvf   '
             #do something better with tar file name
             buildInfo = ''
             if len(BUILD_INFORMATION) > 0 : buildInfo = '-' + BUILD_INFORMATION 
@@ -680,12 +723,19 @@ def run(configuration) :
             commandHistory+=[ tarCmd ]
             result=NBosCommand.run( tarCmd)
             writeResults(result, tarCmd)
+            #delete the examples directory
+            if os.path.isdir( 'examples') == True :
+              rmDirCmd = 'rm -rf '
+              rmDirCmd += 'examples'
+              NBosCommand.run( rmDirCmd)
+              commandHistory += [ rmDirCmd]
             if result['returnCode'] != 0 :
                 result['svn version']=configuration['svnVersion']
                 # figure out what tarResultFail should be
                 #result['tar']=tarResultFail
                 result['command history']=commandHistory
                 NBemail.sendCmdMsgs(configuration['project'],result,  tarCmd)
+                writeResults(result, tarCmd)
                 return
 
   
