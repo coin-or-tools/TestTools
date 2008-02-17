@@ -668,9 +668,6 @@ def run(configuration) :
               directories +=  " include "
 
             # if the examples directory is there, add it
-            examplesDir = projectCheckOutDir
-            
-
             examplesDir = os.path.join(projectCheckOutDir, configuration['project'], 'examples')
             print examplesDir
             NBlogMessages.writeMessage(' project Examples Directory is ' + examplesDir)
@@ -684,7 +681,30 @@ def run(configuration) :
               writeResults(result, copyCmd)
               commandHistory+=[ copyCmd ]
               if os.path.isdir( 'examples') == True :  directories +=  " examples"
+            ##
+            # now get the makefiles
+            examplesMakefileDir = os.path.join(fullBuildDir, configuration['project'], 'examples')
+            print examplesMakefileDir
+            NBlogMessages.writeMessage(' project Examples Makefile Directory is ' + examplesMakefileDir)
+            # copy the examples directory
+            if os.path.isdir( examplesMakefileDir) == True :
+              NBlogMessages.writeMessage(' copy ' + examplesMakefileDir + ' to examplesMakefiles')
+              copyCmd = 'cp -r '
+              copyCmd  += examplesMakefileDir
+              copyCmd += ' examplesMakefiles'
+              result = NBosCommand.run( copyCmd)
+              writeResults(result, copyCmd)
+              commandHistory+=[ copyCmd ]
+              if os.path.isdir( 'examplesMakefiles') == True :  directories +=  " examplesMakefiles"
 
+
+
+
+              
+
+              
+            # done with examples directory
+            #
             # if the bin directory is there, add it
             if os.path.isdir( "bin") == True :
               directories +=  " bin "
@@ -727,6 +747,12 @@ def run(configuration) :
             if os.path.isdir( 'examples') == True :
               rmDirCmd = 'rm -rf '
               rmDirCmd += 'examples'
+              NBosCommand.run( rmDirCmd)
+              commandHistory += [ rmDirCmd]
+            #delete the examplesMakefiles directory
+            if os.path.isdir( 'examplesMakefiles') == True :
+              rmDirCmd = 'rm -rf '
+              rmDirCmd += 'examplesMakefiles'
               NBosCommand.run( rmDirCmd)
               commandHistory += [ rmDirCmd]
             if result['returnCode'] != 0 :
