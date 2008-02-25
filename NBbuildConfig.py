@@ -317,11 +317,11 @@ def run(configuration) :
             THIRD_PARTY_DIRECTORIES.append(thirdPartyBaseDir)
             if 'SkipProjects' in configuration :
               if d not in configuration['SkipProjects']  and d not in ThirdPartyAllowed  :
-                NBlogMessages.writeMessage('warning: we cannot build a binary distribution because of: ' + d)
+                NBlogMessages.writeMessage('  Warning: we cannot build a binary distribution because of: ' + d)
                 buildThirdParty  = False
             else :
               if d not in ThirdPartyAllowed   :
-                NBlogMessages.writeMessage('warning: we cannot build a binary distribution because of: ' + d)
+                NBlogMessages.writeMessage('  Warning: we cannot build a binary distribution because of: ' + d)
                 buildThirdParty  = False        
             install3rdPartyCmd=os.path.join(".","get."+d)
             os.chdir(thirdPartyDir)
@@ -344,7 +344,7 @@ def run(configuration) :
                   install3rdPartyCmd = "sh -c " + "'" +   install3rdPartyCmd    +  "'"
                 installReturn = NBosCommand.run(install3rdPartyCmd)
                 if installReturn['returnCode'] :
-                  NBlogMessages.writeMessage('  warning: Install of 3rd party code in '+thirdPartyDir+' returned '+str(installReturn['returnCode']))
+                  NBlogMessages.writeMessage('  Warning: Install of 3rd party code in '+thirdPartyDir+' returned '+str(installReturn['returnCode']))
                 else :
                   f=open('NBinstalldone','w')
                   f.close()
@@ -363,11 +363,11 @@ def run(configuration) :
             # everything okay if we skip this project
             if 'SkipProjects' in configuration :
               if d not in configuration['SkipProjects']  and d not in ThirdPartyAllowed  :
-                NBlogMessages.writeMessage('warning: we cannot build a binary distribution because of: ' + d)
+                NBlogMessages.writeMessage('  Warning: we cannot build a binary distribution because of: ' + d)
                 buildThirdParty  = False
             else :
               if d not in ThirdPartyAllowed   :
-                NBlogMessages.writeMessage('warning: we cannot build a binary distribution because of: ' + d)
+                NBlogMessages.writeMessage('  Warning: we cannot build a binary distribution because of: ' + d)
           #
           #
     

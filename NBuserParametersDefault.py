@@ -333,4 +333,4 @@ VALGRIND_TEST = False
 # in the binary distribution
 #----------------------------------------------------------------------
 
-ThirdPartyAllowed = ['ASL', 'Blas', 'Lapack', 'Mumps']
+ThirdPartyAllowed = ['ASL', 'Blas', 'Lapack', 'Mumps', 'GAMSIO']

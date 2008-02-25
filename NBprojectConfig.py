@@ -333,7 +333,7 @@ SLN_BLD_TEST['OS']=[
 PROJECT_EMAIL_ADDRS['LaGO'] = 'stefan _AT_ math _DOT_ hu-berlin _DOT_ de'
 CFG_BLD_TEST['LaGO']=[
                   {'dir':'',
-                   'cmd': MAKECMD+' test',
+                   'cmd': MAKECMD+' install'+MAKECMD+'gams-install'+MAKECMD+' test',
                    'check':[ NBcheckResult.rc0 ] } ]
 
 CFG_BLD_INSTALL['LaGO']=[
