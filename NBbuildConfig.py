@@ -163,7 +163,8 @@ def run(configuration) :
     else:
       buildDir+=configuration['configOptions']['unique']
     if 'SkipProjects' in configuration :
-      buildDir+="No"+configuration['SkipProjects']
+      for d in configuration['SkipProjects'] :
+        buildDir+="No"+d
     if 'noThirdParty' in configuration : 
       if configuration['noThirdParty'] :
         buildDir+='-NoThirdParty'
@@ -316,7 +317,8 @@ def run(configuration) :
             # everything okay if we skip this project
             THIRD_PARTY_DIRECTORIES.append(thirdPartyBaseDir)
             if 'SkipProjects' in configuration :
-              if d not in configuration['SkipProjects']  and d not in ThirdPartyAllowed  :
+              dlong = 'ThirdParty/'+d
+              if dlong not in configuration['SkipProjects']  and d not in ThirdPartyAllowed  :
                 NBlogMessages.writeMessage('  Warning: we cannot build a binary distribution because of: ' + d)
                 buildThirdParty  = False
             else :
@@ -362,7 +364,8 @@ def run(configuration) :
             if not os.path.isdir(thirdPartyDir) : continue
             # everything okay if we skip this project
             if 'SkipProjects' in configuration :
-              if d not in configuration['SkipProjects']  and d not in ThirdPartyAllowed  :
+              dlong = 'ThirdParty/'+d
+              if dlong not in configuration['SkipProjects']  and d not in ThirdPartyAllowed  :
                 NBlogMessages.writeMessage('  Warning: we cannot build a binary distribution because of: ' + d)
                 buildThirdParty  = False
             else :
@@ -384,7 +387,8 @@ def run(configuration) :
     skipOptions=''
 
     if 'SkipProjects' in configuration :
-      skipOptions+=configuration['SkipProjects']
+      for d in configuration['SkipProjects'] :
+        skipOptions+=d
 
     # If needed create option for skipping 3rd party code
     needSkip3PartySkipOptions=False
