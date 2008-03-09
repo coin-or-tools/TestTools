@@ -388,7 +388,7 @@ def run(configuration) :
 
     if 'SkipProjects' in configuration :
       for d in configuration['SkipProjects'] :
-        skipOptions+=d
+        skipOptions+=' '+d
 
     # If needed create option for skipping 3rd party code
     needSkip3PartySkipOptions=False
