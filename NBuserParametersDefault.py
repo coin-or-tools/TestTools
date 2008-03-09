@@ -96,6 +96,12 @@ PROJECTS = ['CoinUtils','Clp','Osi','DyLP','SYMPHONY','Vol','Cgl','Cbc','Smi','F
 #    The example indicates that the build configurations specified
 #    for CoinUtils are to be used for building.
 #
+#  'SkipProjects': Give a list of external projects that are skipped
+#    by the corresponding build. This list of projects is added to the
+#    COIN_SKIP_PROJECTS variable of the configure call.
+#    Example: ['Ipopt', 'ThirdParty/HSL']
+#    Note, that you need to use brackets "[ ]" here, not parantheses "( )".
+#
 #----------------------------------------------------------------------
 BUILDS = {
    #'DefaultProject'   : 
@@ -180,10 +186,10 @@ BUILDS = {
    'OS' :
      [ 
        { 'Reference' : 'Ipopt' } 
-     #,{ 'SvnVersion': 'trunk',        'OptLevel': 'Default', 'ThirdParty': 'No', 'SkipProjects': ('Ipopt') } 
-     #,{ 'SvnVersion': 'trunk',        'OptLevel': 'Debug',   'ThirdParty': 'No', 'SkipProjects': ('Ipopt') } 
-     #,{ 'SvnVersion': 'latestStable', 'OptLevel': 'Default', 'ThirdParty': 'No', 'SkipProjects': ('Ipopt') } 
-     #,{ 'SvnVersion': 'latestRelease','OptLevel': 'Default', 'ThirdParty': 'No', 'SkipProjects': ('Ipopt') } 
+     #,{ 'SvnVersion': 'trunk',        'OptLevel': 'Default', 'ThirdParty': 'No', 'SkipProjects': ['Ipopt'] } 
+     #,{ 'SvnVersion': 'trunk',        'OptLevel': 'Debug',   'ThirdParty': 'No', 'SkipProjects': ['Ipopt'] } 
+     #,{ 'SvnVersion': 'latestStable', 'OptLevel': 'Default', 'ThirdParty': 'No', 'SkipProjects': ['Ipopt'] } 
+     #,{ 'SvnVersion': 'latestRelease','OptLevel': 'Default', 'ThirdParty': 'No', 'SkipProjects': ['Ipopt'] } 
      ],
    'CppAD' : 
      [ 
