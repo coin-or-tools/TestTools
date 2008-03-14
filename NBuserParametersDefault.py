@@ -198,10 +198,6 @@ BUILDS = {
      #,{ 'SvnVersion': 'latestStable', 'OptLevel': 'Default', 'ThirdParty': 'No', 'AdditionalConfigOptions':'--with-Example --with-TestMore' } 
      #,{ 'SvnVersion': 'latestRelease','OptLevel': 'Default', 'ThirdParty': 'No', 'AdditionalConfigOptions':'--with-Example --with-TestMore' } 
      ],
-   'Smi' : 
-     [ 
-       { 'Reference' : 'CoinUtils' }
-     ],
    'GAMSlinks' : 
      [ 
        { 'Reference' : 'Ipopt' }
