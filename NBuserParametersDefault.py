@@ -1,6 +1,6 @@
 #------------------------------------------------------------------------
 # This file is distributed under the Common Public License.
-# It is part of the BuildTools project in COIN-OR (www.coin-or.org)
+# It is part of the TestTools project in COIN-OR (www.coin-or.org)
 #------------------------------------------------------------------------
 
 #----------------------------------------------------------------------
@@ -39,8 +39,8 @@ PROJECTS = ['CoinUtils','Clp','Osi','DyLP','SYMPHONY','Vol','Cgl','Cbc','Smi','F
 # attempt to install the solver links in your GAMS system before testing.
 # Finally, GAMSlinks builds only on some selected platforms, see website.
 # Windows is very likely to fail.
-# Adding -DDISALLOW_PRINTING to the CXXFLAGS truns off printing to stdout in Cbc.
-# It might be required to pass the tests. 
+# Adding -DDISALLOW_PRINTING to the CXXFLAGS truns off printing to
+# stdout in Cbc. It might be required to pass the tests. 
 #----------------------------------------------------------------------
 
 #PROJECTS.append('GAMSlinks')
@@ -100,7 +100,7 @@ PROJECTS = ['CoinUtils','Clp','Osi','DyLP','SYMPHONY','Vol','Cgl','Cbc','Smi','F
 #    by the corresponding build. This list of projects is added to the
 #    COIN_SKIP_PROJECTS variable of the configure call.
 #    Example: ['Ipopt', 'ThirdParty/HSL']
-#    Note, that you need to use brackets "[ ]" here, not parantheses "( )".
+#    Note, that you need to use brackets "[ ]" here, not parentheses "( )".
 #
 #----------------------------------------------------------------------
 BUILDS = {
@@ -116,7 +116,7 @@ BUILDS = {
      #,{ 'SvnVersion': 'latestStable',  'OptLevel': 'Default', 'ThirdParty': 'No' } 
      #,{ 'SvnVersion': 'latestStable',  'OptLevel': 'Debug',   'ThirdParty': 'No' } 
      #,{ 'SvnVersion': 'latestRelease', 'OptLevel': 'Default', 'ThirdParty': 'No' }  
-     #,{ 'SvnVersion': 'latestRelease', 'OptLevel': 'Debug', 'ThirdParty': 'No' } 
+     #,{ 'SvnVersion': 'latestRelease', 'OptLevel': 'Debug',   'ThirdParty': 'No' } 
      ],
    'Osi' : 
      [ 
@@ -325,7 +325,7 @@ SVN_UPDATE_TRIALS = 1
 
 #----------------------------------------------------------------------
 # In Linux you may wish to run valgrind to check for memory leaks.
-# This feature if off by default
+# This feature is off by default
 #----------------------------------------------------------------------
 
 VALGRIND_TEST = False

@@ -2,7 +2,7 @@
 
 #------------------------------------------------------------------------
 # This file is distributed under the Common Public License.
-# It is part of the BuildTools project in COIN-OR (www.coin-or.org)
+# It is part of the TestTools project in COIN-OR (www.coin-or.org)
 #------------------------------------------------------------------------
 
 import os
@@ -20,14 +20,6 @@ import NBbuildConfig
 
 execfile('NBuserParametersDefault.py')
 execfile('NBuserParameters.py')
-
-
-
-
-
-# TODO:
-#   -Get config style build working on Windows
-
 
 #------------------------------------------------------------------------
 #  Main Program Starts Here
@@ -205,7 +197,6 @@ for p in PROJECTS :
         # No test commands so remove from configuration
         configuration.pop('test')
         
-      #kipp add
       #---------------------------------------------------------------------
       # Set up install executables
       #---------------------------------------------------------------------

@@ -1,19 +1,20 @@
 INSTALL for NightlyBuild
 
 To adapt NightlyBuild for your system, it is proposed to follow the following steps:
-Copy the file NBuserParametersDefault.py to the file NBuserParameters.ny and adapt it to your preferences.
+Copy the file NBuserParametersDefault.py to the file NBuserParameters.py and adapt it to your preferences.
 The NightlyBuild system executes first NBuserParametersDefault.py to get default values for all parameters.
-Afterwards NBuserParameters.ny is executed to overwrite parameter values with user-specific ones.
-In NBuserParameters.ny you can specify:
+Afterwards NBuserParameters.py is executed to overwrite parameter values with user-specific ones.
+In NBuserParameters.py you can specify:
 - the directory where the projects will be downloaded and built
 - the list of projects to built
-- the build types to built
+- the build types (optimized, debug, extra configure flags, ...) to built
 - additional flags for the configure call that might be specific to your system (compiler setting,...)
 - the name of a file where logging messages should go to
 - information about the sending of email, e.g., should emails be send, your mail address, SMTP server, ...
 
-Please read the comments in NBuserParametersDefault.ny about detailed information which settings can be made and how they are specified.
+Please read the comments in NBuserParametersDefault.py about detailed information which settings can be made and how they are specified.
 To get things running properly, you will need to specify at least information about the sending of emails.
+
 
 To build on Windows using the Microsoft compiler and the COIN-OR project supplied solution
 files (.sln) the following hints may be useful:
@@ -24,17 +25,16 @@ files (.sln) the following hints may be useful:
 - The environment variables for accessing the microsoft compiler must be setup.
   Microsoft provides a script to do this:
   Microsoft Visual Studio 8\Common7\Tools\vsvars32.bat
-- The LIB environment variable needs to be set to the location of some MS provided
-  libraries.  The following commands have been used to achieve this:
+- The LIB environment variable needs to be set to the location of some MS provided libraries.
+  The following commands have been used to achieve this:
   set LIB=E:\Microsoft Platform SDK for Windows Server 2003 R2\Lib
   set LIB=E:\Microsoft Visual Studio 8\VC\lib;%LIB%
-- To build OS, the INCLUDE environment variable needs to be set to the location of some MS provided
-  headers.  The following commands have been used to achieve this:
+- To build OS, the INCLUDE environment variable needs to be set to the location of some MS provided headers.
+  The following commands have been used to achieve this:
   set INCLUDE=E:\Microsoft Platform SDK for Windows Server 2003 R2\Include;%INCLUDE%
 
 
-- A summary of the commands that have worked to start nightlyBuild for a DOS window
-  are:
+- A summary of the commands that have worked to start nightlyBuild for a DOS window are:
     "E:\Microsoft Visual Studio 8\Common7\Tools\vsvars32.bat"
     set LIB=E:\Microsoft Platform SDK for Windows Server 2003 R2\Lib
     set LIB=E:\Microsoft Visual Studio 8\VC\lib;%LIB%

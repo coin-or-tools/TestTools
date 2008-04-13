@@ -2,7 +2,7 @@
 
 #------------------------------------------------------------------------
 # This file is distributed under the Common Public License.
-# It is part of the BuildTools project in COIN-OR (www.coin-or.org)
+# It is part of the TestTools project in COIN-OR (www.coin-or.org)
 #------------------------------------------------------------------------
 
 import re 
