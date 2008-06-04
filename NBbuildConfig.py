@@ -116,7 +116,6 @@ def writeResults(result,filenameSuffix) :
 #  
 #  configuration['SkipProjects']= List of COIN projects to skip (exclude)
 #    from the build.
-#    examples: "Ipopt", "Ipopt DyLP"
 #
 #  configuration['slnFile']= path and name of solution file if it is not
 #    in the standard location.
@@ -729,7 +728,7 @@ def run(configuration) :
             tarCmd = 'tar  --exclude=.svn -czvf   '
 
             tarFileName  = configuration['project'] 
-            tarFileName += "-"+svnVersionFlattened
+            tarFileName += "-"+svnVersionFlattened.replace('releases-','').replace('stable-','')
             if 'buildTypeInfo' in configuration and len(configuration['buildTypeInfo']) > 0 :
               tarFileName += "-"+configuration['buildTypeInfo']
             if len(BUILD_INFORMATION) > 0 :
