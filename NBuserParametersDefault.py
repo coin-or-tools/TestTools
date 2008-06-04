@@ -71,7 +71,12 @@ PROJECTS = ['CoinUtils','Clp','Osi','DyLP','SYMPHONY','Vol','Cgl','Cbc','Smi','F
 #    for the CoinBinary repository.
 #    Further, you should fill in BUILD_INFORMATION (see below). 
 #
-#  'AdditionConfigOptions': This provides the ability to specify an
+#  BuildTypeInfo: A string describing the current build types.
+#    This string is used as part of the archive name that is created if
+#    BUILD_BINARIES is on. It should be used to distinguish several builds
+#    of the same svn version.    
+#
+#  AdditionConfigOptions: This provides the ability to specify an
 #    additional './configure' option to be applied to this specific build.
 #    CONFIGURE_FLAGS can be set if one wants to specify addtional configure
 #    options to all builds.
@@ -79,7 +84,7 @@ PROJECTS = ['CoinUtils','Clp','Osi','DyLP','SYMPHONY','Vol','Cgl','Cbc','Smi','F
 #    This is ignored on windows when building with MS compiler solution file
 #    because configure is not run.
 #
-#  'Run' : 'always', 'noSuccessOrAfterChange', 'afterChange'
+#  Run : 'always', 'noSuccessOrAfterChange', 'afterChange'
 #    This specifies when a specific configuration will be run.
 #    nightlyBuild can determine if the source code has been updated
 #    since the last run. nightlyBuild also records when a run 
@@ -96,13 +101,13 @@ PROJECTS = ['CoinUtils','Clp','Osi','DyLP','SYMPHONY','Vol','Cgl','Cbc','Smi','F
 #              point in repeating a known failure unless a possible
 #              fix has been committed to svn.
 #
-#  'Reference': This specifies that the build is to be done in the way
+#  Reference: This specifies that the build is to be done in the way
 #    of the referenced name.
 #    Example: 'CoinUtils'
 #    The example indicates that the build configurations specified
 #    for CoinUtils are to be used for building.
 #
-#  'SkipProjects': Give a list of external projects that are skipped
+#  SkipProjects: Give a list of external projects that are skipped
 #    by the corresponding build. This list of projects is added to the
 #    COIN_SKIP_PROJECTS variable of the configure call.
 #    Example: ['Ipopt', 'ThirdParty/HSL']
@@ -179,7 +184,7 @@ BUILDS = {
    'CoinAll' :
      [
        { 'SvnVersion': 'trunk', 'OptLevel': 'Default', 'ThirdParty':'Yes', 'Distribute': 'No' },
-       { 'SvnVersion': 'trunk', 'OptLevel': 'Debug',   'ThirdParty':'Yes', 'Distribute': 'No' }
+       { 'SvnVersion': 'trunk', 'OptLevel': 'Debug',   'ThirdParty':'Yes', 'Distribute': 'No', 'BuildTypeInfo' : 'debug' }
      ],
    'LaGO' :
      [
