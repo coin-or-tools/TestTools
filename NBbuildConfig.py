@@ -786,6 +786,12 @@ def run(configuration) :
               svnAddCmd = 'svn add "'+os.path.join(distributeDirectory,tarFileName)+'"'
               commandHistory+=[ svnAddCmd ]
               svnResult=NBsvnCommand.run(svnAddCmd,'.',configuration['project'])
+              if svnResult['returnCode'] != 0 and svnResult['stderr'].find('has binary mime type property')<0:
+                return
+              #set mime type to binary so that there is no confusion about endlines
+              svnPropsetCmd = 'svn propset svn:mime-type application/octet-stream "'+os.path.join(distributeDirectory,tarFileName)+'"'
+              commandHistory+=[ svnPropsetCmd ]
+              svnResult=NBsvnCommand.run(svnPropsetCmd,'.',configuration['project'])
               if svnResult['returnCode'] != 0 :
                 return
               #commit repository

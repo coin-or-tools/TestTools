@@ -27,8 +27,9 @@ execfile('NBuserParameters.py')
 #          return['returnCode'] is the return code of svn
 #------------------------------------------------------------------------
 def run(svnCmd,dir,project) :
-  os.chdir(dir)
-  NBlogMessages.writeMessage('  cd '+dir)
+  if dir != '.' :
+    os.chdir(dir)
+    NBlogMessages.writeMessage('  cd '+dir)
   NBlogMessages.writeMessage('  '+svnCmd)
 # result = NBosCommand.run(svnCmd)
 
@@ -36,9 +37,13 @@ def run(svnCmd,dir,project) :
   for i in range(1, SVN_UPDATE_TRIALS + 1):
     result = NBosCommand.run(svnCmd)
     if result['returnCode'] == 0 : return result
-# if we are here we did not do a successful update
+    
+# if we are here something went wrong
 
-  if result['returnCode'] != 0 :
+  # we do not send a mail if svn add reported "has binary mime type property"
+  # this is a stupid work around that works only if svn add was supposed to add only one binary file
+  # this binary file usually still gets added
+  if result['returnCode'] != 0 and result['stderr'].find('has binary mime type property')<0:
    NBemail.sendCmdMsgs(project,result,svnCmd)
   return result
 

@@ -209,7 +209,9 @@ for p in PROJECTS :
         
       if 'buildTypeInfo' in configuration :
         configuration.pop('buildTypeInfo')
-      if 'buildTypeInfo' in bc :
+      if 'BuildTypeInfo' in bc :
+        configuration['buildTypeInfo'] = bc['BuildTypeInfo']
+      elif 'buildTypeInfo' in bc :
         configuration['buildTypeInfo'] = bc['buildTypeInfo']
 
       #---------------------------------------------------------------------
