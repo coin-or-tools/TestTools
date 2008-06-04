@@ -673,8 +673,7 @@ def run(configuration) :
 
             # if the examples directory is there, add it
             examplesDir = os.path.join(projectCheckOutDir, configuration['project'], 'examples')
-            print examplesDir
-            NBlogMessages.writeMessage(' project Examples Directory is ' + examplesDir)
+            NBlogMessages.writeMessage('  Examples Directory is ' + examplesDir)
             # copy the examples directory
             if os.path.isdir( examplesDir) == True :
               NBlogMessages.writeMessage(' copy ' + examplesDir + ' to examples')
@@ -688,8 +687,7 @@ def run(configuration) :
             ##
             # now get the makefiles
             examplesMakefileDir = os.path.join(fullBuildDir, configuration['project'], 'examples')
-            print examplesMakefileDir
-            NBlogMessages.writeMessage(' project Examples Makefile Directory is ' + examplesMakefileDir)
+            NBlogMessages.writeMessage('  Examples Makefile Directory is ' + examplesMakefileDir)
             # copy the examples directory
             if os.path.isdir( examplesMakefileDir) == True :
               NBlogMessages.writeMessage(' copy ' + examplesMakefileDir + ' to examplesMakefiles')
@@ -700,15 +698,8 @@ def run(configuration) :
               writeResults(result, copyCmd)
               commandHistory+=[ copyCmd ]
               if os.path.isdir( 'examplesMakefiles') == True :  directories +=  " examplesMakefiles"
-
-
-
-
-              
-
-              
             # done with examples directory
-            #
+
             # if the bin directory is there, add it
             if os.path.isdir( "bin") == True :
               directories +=  " bin "
@@ -723,9 +714,9 @@ def run(configuration) :
             if not os.path.isdir( binariesDir ) :
               os.makedirs( binariesDir )
 
-            #configuration['project']
-            outputDirectory = os.path.join(binariesDir, configuration['project'])
-            print outputDirectory
+#            outputDirectory = os.path.join(binariesDir, configuration['project'])
+            outputDirectory = binariesDir
+#            print outputDirectory
 
 
             if not os.path.isdir( outputDirectory) :
@@ -738,8 +729,8 @@ def run(configuration) :
             tarCmd = 'tar  --exclude=.svn -czvf   '
             #do something better with tar file name
             buildInfo = ''
-            if len(BUILD_INFORMATION) > 0 : buildInfo = '-' + BUILD_INFORMATION 
-            tarFileName =   configuration['project'] + "-" + buildDir + "-" + sys.platform + buildInfo +".tgz"
+            if len(BUILD_INFORMATION) > 0 : buildInfo = BUILD_INFORMATION 
+            tarFileName =   configuration['project'] + "-" + buildDir + "-" + buildInfo +".tgz"
             tarCmd += os.path.join(outputDirectory, tarFileName)
             tarCmd += directories
 
@@ -751,22 +742,62 @@ def run(configuration) :
             if os.path.isdir( 'examples') == True :
               rmDirCmd = 'rm -rf '
               rmDirCmd += 'examples'
-              NBosCommand.run( rmDirCmd)
               commandHistory += [ rmDirCmd]
+              NBosCommand.run( rmDirCmd)
             #delete the examplesMakefiles directory
             if os.path.isdir( 'examplesMakefiles') == True :
               rmDirCmd = 'rm -rf '
               rmDirCmd += 'examplesMakefiles'
-              NBosCommand.run( rmDirCmd)
               commandHistory += [ rmDirCmd]
+              NBosCommand.run( rmDirCmd)
             if result['returnCode'] != 0 :
-                result['svn version']=configuration['svnVersion']
-                # figure out what tarResultFail should be
-                #result['tar']=tarResultFail
-                result['command history']=commandHistory
-                NBemail.sendCmdMsgs(configuration['project'],result,  tarCmd)
-                writeResults(result, tarCmd)
+              result['svn version']=configuration['svnVersion']
+              # figure out what tarResultFail should be
+              #result['tar']=tarResultFail
+              result['command history']=commandHistory
+              NBemail.sendCmdMsgs(configuration['project'],result,  tarCmd)
+              writeResults(result, tarCmd)
+              return
+            
+            # upload tar file to CoinBinary server
+            if configuration['Distribute'] == True :
+              #checkout/update binary directory from CoinBinary server
+              distributeDirectory = os.path.join(projectBaseDir,"distribute")
+              svnCheckoutCmd = 'svn checkout https://projects.coin-or.org/svn/CoinBinary/binary/'+configuration['project']+' '+distributeDirectory
+              commandHistory+=[ svnCheckoutCmd ]
+              svnResult=NBsvnCommand.run(svnCheckoutCmd,'.',configuration['project'])
+              if svnResult['returnCode'] != 0 :
                 return
+              #put tar file into distribution directory
+              copyCmd = 'cp -f "'+os.path.join(outputDirectory, tarFileName)+'" "'+distributeDirectory+'"'
+              commandHistory += [ copyCmd ]
+              result = NBosCommand.run( copyCmd)
+              if result['returnCode'] != 0 :
+                result['svn version'] = configuration['svnVersion']
+                result['command history'] = commandHistory
+                NBemail.sendCmdMsgs(configuration['project'], result, copyCmd)
+                writeResults(result, copyCmd)
+                return
+              #add tar file to repository (should just happen nothing if already existing in repo)
+              svnAddCmd = 'svn add "'+os.path.join(distributeDirectory,tarFileName)+'"'
+              commandHistory+=[ svnAddCmd ]
+              svnResult=NBsvnCommand.run(svnAddCmd,'.',configuration['project'])
+              if svnResult['returnCode'] != 0 :
+                return
+              #commit repository
+              svnCommitCmd =  'svn commit --non-interactive '
+              svnCommitCmd += '-m "nightlyBuild: adding or updating binary '+tarFileName+'" '
+              if len(COINBINARY_SVN_USERNAME) :
+                svnCommitCmd += '--username '+COINBINARY_SVN_USERNAME+' '
+              if len(COINBINARY_SVN_PASSWORD) :
+                svnCommitCmd += '--password '+COINBINARY_SVN_PASSWORD+' '
+              svnCommitCmd += distributeDirectory
+              if len(COINBINARY_SVN_PASSWORD)==0 :
+                commandHistory+=[ svnCommitCmd ]
+              svnResult=NBsvnCommand.run(svnCommitCmd,'.',configuration['project'])
+              if svnResult['returnCode'] != 0 :
+                return
+                
 
   
   #---------------------------------------------------------------------

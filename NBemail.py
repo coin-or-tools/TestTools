@@ -58,7 +58,8 @@ def sendCmdMsgs(project,cmdMsgs,cmd):
   curDir = os.getcwd()
 
   toAddrs = [unscrambleAddress(MY_EMAIL_ADDR)]
-  if SEND_MAIL_TO_PROJECT_MANAGER and NBprojectConfig.PROJECT_EMAIL_ADDRS.has_key(project) :
+  # do not send messages about svn failures to the project manager 
+  if cmd.find('svn ')<0 and SEND_MAIL_TO_PROJECT_MANAGER and NBprojectConfig.PROJECT_EMAIL_ADDRS.has_key(project) :
     scrambledEmailAddress=NBprojectConfig.PROJECT_EMAIL_ADDRS[project]
     unscrambledEmailAddress=unscrambleAddress(scrambledEmailAddress)
     toAddrs.append(unscrambledEmailAddress)

@@ -206,6 +206,13 @@ for p in PROJECTS :
       else :
         # No test executables so remove from configuration
         configuration.pop('install')
+        
+      #---------------------------------------------------------------------
+      # Set up distribution of binaries
+      #---------------------------------------------------------------------
+      configuration['Distribute']=False
+      if 'Distribute' in bc and bc['Distribute'].lower()=='yes' :
+        configuration['Distribute']=True
 
       #---------------------------------------------------------------------
       # Set up valgring executables

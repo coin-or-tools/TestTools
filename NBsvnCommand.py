@@ -31,18 +31,13 @@ def run(svnCmd,dir,project) :
   NBlogMessages.writeMessage('  cd '+dir)
   NBlogMessages.writeMessage('  '+svnCmd)
 # result = NBosCommand.run(svnCmd)
-###
-# START NEW CODE
+
 # sometimes it is necessary to run more than once
-#
   for i in range(1, SVN_UPDATE_TRIALS + 1):
     result = NBosCommand.run(svnCmd)
     if result['returnCode'] == 0 : return result
-#
-# END NEW CODE
 # if we are here we did not do a successful update
-#
-#
+
   if result['returnCode'] != 0 :
    NBemail.sendCmdMsgs(project,result,svnCmd)
   return result

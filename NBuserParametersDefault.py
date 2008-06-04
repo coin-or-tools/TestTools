@@ -65,6 +65,12 @@ PROJECTS = ['CoinUtils','Clp','Osi','DyLP','SYMPHONY','Vol','Cgl','Cbc','Smi','F
 #   Presently this ignored on windows when building with MS compiler 
 #   solution file because ThirdParty code is never used.
 #
+#  Distribute: 'Yes' or 'No'.  Specifies if the result of the build will be
+#    uploaded into the CoinBinary repository.
+#    You need to turn BUILD_BINARIES on for this and have writing permissions
+#    for the CoinBinary repository.
+#    Further, you should fill in BUILD_INFORMATION (see below). 
+#
 #  'AdditionConfigOptions': This provides the ability to specify an
 #    additional './configure' option to be applied to this specific build.
 #    CONFIGURE_FLAGS can be set if one wants to specify addtional configure
@@ -111,7 +117,7 @@ BUILDS = {
    #  ],
    'CoinUtils' : 
      [
-       { 'SvnVersion': 'trunk',         'OptLevel': 'Default', 'ThirdParty': 'No' } 
+       { 'SvnVersion': 'trunk',         'OptLevel': 'Default', 'ThirdParty': 'No', 'Distribute': 'No' } 
      #,{ 'SvnVersion': 'trunk',         'OptLevel': 'Debug',   'ThirdParty': 'No' } 
      #,{ 'SvnVersion': 'latestStable',  'OptLevel': 'Default', 'ThirdParty': 'No' } 
      #,{ 'SvnVersion': 'latestStable',  'OptLevel': 'Debug',   'ThirdParty': 'No' } 
@@ -164,15 +170,15 @@ BUILDS = {
      ],
    'Ipopt' : 
      [ 
-       { 'SvnVersion': 'trunk',        'OptLevel': 'Default', 'ThirdParty':'Yes' }
+       { 'SvnVersion': 'trunk',        'OptLevel': 'Default', 'ThirdParty':'Yes', 'Distribute': 'No' }
      #,{ 'SvnVersion': 'trunk',        'OptLevel': 'Debug',   'ThirdParty':'Yes' }
      #,{ 'SvnVersion': 'latestStable', 'OptLevel': 'Default', 'ThirdParty':'Yes' }
      #,{ 'SvnVersion': 'latestRelease','OptLevel': 'Default', 'ThirdParty':'Yes' }
      ],
    'CoinAll' :
      [
-       { 'SvnVersion': 'trunk', 'OptLevel': 'Default', 'ThirdParty':'Yes' },
-       { 'SvnVersion': 'trunk', 'OptLevel': 'Debug',   'ThirdParty':'Yes' }
+       { 'SvnVersion': 'trunk', 'OptLevel': 'Default', 'ThirdParty':'Yes', 'Distribute': 'No' },
+       { 'SvnVersion': 'trunk', 'OptLevel': 'Debug',   'ThirdParty':'Yes', 'Distribute': 'No' }
      ],
    'LaGO' :
      [
@@ -180,7 +186,7 @@ BUILDS = {
      ],
    'Bonmin' : 
      [ 
-       { 'SvnVersion': 'trunk',        'OptLevel': 'Default', 'ThirdParty':'Yes' }
+       { 'SvnVersion': 'trunk',        'OptLevel': 'Default', 'ThirdParty':'Yes', 'Distribute': 'No' }
       #,{ 'SvnVersion': 'branches/0.9', 'OptLevel': 'Default', 'ThirdParty':'Yes' }
      ],
    'OS' :
@@ -193,12 +199,12 @@ BUILDS = {
      ],
    'CppAD' : 
      [ 
-       { 'SvnVersion': 'trunk',        'OptLevel': 'Default', 'ThirdParty': 'No', 'AdditionalConfigOptions':'--with-Example --with-TestMore' } 
+       { 'SvnVersion': 'trunk',        'OptLevel': 'Default', 'ThirdParty': 'No', 'AdditionalConfigOptions':'--with-Example --with-TestMore', 'Distribute': 'No' }
      #,{ 'SvnVersion': 'trunk',        'OptLevel': 'Debug',   'ThirdParty': 'No', 'AdditionalConfigOptions':'--with-Example --with-TestMore' } 
      #,{ 'SvnVersion': 'latestStable', 'OptLevel': 'Default', 'ThirdParty': 'No', 'AdditionalConfigOptions':'--with-Example --with-TestMore' } 
      #,{ 'SvnVersion': 'latestRelease','OptLevel': 'Default', 'ThirdParty': 'No', 'AdditionalConfigOptions':'--with-Example --with-TestMore' } 
      ],
-   'GAMSlinks' : 
+   'GAMSlinks' :
      [ 
        { 'Reference' : 'Ipopt' }
      ]
@@ -298,12 +304,21 @@ SEND_MAIL_TO_PROJECT_MANAGER = 0
 BUILD_BINARIES = 0
 
 #----------------------------------------------------------------------
-# You may wish to include compiler or other build information in the binary build name
+# You may wish to include platform, compiler, or other build information
+# in the binary build name
 # By default it is null
 #----------------------------------------------------------------------
 
 BUILD_INFORMATION = ''
 
+#----------------------------------------------------------------------
+# You may wish to specify a username and password for a svn commit
+# into the CoinBinary repository
+# By default they are null
+#----------------------------------------------------------------------
+
+COINBINARY_SVN_USERNAME = ''
+COINBINARY_SVN_PASSWORD = ''
 
 
 #----------------------------------------------------------------------

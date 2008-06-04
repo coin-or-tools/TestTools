@@ -21,6 +21,12 @@ For such a build type, NightlyBuild does
 5. Call make. If there is an error, send a failure report as e-mail and break.
 6. If the project has a test program, call make test. If there is an error, send a failure report as e-mail and break.
 7. If the project has unit tests, call the unit tests. If there is an error, send a failure report as e-mail and break.
+8. If valgrind tests are turned on and the project has a valgrind test specified, valgrind is run on this test. An e-mail with the report of this test is send out.
+9. Run make install which will put any libraries that are built into a lib directory, any executables into a bin directory and the necessary header files into an include directory. If there is an error, send a failure report as e-mail and break.
+10. If the user specifies BUILD_BINARIES = 1 then a zipped archive is created of the project libraries, binaries, and header files.
+   The string BUILD_INFORMATION is included into the name of the zipped archive. It should specify the platform and compiler.
+   The zipped archive is stored in a subdirectory NIGHTLY_BUILD_ROOT_DIR/binaries/<projectname>. 
+11. If distribution of the current build type is turned on, the zipped archive is uploaded into the CoinBinary repository.
 
 There are also rules implemented to avoid the rebuild and test of a project if there has been no change in the code since the last build.
 The failure reports contain, next to information about the build type and the system, also the output to stdout and stderr.
