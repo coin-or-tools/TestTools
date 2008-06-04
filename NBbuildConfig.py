@@ -727,10 +727,15 @@ def run(configuration) :
             # tar it up
             # buidDir should be name of tar file -- make unique
             tarCmd = 'tar  --exclude=.svn -czvf   '
-            #do something better with tar file name
-            buildInfo = ''
-            if len(BUILD_INFORMATION) > 0 : buildInfo = BUILD_INFORMATION 
-            tarFileName =   configuration['project'] + "-" + buildDir + "-" + buildInfo +".tgz"
+
+            tarFileName  = configuration['project'] 
+            tarFileName += "-"+svnVersionFlattened
+            if 'buildTypeInfo' in configuration and len(configuration['buildTypeInfo']) > 0 :
+              tarFileName += "-"+configuration['buildTypeInfo']
+            if len(BUILD_INFORMATION) > 0 :
+              tarFileName += "-"+BUILD_INFORMATION
+            tarFileName += ".tgz"
+            
             tarCmd += os.path.join(outputDirectory, tarFileName)
             tarCmd += directories
 

@@ -151,14 +151,15 @@ BUILDS = {
    'Cbc' : 
      [ 
        { 'Reference' : 'CoinUtils' } 
-
        # And build a parallel version with Third Party
-     #,{ 
-     #   'SvnVersion': 'latestStable', 
-     #   'OptLevel': 'Default', 
-     #   'ThirdParty': 'Yes', 
-     #   'AdditionalConfigOptions': '--enable-cbc-parallel' 
-     # }
+     ,{ 
+        'SvnVersion': 'latestStable', 
+        'OptLevel': 'Default', 
+        'ThirdParty': 'Yes', 
+        'AdditionalConfigOptions': '--enable-cbc-parallel',
+        'Distribute' : 'No',
+        'BuildTypeInfo': 'parallel' 
+      }
      ],
    'Smi' : 
      [ 
@@ -305,8 +306,8 @@ BUILD_BINARIES = 0
 
 #----------------------------------------------------------------------
 # You may wish to include platform, compiler, or other build information
-# in the binary build name
-# By default it is null
+# in the binary build name.
+# Example: BUILD_INFORMATION = 'linux-i386-gcc4.2'
 #----------------------------------------------------------------------
 
 BUILD_INFORMATION = ''
