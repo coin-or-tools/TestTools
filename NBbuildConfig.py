@@ -58,9 +58,10 @@ def cleanUpName(messedUpName) :
   cleanedUpName=cleanedUpName.replace("'",'')
   cleanedUpName=cleanedUpName.replace("=",'-')
   cleanedUpName=cleanedUpName.replace(":",'')
+  cleanedUpName=cleanedUpName.replace(";",'')
   cleanedUpName=cleanedUpName.replace('--enable','')
   cleanedUpName=cleanedUpName.replace('--','-')
-  return cleanedUpName
+  return cleanedUpName[:240]
 
 
 #---------------------------------------------------------------------
@@ -591,7 +592,7 @@ def run(configuration) :
     #check to make sure valgrind is reaally there
     result=NBosCommand.run( "valgrind --help" )
     if result['returnCode'] == 0 :
-      if configuration['buildMethod']=='unixConfig' :
+      if configuration['buildMethod']=='unixConfig' and configuration['configOptions']['unique'].find('--enable-debug')>=0 :
         if "valgrind" in configuration :
           for t in range( len(configuration['valgrind']) ) :
             valgrindRelDir=configuration['valgrind'][t]['dir']
@@ -605,7 +606,7 @@ def run(configuration) :
               continue
             os.chdir( valgrindDir)
             NBlogMessages.writeMessage('  cd ' + valgrindDir)
-            NBlogMessages.writeMessage( '  ' + valgrindCmd )
+            NBlogMessages.writeMessage('  ' + valgrindCmd )
             commandHistory+=[ valgrindCmd ]
             result = NBosCommand.run(valgrindCmd)
             writeResults(result, valgrindCmd)
