@@ -12,6 +12,9 @@ A build type is a tuple of information containing the
 - ThirdParty: should it be allowed to use third party codes
 - SkipProjects: a list of COIN-OR projects (from the externals) that should be skipped in the build
 - AdditionalConfigOptions: additional flags for the configure call
+- Run: whether to run after always, after changes, or if previously unsuccessful
+- Distribute: whether created binaries should be uploaded into the CoinBinary repository
+- BuildTypeInfo: an info on the build type to include into the archive file name
 
 For such a build type, NightlyBuild does
 1. Checkout the specified version from the svn repository (https://projects.coin-or.org/svn/<project>/...).
