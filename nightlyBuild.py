@@ -93,6 +93,7 @@ for p in PROJECTS :
   #------------------------------------------------------------------------
   buildConfigs = BUILDS[p]
   for bc in buildConfigs:
+    
 
     #--------------------------------------------------------------------
     # Does build reference another project's build configuration.

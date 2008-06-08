@@ -152,6 +152,11 @@ def run(configuration) :
   svnCheckOutUrl='https://projects.coin-or.org/svn/'+\
                  configuration['project']+'/'+\
                  configuration['svnVersion']
+  if configuration['project'] == 'CoinAll' :
+    svnCheckOutUrl='https://projects.coin-or.org/svn/CoinBinary/'+\
+                 configuration['project']+'/'+\
+                 configuration['svnVersion']
+
 
   buildDir=svnVersionFlattened
 
@@ -490,7 +495,6 @@ def run(configuration) :
     # end kipp
     # 
     writeResults(result,'make') 
-
     # Check if make worked
     if result['returnCode'] != 0 :
       result['configure flags']=configOptions
@@ -550,7 +554,9 @@ def run(configuration) :
   #---------------------------------------------------------------------
   # Run all test executables
   #---------------------------------------------------------------------
+  print "test for the unit test"
   if "test" in configuration :
+    print "we are going to run the unit test"
     for t in range( len(configuration['test']) ) :
       testRelDir=configuration['test'][t]['dir']
       testDir = os.path.join(fullBuildDir,testRelDir)
@@ -628,7 +634,9 @@ def run(configuration) :
 
 
   if configuration['buildMethod']=='unixConfig' or configuration['buildMethod']=='mingw':
+    print "check if we should do an intall"
     if "install" in configuration :
+      print "we should do an install"
       for t in range( len(configuration['install']) ) :
         installRelDir=configuration['install'][t]['dir']
         installDir = os.path.join(fullBuildDir, installRelDir)
@@ -650,7 +658,7 @@ def run(configuration) :
             #result['install']=installResultFail
             result['command history']=commandHistory
             NBemail.sendCmdMsgs(configuration['project'],result,installCmd)
-            return
+            #return
 
     
     #---------------------------------------------------------------------

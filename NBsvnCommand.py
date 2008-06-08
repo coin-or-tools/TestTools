@@ -73,6 +73,8 @@ def latestStableVersion(project) :
 #------------------------------------------------------------------------
 def latestReleaseVersion(project) :
   url='https://projects.coin-or.org/svn/'+project+'/releases'
+  if project == "CoinAll":
+    url = 'https://projects.coin-or.org/svn/'+'CoinBinary/'+project+'/releases'
   handle=urllib2.urlopen(url)
   html=handle.read()
   handle.close()
