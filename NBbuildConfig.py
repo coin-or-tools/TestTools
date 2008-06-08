@@ -658,7 +658,7 @@ def run(configuration) :
             #result['install']=installResultFail
             result['command history']=commandHistory
             NBemail.sendCmdMsgs(configuration['project'],result,installCmd)
-            #return
+            return
 
     
     #---------------------------------------------------------------------
