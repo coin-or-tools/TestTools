@@ -79,6 +79,12 @@ if sys.platform=='win32' :
     if result['returnCode'] == 0 : configuration['buildMethod']='mingw'
 else :
   configuration['buildMethod']='unixConfig'
+  
+valgrind_ok = False  
+if VALGRIND_TEST :
+  #check to make sure valgrind is really there
+  result=NBosCommand.run( "valgrind --help" )
+  valgrind_ok = (result['returnCode'] == 0)
 
 #------------------------------------------------------------------------
 # Loop once for each project (get code, compile & link, and test).
@@ -159,13 +165,16 @@ for p in PROJECTS :
 
       #--------------------------------------------------------------------
       # Setup usage of 3rd Party code
+      # If not specified, use the moderate setting 'allowed'
       #--------------------------------------------------------------------
-      if 'noThirdParty' in configuration: configuration.pop('noThirdParty')
+      if 'ThirdParty' in configuration: configuration.pop('ThirdParty')
       if 'ThirdParty' in bc:
-        if bc['ThirdParty'].lower()=='yes' :
-          configuration['noThirdParty']=False
-        else:
-          configuration['noThirdParty']=True
+        if bc['ThirdParty'].lower() not in ['yes', 'no', 'allowed'] :
+          print 'Error. ThirdParty entry of Build type configuration contains invalided value '+bc['ThirdParty']
+          sys.exit(1)
+        configuration['ThirdParty'] = bc['ThirdParty'].lower();
+      else :
+        bc['ThirdParty'] = 'allowed'
 
       #--------------------------------------------------------------------
       # Set config options
@@ -187,6 +196,8 @@ for p in PROJECTS :
       if 'SkipProjects' in configuration: configuration.pop('SkipProjects')
       if 'SkipProjects' in bc :
         configuration['SkipProjects']=bc['SkipProjects']
+      else :
+        configuration['SkipProjects']=[]
       
       #---------------------------------------------------------------------
       # Set up test commands
@@ -226,15 +237,15 @@ for p in PROJECTS :
       # Set up valgring executables
       # Don't bother if not in debug mode
       #---------------------------------------------------------------------
-      if bc['OptLevel'] == "Debug":
-        configuration['valgrind']={}
-        if NBprojectConfig.CFG_BLD_VALGRIND_TEST.has_key(p) :
-          configuration['valgrind']=NBprojectConfig.CFG_BLD_VALGRIND_TEST[p]
-        else :
-          # No test executables so remove from configuration
-          configuration.pop('valgrind')
-
-
+      if 'valgrind' in configuration :
+        configuration.pop('valgrind')
+      # Add valgrind test to configuration, if
+      # - valgrind is there and the user wants valgrind tests,
+      # - we build in debug mode,
+      # - we build in a unix like style, and
+      # - there is a valgrind test specified for the current project
+      if valgrind_ok and bc['OptLevel'] == "Debug" and configuration['buildMethod']=='unixConfig' and p in NBprojectConfig.CFG_BLD_VALGRIND_TEST :
+        configuration['valgrind']=NBprojectConfig.CFG_BLD_VALGRIND_TEST[p]
 
     if configuration['buildMethod']=='msSln' :
       #--------------------------------------------------------------------

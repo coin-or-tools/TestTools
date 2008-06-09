@@ -63,6 +63,28 @@ def cleanUpName(messedUpName) :
   cleanedUpName=cleanedUpName.replace('--','-')
   return cleanedUpName[:240]
 
+#---------------------------------------------------------------------
+# cleanUpThirdPartyDirs:
+# Cleans a list of thirdparty dirs by taking suspicious entries out
+#  (.svn, .OLD, and non-directory entries....).
+#---------------------------------------------------------------------
+def cleanUpThirdPartyDirs(thirdPartyBaseDir, thirdPartyDirs) :
+  for d in thirdPartyDirs[:] :
+    if d=='.svn' : 
+      thirdPartyDirs.remove(d)
+      continue
+    thirdPartyDir=os.path.join(thirdPartyBaseDir,d)
+    if not os.path.isdir(thirdPartyDir) :
+      thirdPartyDirs.remove(d)
+      continue
+    if d.endswith('.OLD') :
+      NBlogMessages.writeMessage('  removing '+d)
+      shutil.rmtree(thirdPartyDir)
+      fileToBeRemoved=os.path.join(thirdPartyDir[0:-4], 'NBinstalldone')
+      if os.path.isfile(fileToBeRemoved) :
+        os.remove(fileToBeRemoved)
+      thirdPartyDirs.remove(d)
+      continue
 
 #---------------------------------------------------------------------
 # writeResults:
@@ -161,18 +183,16 @@ def run(configuration) :
   buildDir=svnVersionFlattened
 
   if configuration['buildMethod']=='unixConfig' or configuration['buildMethod']=='mingw' :
-  
-   
     if len( configuration['configOptions']['unique']) > 150 and importedHashlib :
       buildDir += hashlib.md5( configuration['configOptions']['unique']).hexdigest()
     else:
       buildDir+=configuration['configOptions']['unique']
-    if 'SkipProjects' in configuration :
-      for d in configuration['SkipProjects'] :
-        buildDir+="No"+d
-    if 'noThirdParty' in configuration : 
-      if configuration['noThirdParty'] :
-        buildDir+='-NoThirdParty'
+    for d in configuration['SkipProjects'] :
+      buildDir+="No"+d
+    if configuration['ThirdParty']=='yes' :
+      buildDir+='-AllThirdParty'
+    if configuration['ThirdParty']=='no' :
+      buildDir+='-NoThirdParty'
     buildDir=cleanUpName(buildDir)
     if buildDir==svnVersionFlattened : buildDir+='-default'
     
@@ -290,94 +310,72 @@ def run(configuration) :
   # If there are third party apps, then get these apps
   #---------------------------------------------------------------------
   buildThirdParty = True
-  if 'noThirdParty' in configuration :
-    if not configuration['noThirdParty'] :
-      thirdPartyBaseDir=os.path.join(projectCheckOutDir,'ThirdParty')
-      if os.path.isdir(thirdPartyBaseDir) :
-        if thirdPartyBaseDir not in THIRD_PARTY_HISTORY :
-          thirdPartyDirs = os.listdir(thirdPartyBaseDir)
-          #clean up: take care of .svn, .OLD, and non-directory entries
-          for d in thirdPartyDirs[:] :
-            if d=='.svn' : 
-              thirdPartyDirs.remove(d)
-              continue
-            thirdPartyDir=os.path.join(thirdPartyBaseDir,d)
-            if not os.path.isdir(thirdPartyDir) :
-              thirdPartyDirs.remove(d)
-              continue
-            if d.endswith('.OLD') :
-              NBlogMessages.writeMessage('  removing '+d)
-              shutil.rmtree(thirdPartyDir)
-              fileToBeRemoved=os.path.join(thirdPartyDir[0:-4], 'NBinstalldone')
-              if os.path.isfile(fileToBeRemoved) :
-                os.remove(fileToBeRemoved)
-              thirdPartyDirs.remove(d)
-              continue
-            THIRD_PARTY_HISTORY.append( d)
-          for d in thirdPartyDirs :
-            if d=='.svn' : continue
-            thirdPartyDir=os.path.join(thirdPartyBaseDir,d)
-            if not os.path.isdir(thirdPartyDir) : continue
+  if 'ThirdParty' in configuration and configuration['ThirdParty'] != 'no' :
+    thirdPartyBaseDir=os.path.join(projectCheckOutDir,'ThirdParty')
+    if os.path.isdir(thirdPartyBaseDir) :
+      if thirdPartyBaseDir not in THIRD_PARTY_HISTORY :
+        thirdPartyDirs = os.listdir(thirdPartyBaseDir)
+        #clean up: take care of .svn, .OLD, and non-directory entries
+        cleanUpThirdPartyDirs(thirdPartyBaseDir, thirdPartyDirs)
+        for d in thirdPartyDirs :
+          THIRD_PARTY_HISTORY.append(d)
+          THIRD_PARTY_DIRECTORIES.append(d)
+          dlong = 'ThirdParty/'+d
 
-            # everything okay if we skip this project
-            THIRD_PARTY_DIRECTORIES.append(thirdPartyBaseDir)
-            if 'SkipProjects' in configuration :
-              dlong = 'ThirdParty/'+d
-              if dlong not in configuration['SkipProjects']  and d not in ThirdPartyAllowed  :
-                NBlogMessages.writeMessage('  Warning: we cannot build a binary distribution because of: ' + d)
-                buildThirdParty  = False
-            else :
-              if d not in ThirdPartyAllowed   :
-                NBlogMessages.writeMessage('  Warning: we cannot build a binary distribution because of: ' + d)
-                buildThirdParty  = False        
-            install3rdPartyCmd=os.path.join(".","get."+d)
-            os.chdir(thirdPartyDir)
-            # If the install command has been updated since the last
-            # install, then do a new install
-            if os.path.isfile('NBinstalldone') :
-              if NBosCommand.newer(install3rdPartyCmd,'NBinstalldone') :
-                os.remove('NBinstalldone')
-            if not os.path.isfile('NBinstalldone') :
-              if os.path.isfile(install3rdPartyCmd) :
-                NBlogMessages.writeMessage('  '+install3rdPartyCmd)
-                commandHistory+=[ install3rdPartyCmd ]
-                if configuration['buildMethod']=='mingw' :
-                  install3rdPartyCmd = os.path.join(".","get."+d)
-                  #what a pain replace("\\", "/") does not work
-                  # we must split and then join, ugh
-                  pathParts = install3rdPartyCmd.split("\\")
-                  sep = '/'
-                  install3rdPartyCmd = sep.join(pathParts)
-                  install3rdPartyCmd = "sh -c " + "'" +   install3rdPartyCmd    +  "'"
-                installReturn = NBosCommand.run(install3rdPartyCmd)
-                if installReturn['returnCode'] :
-                  NBlogMessages.writeMessage('  Warning: Install of 3rd party code in '+thirdPartyDir+' returned '+str(installReturn['returnCode']))
-                else :
-                  f=open('NBinstalldone','w')
-                  f.close()
-                writeResults(installReturn,install3rdPartyCmd)
-            else :
-              NBlogMessages.writeMessage('  skipped a new download of '+d)
+          # if the 3rdparty code is not in the white list and not skipped, but we want to build only allowed projects,
+          # then we add this 3rdparty code into the list of skipped projects
+          if configuration['ThirdParty'] == 'allowed' and d not in ThirdPartyAllowed and dlong not in configuration['SkipProjects'] :
+            configuration['SkipProjects'].append(dlong)
+          # everything okay if we skip this project
+          if dlong not in configuration['SkipProjects'] and d not in ThirdPartyAllowed :
+            NBlogMessages.writeMessage('  Warning: we cannot build a binary distribution because of: ' + d)
+            buildThirdParty  = False
+          install3rdPartyCmd=os.path.join(".","get."+d)
+          thirdPartyDir=os.path.join(thirdPartyBaseDir,d)
+          os.chdir(thirdPartyDir)
+          
+          # If the install command has been updated since the last
+          # install, then do a new install
+          if os.path.isfile('NBinstalldone') :
+            if NBosCommand.newer(install3rdPartyCmd,'NBinstalldone') :
+              os.remove('NBinstalldone')
+          if not os.path.isfile('NBinstalldone') :
+            if os.path.isfile(install3rdPartyCmd) :
+              NBlogMessages.writeMessage('  '+install3rdPartyCmd)
+              commandHistory+=[ install3rdPartyCmd ]
+              if configuration['buildMethod']=='mingw' :
+                install3rdPartyCmd = os.path.join(".","get."+d)
+                #what a pain replace("\\", "/") does not work
+                # we must split and then join, ugh
+                pathParts = install3rdPartyCmd.split("\\")
+                sep = '/'
+                install3rdPartyCmd = sep.join(pathParts)
+                install3rdPartyCmd = "sh -c " + "'" +   install3rdPartyCmd    +  "'"
+              installReturn = NBosCommand.run(install3rdPartyCmd)
+              if installReturn['returnCode'] :
+                NBlogMessages.writeMessage('  Warning: Install of 3rd party code in '+thirdPartyDir+' returned '+str(installReturn['returnCode']))
+              else :
+                f=open('NBinstalldone','w')
+                f.close()
+              writeResults(installReturn,install3rdPartyCmd)
+          else :
+            NBlogMessages.writeMessage('  skipped a new download of '+d)
         else :
           NBlogMessages.writeMessage('  Skipped a new download into '+thirdPartyBaseDir)
           # but we still need to test for building binaries even if we already
           # got the ThirdParty code
           buildThirdParty  = True
           for d in THIRD_PARTY_DIRECTORIES :
-            if d=='.svn' : continue
             thirdPartyDir=os.path.join(thirdPartyBaseDir,d)
-            if not os.path.isdir(thirdPartyDir) : continue
+            dlong = 'ThirdParty/'+d
+            # if the 3rdparty code is not in the white list and not skipped, but we want to build only allowed projects,
+            # then we add this 3rdparty code into the list of skipped projects
+            if configuration['ThirdParty'] == 'allowed' and d not in ThirdPartyAllowed and dlong not in configuration['SkipProjects'] :
+              configuration['SkipProjects'].append(dlong)
             # everything okay if we skip this project
-            if 'SkipProjects' in configuration :
-              dlong = 'ThirdParty/'+d
-              if dlong not in configuration['SkipProjects']  and d not in ThirdPartyAllowed  :
-                NBlogMessages.writeMessage('  Warning: we cannot build a binary distribution because of: ' + d)
-                buildThirdParty  = False
-            else :
-              if d not in ThirdPartyAllowed   :
-                NBlogMessages.writeMessage('  Warning: we cannot build a binary distribution because of: ' + d)
-          #
-          #
+            if dlong not in configuration['SkipProjects'] and d not in ThirdPartyAllowed  :
+              NBlogMessages.writeMessage('  Warning: we cannot build a binary distribution because of: ' + d)
+              buildThirdParty  = False
     
   #---------------------------------------------------------------------
   # Create the build directory if it doesn't exist
@@ -396,17 +394,12 @@ def run(configuration) :
         skipOptions+=' '+d
 
     # If needed create option for skipping 3rd party code
-    needSkip3PartySkipOptions=False
-    if 'noThirdParty' not in configuration : 
-      needSkip3PartySkipOptions=True
-    elif configuration['noThirdParty'] :
-      needSkip3PartySkipOptions=True
-    if needSkip3PartySkipOptions :
+    if configuration['ThirdParty']=='no' :
       thirdPartyBaseDir=os.path.join(projectCheckOutDir,'ThirdParty')
       if os.path.isdir(thirdPartyBaseDir) :
         thirdPartyDirs = os.listdir(thirdPartyBaseDir)
+        cleanUpThirdPartyDirs(thirdPartyBaseDir, thirdPartyDirs)
         for d in thirdPartyDirs :
-          if d=='.svn' : continue
           skipOptions+=' ThirdParty/'+d
 
     if skipOptions!='' :
@@ -423,8 +416,6 @@ def run(configuration) :
     configOptions=configOptions.replace("  "," ")
     configOptions=configOptions.replace('=" ','="')
 
-    #start kipp change
-    #
     if configuration['buildMethod']=='mingw' :
       #configCmd = os.path.join(projectCheckOutDir,"configure ")
       configCmd = os.path.join("..",svnVersionFlattened,"configure ")
@@ -437,8 +428,6 @@ def run(configuration) :
       configCmd = "sh -c " + "'" + configCmd + configOptions +  "'"
     else:
       configCmd = os.path.join(projectCheckOutDir,"configure "+configOptions) 
-    #
-    #end kipp change
 
     # If config was previously run, then no need to run again.
     if (not runConfigure) and NBcheckResult.didConfigRunOK() :
@@ -588,50 +577,51 @@ def run(configuration) :
 
 
   #---------------------------------------------------------------------
-  # Run valgrind on the unitTest
-  # We assume a Unix Installation
+  # Run valgrind on the unit tests
   #---------------------------------------------------------------------
-
-
-  #only do this if we have valgrind
-  if VALGRIND_TEST == True :
-    #check to make sure valgrind is reaally there
-    result=NBosCommand.run( "valgrind --help" )
-    if result['returnCode'] == 0 :
-      if configuration['buildMethod']=='unixConfig' and configuration['configOptions']['unique'].find('--enable-debug')>=0 :
-        if "valgrind" in configuration :
-          for t in range( len(configuration['valgrind']) ) :
-            valgrindRelDir=configuration['valgrind'][t]['dir']
-            valgrindDir = os.path.join(fullBuildDir, valgrindRelDir)
-            valgrindCmd=configuration['valgrind'][t]['cmd']
-            if not os.path.isdir( valgrindDir) :
-              NBlogMessages.writeMessage('  Directory to run valgrind on unitTest from does not exist:')
-              NBlogMessages.writeMessage('    fullBuild directory: ' + fullBuildDir)
-              NBlogMessages.writeMessage('    Intended directory: ' + valgrindDir)
-              NBlogMessages.writeMessage('    Intended command: ' + valgrindCmd)
-              continue
-            os.chdir( valgrindDir)
-            NBlogMessages.writeMessage('  cd ' + valgrindDir)
-            NBlogMessages.writeMessage('  ' + valgrindCmd )
-            commandHistory+=[ valgrindCmd ]
-            result = NBosCommand.run(valgrindCmd)
-            writeResults(result, valgrindCmd)
-            result['svn version']=configuration['svnVersion']
-            result['command history'] = commandHistory
-            NBemail.sendCmdMsgs(configuration['project'], result, valgrindCmd)
-            #if result['returnCode'] != 0 :
-            #    result['svn version']=configuration['svnVersion']
-            #    result['command history'] = commandHistory
-            #    NBemail.sendCmdMsgs(configuration['project'], result, valgrindCmd)
-            #    return
-
   
+  if "valgrind" in configuration :
+    for t in range( len(configuration['valgrind']) ) :
+      valgrindRelDir=configuration['valgrind'][t]['dir']
+      valgrindDir = os.path.join(fullBuildDir, valgrindRelDir)
+      valgrindCmd=configuration['valgrind'][t]['cmd']
+      if not os.path.isdir( valgrindDir) :
+        NBlogMessages.writeMessage('  Directory to run valgrind on unitTest from does not exist:')
+        NBlogMessages.writeMessage('    fullBuild directory: ' + fullBuildDir)
+        NBlogMessages.writeMessage('    Intended directory: ' + valgrindDir)
+        NBlogMessages.writeMessage('    Intended command: ' + valgrindCmd)
+        continue
+      os.chdir( valgrindDir)
+      NBlogMessages.writeMessage('  cd ' + valgrindDir)
+      NBlogMessages.writeMessage('  ' + valgrindCmd )
+      commandHistory+=[ valgrindCmd ]
+      result = NBosCommand.run(valgrindCmd)
+      writeResults(result, valgrindCmd)
+      result['svn version'] = configuration['svnVersion']
+      result['command history'] = commandHistory
+      r1=r'ERROR SUMMARY: (\d+) errors from'
+      r2=r'LEAK SUMMARY:\n.*(\d+) bytes in.*\n.*(\d+) bytes in.*\n.*(\d+) bytes in.*\n.*(\d+) bytes in.*'
+      errorsum = re.findall(r1, result['stderr'])
+      leaksum  = re.findall(r2, result['stderr'])
+      failures = False
+      for error in errorsum :
+        if error[1]>0 :
+          failures = True
+          break
+      for leak in errorsum :
+        if leak[0]>0 or leak[1]>0 or leak[2]>0 or leak[3]>0 :
+          failures = True
+          break
+      if failures :
+        NBemail.sendCmdMsgs(configuration['project'], result, valgrindCmd)
+        return
+      #if result['returnCode'] != 0 :
+      #  NBemail.sendCmdMsgs(configuration['project'], result, valgrindCmd)
 
   #---------------------------------------------------------------------
   # Run all install executables
   # We assume a Unix Installation
   #---------------------------------------------------------------------
-
 
   if configuration['buildMethod']=='unixConfig' or configuration['buildMethod']=='mingw':
     print "check if we should do an intall"
@@ -666,156 +656,157 @@ def run(configuration) :
     # We assume a Unix distribution
     #---------------------------------------------------------------------
 
-      if BUILD_BINARIES == 1 :
-        # Only build binary if we are using allowed third party software
-        if buildThirdParty  == True :
-            directories = ""   
-            # if the lib  directory is there, add it
-            # delete these if already there
-            if os.path.isdir( "lib") == True :
-              directories  += " lib "
+      # Only build binary if we are using allowed third party software
+      if BUILD_BINARIES == 1 and buildThirdParty:
+        directories = ""   
+        # if the lib  directory is there, add it
+        # delete these if already there
+        if os.path.isdir( "lib") == True :
+          directories  += " lib "
 
-            # if the include directory is there, add it
-            if os.path.isdir( "include") == True :
-              directories +=  " include "
+        # if the include directory is there, add it
+        if os.path.isdir( "include") == True :
+          directories +=  " include "
 
-            # if the examples directory is there, add it
-            examplesDir = os.path.join(projectCheckOutDir, configuration['project'], 'examples')
-            NBlogMessages.writeMessage('  Examples Directory is ' + examplesDir)
-            # copy the examples directory
-            if os.path.isdir( examplesDir) == True :
-              NBlogMessages.writeMessage(' copy ' + examplesDir + ' to examples')
-              copyCmd = 'cp -r '
-              copyCmd  += examplesDir
-              copyCmd += ' examples'
-              result = NBosCommand.run( copyCmd)
-              writeResults(result, copyCmd)
-              commandHistory+=[ copyCmd ]
-              if os.path.isdir( 'examples') == True :  directories +=  " examples"
-            ##
-            # now get the makefiles
-            examplesMakefileDir = os.path.join(fullBuildDir, configuration['project'], 'examples')
-            NBlogMessages.writeMessage('  Examples Makefile Directory is ' + examplesMakefileDir)
-            # copy the examples directory
-            if os.path.isdir( examplesMakefileDir) == True :
-              NBlogMessages.writeMessage(' copy ' + examplesMakefileDir + ' to examplesMakefiles')
-              copyCmd = 'cp -r '
-              copyCmd  += examplesMakefileDir
-              copyCmd += ' examplesMakefiles'
-              result = NBosCommand.run( copyCmd)
-              writeResults(result, copyCmd)
-              commandHistory+=[ copyCmd ]
-              if os.path.isdir( 'examplesMakefiles') == True :  directories +=  " examplesMakefiles"
-            # done with examples directory
+        # if the examples directory is there, add it
+        examplesDir = os.path.join(projectCheckOutDir, configuration['project'], 'examples')
+        NBlogMessages.writeMessage('  Examples Directory is ' + examplesDir)
+        # copy the examples directory
+        if os.path.isdir( examplesDir) == True :
+          NBlogMessages.writeMessage(' copy ' + examplesDir + ' to examples')
+          copyCmd = 'cp -r '
+          copyCmd  += examplesDir
+          copyCmd += ' examples'
+          result = NBosCommand.run( copyCmd)
+          writeResults(result, copyCmd)
+          commandHistory+=[ copyCmd ]
+          if os.path.isdir( 'examples') == True :  directories +=  " examples"
+        ##
+        # now get the makefiles
+        examplesMakefileDir = os.path.join(fullBuildDir, configuration['project'], 'examples')
+        NBlogMessages.writeMessage('  Examples Makefile Directory is ' + examplesMakefileDir)
+        # copy the examples directory
+        if os.path.isdir( examplesMakefileDir) == True :
+          NBlogMessages.writeMessage(' copy ' + examplesMakefileDir + ' to examplesMakefiles')
+          copyCmd = 'cp -r '
+          copyCmd  += examplesMakefileDir
+          copyCmd += ' examplesMakefiles'
+          result = NBosCommand.run( copyCmd)
+          writeResults(result, copyCmd)
+          commandHistory+=[ copyCmd ]
+          if os.path.isdir( 'examplesMakefiles') == True :  directories +=  " examplesMakefiles"
+        # done with examples directory
 
-            # if the bin directory is there, add it
-            if os.path.isdir( "bin") == True :
-              directories +=  " bin "
+        # if the bin directory is there, add it
+        if os.path.isdir( "bin") == True :
+          directories +=  " bin "
 
-            # if the share directory is there, add it
-            if os.path.isdir( "share") == True :
-              directories +=  " share "
+        # if the share directory is there, add it
+        if os.path.isdir( "share") == True :
+          directories +=  " share "
 
-            #if the directory that stores the binaries is not there create it
-            binariesDir=os.path.join(projectBaseDir,"binaries")
+        #if the directory that stores the binaries is not there create it
+        binariesDir=os.path.join(projectBaseDir,"binaries")
 
-            if not os.path.isdir( binariesDir ) :
-              os.makedirs( binariesDir )
+        if not os.path.isdir( binariesDir ) :
+          os.makedirs( binariesDir )
 
-#            outputDirectory = os.path.join(binariesDir, configuration['project'])
-            outputDirectory = binariesDir
-#            print outputDirectory
+#        outputDirectory = os.path.join(binariesDir, configuration['project'])
+        outputDirectory = binariesDir
+#        print outputDirectory
 
 
-            if not os.path.isdir( outputDirectory) :
-              os.makedirs( outputDirectory)
+        if not os.path.isdir( outputDirectory) :
+          os.makedirs( outputDirectory)
 
-            # create the output directory
+        # create the output directory
             
-            # tar it up
-            # buidDir should be name of tar file -- make unique
-            tarCmd = 'tar  --exclude=.svn -czvf   '
+        # tar it up
+        # buidDir should be name of tar file -- make unique
+        tarCmd = 'tar  --exclude=.svn -czvf   '
 
-            tarFileName  = configuration['project'] 
-            tarFileName += "-"+svnVersionFlattened.replace('releases-','').replace('stable-','')
-            if 'buildTypeInfo' in configuration and len(configuration['buildTypeInfo']) > 0 :
-              tarFileName += "-"+configuration['buildTypeInfo']
-            if len(BUILD_INFORMATION) > 0 :
-              tarFileName += "-"+BUILD_INFORMATION
-            tarFileName += ".tgz"
+        tarFileName  = configuration['project'] 
+        tarFileName += "-"+svnVersionFlattened.replace('releases-','').replace('stable-','')
+        if len(BUILD_INFORMATION) > 0 :
+          tarFileName += "-"+BUILD_INFORMATION
+        if configuration['configOptions']['unique'].find('--enable-debug')>=0 :
+          tarFileName += "-debug"
+        if 'buildTypeInfo' in configuration and len(configuration['buildTypeInfo']) > 0 :
+          tarFileName += "-"+configuration['buildTypeInfo']
+        tarFileName += ".tgz"
             
-            tarCmd += os.path.join(outputDirectory, tarFileName)
-            tarCmd += directories
+        tarCmd += os.path.join(outputDirectory, tarFileName)
+        tarCmd += directories
 
-            NBlogMessages.writeMessage( '  '+ tarCmd )
-            commandHistory+=[ tarCmd ]
-            result=NBosCommand.run( tarCmd)
-            writeResults(result, tarCmd)
-            #delete the examples directory
-            if os.path.isdir( 'examples') == True :
-              rmDirCmd = 'rm -rf '
-              rmDirCmd += 'examples'
-              commandHistory += [ rmDirCmd]
-              NBosCommand.run( rmDirCmd)
-            #delete the examplesMakefiles directory
-            if os.path.isdir( 'examplesMakefiles') == True :
-              rmDirCmd = 'rm -rf '
-              rmDirCmd += 'examplesMakefiles'
-              commandHistory += [ rmDirCmd]
-              NBosCommand.run( rmDirCmd)
-            if result['returnCode'] != 0 :
-              result['svn version']=configuration['svnVersion']
-              # figure out what tarResultFail should be
-              #result['tar']=tarResultFail
-              result['command history']=commandHistory
-              NBemail.sendCmdMsgs(configuration['project'],result,  tarCmd)
-              writeResults(result, tarCmd)
-              return
+        NBlogMessages.writeMessage( '  '+ tarCmd )
+        commandHistory+=[ tarCmd ]
+        result=NBosCommand.run( tarCmd)
+        writeResults(result, tarCmd)
+        #delete the examples directory
+        if os.path.isdir( 'examples') == True :
+          rmDirCmd = 'rm -rf '
+          rmDirCmd += 'examples'
+          commandHistory += [ rmDirCmd]
+          NBosCommand.run( rmDirCmd)
+        #delete the examplesMakefiles directory
+        if os.path.isdir( 'examplesMakefiles') == True :
+          rmDirCmd = 'rm -rf '
+          rmDirCmd += 'examplesMakefiles'
+          commandHistory += [ rmDirCmd]
+          NBosCommand.run( rmDirCmd)
+        if result['returnCode'] != 0 :
+          result['svn version']=configuration['svnVersion']
+          # figure out what tarResultFail should be
+          #result['tar']=tarResultFail
+          result['command history']=commandHistory
+          NBemail.sendCmdMsgs(configuration['project'],result,  tarCmd)
+          writeResults(result, tarCmd)
+          return
             
-            # upload tar file to CoinBinary server
-            if configuration['Distribute'] == True :
-              #checkout/update binary directory from CoinBinary server
-              distributeDirectory = os.path.join(projectBaseDir,"distribute")
-              svnCheckoutCmd = 'svn checkout https://projects.coin-or.org/svn/CoinBinary/binary/'+configuration['project']+' '+distributeDirectory
-              commandHistory+=[ svnCheckoutCmd ]
-              svnResult=NBsvnCommand.run(svnCheckoutCmd,'.',configuration['project'])
-              if svnResult['returnCode'] != 0 :
-                return
-              #put tar file into distribution directory
-              copyCmd = 'cp -f "'+os.path.join(outputDirectory, tarFileName)+'" "'+distributeDirectory+'"'
-              commandHistory += [ copyCmd ]
-              result = NBosCommand.run( copyCmd)
-              if result['returnCode'] != 0 :
-                result['svn version'] = configuration['svnVersion']
-                result['command history'] = commandHistory
-                NBemail.sendCmdMsgs(configuration['project'], result, copyCmd)
-                writeResults(result, copyCmd)
-                return
-              #add tar file to repository (should just happen nothing if already existing in repo)
-              svnAddCmd = 'svn add "'+os.path.join(distributeDirectory,tarFileName)+'"'
-              commandHistory+=[ svnAddCmd ]
-              svnResult=NBsvnCommand.run(svnAddCmd,'.',configuration['project'])
-              if svnResult['returnCode'] != 0 and svnResult['stderr'].find('has binary mime type property')<0:
-                return
-              #set mime type to binary so that there is no confusion about endlines
-              svnPropsetCmd = 'svn propset svn:mime-type application/octet-stream "'+os.path.join(distributeDirectory,tarFileName)+'"'
-              commandHistory+=[ svnPropsetCmd ]
-              svnResult=NBsvnCommand.run(svnPropsetCmd,'.',configuration['project'])
-              if svnResult['returnCode'] != 0 :
-                return
-              #commit repository
-              svnCommitCmd =  'svn commit --non-interactive '
-              svnCommitCmd += '-m "nightlyBuild: adding or updating binary '+tarFileName+'" '
-              if len(COINBINARY_SVN_USERNAME) :
-                svnCommitCmd += '--username '+COINBINARY_SVN_USERNAME+' '
-              if len(COINBINARY_SVN_PASSWORD) :
-                svnCommitCmd += '--password '+COINBINARY_SVN_PASSWORD+' '
-              svnCommitCmd += distributeDirectory
-              if len(COINBINARY_SVN_PASSWORD)==0 :
-                commandHistory+=[ svnCommitCmd ]
-              svnResult=NBsvnCommand.run(svnCommitCmd,'.',configuration['project'])
-              if svnResult['returnCode'] != 0 :
-                return
+        # upload tar file to CoinBinary server
+        if configuration['Distribute'] == True :
+          #checkout/update binary directory from CoinBinary server
+          distributeDirectory = os.path.join(projectBaseDir,"distribute")
+          svnCheckoutCmd = 'svn checkout https://projects.coin-or.org/svn/CoinBinary/binary/'+configuration['project']+' '+distributeDirectory
+          commandHistory+=[ svnCheckoutCmd ]
+          svnResult=NBsvnCommand.run(svnCheckoutCmd,'.',configuration['project'])
+          if svnResult['returnCode'] != 0 :
+            return
+          #put tar file into distribution directory
+          copyCmd = 'cp -f "'+os.path.join(outputDirectory, tarFileName)+'" "'+distributeDirectory+'"'
+          commandHistory += [ copyCmd ]
+          result = NBosCommand.run( copyCmd)
+          if result['returnCode'] != 0 :
+            result['svn version'] = configuration['svnVersion']
+            result['command history'] = commandHistory
+            NBemail.sendCmdMsgs(configuration['project'], result, copyCmd)
+            writeResults(result, copyCmd)
+            return
+          #add tar file to repository (should just happen nothing if already existing in repo)
+          svnAddCmd = 'svn add "'+os.path.join(distributeDirectory,tarFileName)+'"'
+          commandHistory+=[ svnAddCmd ]
+          svnResult=NBsvnCommand.run(svnAddCmd,'.',configuration['project'])
+          if svnResult['returnCode'] != 0 and svnResult['stderr'].find('has binary mime type property')<0:
+            return
+          #set mime type to binary so that there is no confusion about endlines
+          svnPropsetCmd = 'svn propset svn:mime-type application/octet-stream "'+os.path.join(distributeDirectory,tarFileName)+'"'
+          commandHistory+=[ svnPropsetCmd ]
+          svnResult=NBsvnCommand.run(svnPropsetCmd,'.',configuration['project'])
+          if svnResult['returnCode'] != 0 :
+            return
+          #commit repository
+          svnCommitCmd =  'svn commit --non-interactive '
+          svnCommitCmd += '-m "nightlyBuild: adding or updating binary '+tarFileName+'" '
+          if len(COINBINARY_SVN_USERNAME) :
+            svnCommitCmd += '--username '+COINBINARY_SVN_USERNAME+' '
+          if len(COINBINARY_SVN_PASSWORD) :
+            svnCommitCmd += '--password '+COINBINARY_SVN_PASSWORD+' '
+          svnCommitCmd += distributeDirectory
+          if len(COINBINARY_SVN_PASSWORD)==0 :
+            commandHistory+=[ svnCommitCmd ]
+          svnResult=NBsvnCommand.run(svnCommitCmd,'.',configuration['project'])
+          if svnResult['returnCode'] != 0 :
+            return
                 
 
   

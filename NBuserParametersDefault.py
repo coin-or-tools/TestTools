@@ -58,18 +58,23 @@ PROJECTS = ['CoinUtils','Clp','Osi','DyLP','SYMPHONY','Vol','Cgl','Cbc','Smi','F
 #   This is ignored on windows when building with MS compiler solution file
 #   because both Release and Debug are built.
 #
-#  ThirdParty: 'Yes' or 'No'.  Some projects provide scripts for downloading
-#   third party code. If 'Yes' then these scripts will be run. If 'No'
-#   then the options for skipping the use of third party codes are
+#  ThirdParty: 'Yes', 'Allowed', or 'No'.  Some projects provide scripts for
+#   downloading third party code. If 'Yes' then these scripts will be run.
+#   If 'No' then the options for skipping the use of third party codes are
 #   used when running "./configure".
-#   Presently this ignored on windows when building with MS compiler 
+#   If 'Allowed' (the default), then the options for skipping third party codes
+#   are set only for those that are not on the ThirdPartyAllowed list (see below).
+#   Presently this ignored on windows when building with MS compiler
 #   solution file because ThirdParty code is never used.
 #
 #  Distribute: 'Yes' or 'No'.  Specifies if the result of the build will be
 #    uploaded into the CoinBinary repository.
 #    You need to turn BUILD_BINARIES on for this and have writing permissions
 #    for the CoinBinary repository.
-#    Further, you should fill in BUILD_INFORMATION (see below). 
+#    Further, you should fill in BUILD_INFORMATION (see below).
+#    Finally, you probably want to set ThirdParty to 'Allowed' or 'No', since the
+#    scripts do not distributing binaries with third party codes that are not in
+#    ThirdPartyAllowed. 
 #
 #  BuildTypeInfo: A string describing the current build types.
 #    This string is used as part of the archive name that is created if
@@ -183,8 +188,8 @@ BUILDS = {
      ],
    'CoinAll' :
      [
-       { 'SvnVersion': 'trunk', 'OptLevel': 'Default', 'ThirdParty':'Yes', 'Distribute': 'No' },
-       { 'SvnVersion': 'trunk', 'OptLevel': 'Debug',   'ThirdParty':'Yes', 'Distribute': 'No', 'BuildTypeInfo' : 'debug' }
+       { 'SvnVersion': 'trunk', 'OptLevel': 'Default', 'ThirdParty':'Allowed', 'Distribute': 'Yes' },
+       { 'SvnVersion': 'trunk', 'OptLevel': 'Debug',   'ThirdParty':'Allowed', 'Distribute': 'Yes' }
      ],
    'LaGO' :
      [

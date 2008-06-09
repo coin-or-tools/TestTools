@@ -52,7 +52,7 @@ CFG_BLD_INSTALL['CoinUtils']=[
 
 CFG_BLD_VALGRIND_TEST['CoinUtils']=[
                   {'dir':'CoinUtils/test',
-                   'cmd': ' valgrind -q --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
+                   'cmd': ' valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
                    'check':[] } ]
 
 
@@ -105,7 +105,7 @@ CFG_BLD_TEST['Clp']=[
                              NBcheckResult.endWithWoodw] } ]
 CFG_BLD_VALGRIND_TEST['Clp']=[
                   {'dir':'Clp/src',
-                   'cmd': 'valgrind -q --tool=memcheck --leak-check=full  --show-reachable=yes ./clp -unitTest',
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./clp -unitTest',
                    'check':[] } ]
 
 CFG_BLD_INSTALL['Clp']=[
@@ -139,7 +139,7 @@ CFG_BLD_TEST['SYMPHONY']=[
                              NBcheckResult.standardSuccessMessage ] } ]
 CFG_BLD_VALGRIND_TEST['SYMPHONY']=[
                   {'dir':'SYMPHONY/test',
-                   'cmd': 'valgrind -q --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
                    'check':[] } ]
 
 CFG_BLD_INSTALL['SYMPHONY']=[
@@ -185,7 +185,7 @@ CFG_BLD_TEST['Osi']=[
                              NBcheckResult.noSolverInterfaceTestingIssueMessage] } ]
 CFG_BLD_VALGRIND_TEST['Osi']=[
                   {'dir':'Osi/test',
-                   'cmd': 'valgrind -q --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
                    'check':[] } ]
 
 CFG_BLD_INSTALL['Osi']=[
@@ -211,7 +211,7 @@ CFG_BLD_TEST['Cgl']=[
                              NBcheckResult.standardSuccessMessage ] } ]
 CFG_BLD_VALGRIND_TEST['Cgl']=[
                   {'dir':'Cgl/test',
-                   'cmd': 'valgrind -q --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
                    'check':[] } ]
 
 CFG_BLD_INSTALL['Cgl']=[
@@ -234,7 +234,7 @@ CFG_BLD_TEST['Cbc']=[
                    'check':[ NBcheckResult.rc0to2 ] } ]
 CFG_BLD_VALGRIND_TEST['Cbc']=[
                   {'dir':'Cbc/src',
-                   'cmd': 'valgrind -q --tool=memcheck --leak-check=full  --show-reachable=yes ./cbc -unitTest',
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./cbc -unitTest',
                    'check':[] } ]
 
 if importedCbcRunTimes :
@@ -266,7 +266,7 @@ CFG_BLD_TEST['Ipopt']=[
 # running valgrind on Ipopt fails with "badly formed extended line op encountered!" message for me
 CFG_BLD_VALGRIND_TEST['Ipopt']=[
                   {'dir':'Ipopt/test',
-                   'cmd': 'valgrind -q --tool=memcheck --leak-check=full  --show-reachable=yes ./hs071_cpp; valgrind -q --tool=memcheck --leak-check=full  --show-reachable=yes ./hs071_c; valgrind -q --tool=memcheck --leak-check=full  --show-reachable=yes ./hs071_f',
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./hs071_cpp; valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./hs071_c; valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./hs071_f',
                    'check':[] } ]
 
 CFG_BLD_INSTALL['Ipopt']=[
@@ -288,7 +288,7 @@ CFG_BLD_TEST['Bonmin']=[
 # running valgrind on Bonmin fails with "badly formed extended line op encountered!" message for me
 CFG_BLD_VALGRIND_TEST['Bonmin']=[
                   {'dir':'Bonmin/test',
-                   'cmd': 'valgrind -q --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest; valgrind -q --tool=memcheck --leak-check=full  --show-reachable=yes ./CppExample',
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest; valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./CppExample',
                    'check':[] } ]
 
 CFG_BLD_INSTALL['Bonmin']=[
@@ -308,7 +308,7 @@ CFG_BLD_TEST['FlopC++']=[
                              NBcheckResult.standardSuccessMessage ] } ]
 CFG_BLD_VALGRIND_TEST['FlopC++']=[
                   {'dir':'FlopCpp/test',
-                   'cmd': 'valgrind -q --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
                    'check':[] } ]
 
 CFG_BLD_INSTALL['FlopC++']=[
@@ -343,7 +343,7 @@ CFG_BLD_TEST['OS']=[
 # running valgrind on OS fails with "badly formed extended line op encountered!" message for me
 CFG_BLD_VALGRIND_TEST['OS']=[
                   {'dir':'OS/test',
-                   'cmd': ' valgrind -q --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
+                   'cmd': ' valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
                    'check':[] } ]
 
 
@@ -402,7 +402,7 @@ CFG_BLD_TEST['CppAD']=[
                    'check':[ NBcheckResult.rc0 ] } ]
 CFG_BLD_VALGRIND_TEST['CppAD']=[
                   {'dir':'example',
-                   'cmd': 'valgrind -q --tool=memcheck --leak-check=full  --show-reachable=yes ./example',
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./example',
                    'check':[] } ]
 
 #take out make install for CppAD since it does not confirm to usual coin procedure (it installs into $HOME/include by default!)
@@ -423,7 +423,7 @@ CFG_BLD_TEST['Smi']=[
                              NBcheckResult.endWithStarDoneStar ] } ]
 CFG_BLD_VALGRIND_TEST['Smi']=[
                   {'dir':'Smi/test',
-                   'cmd': 'valgrind -q --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
                    'check':[] } ]
 
 CFG_BLD_INSTALL['Smi']=[
