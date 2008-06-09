@@ -118,9 +118,10 @@ def writeResults(result,filenameSuffix) :
 #    msSoln: use microsoft compiler with a solution (sln) file.
 #    unixConfig: use sequence "./configure", "make", "make test"
 #
-#  configuration['noThirdParty']=True or False (optional). If False 
-#   then 3rd party code will be used. If not specified then 3rd part
-#   code will be skipped.
+#  configuration['ThirdParty']='yes', 'no', or 'allowed'.
+#   If 'yes' then all 3rd party code will be used.
+#   If 'allowed' then only 3rd party code in the ThirdPartyAllowed list will be used. 
+#   If 'no' then no 3rd party code will be used.
 #   Only used if configuration['buildMethod']=='unixConfig'
 #
 #  configuration['configOptions']: Parameters to be passed to configure.
@@ -543,9 +544,9 @@ def run(configuration) :
   #---------------------------------------------------------------------
   # Run all test executables
   #---------------------------------------------------------------------
-  print "test for the unit test"
+#  print "test for the unit test"
   if "test" in configuration :
-    print "we are going to run the unit test"
+#    print "we are going to run the unit test"
     for t in range( len(configuration['test']) ) :
       testRelDir=configuration['test'][t]['dir']
       testDir = os.path.join(fullBuildDir,testRelDir)
@@ -624,9 +625,9 @@ def run(configuration) :
   #---------------------------------------------------------------------
 
   if configuration['buildMethod']=='unixConfig' or configuration['buildMethod']=='mingw':
-    print "check if we should do an intall"
+#    print "check if we should do an intall"
     if "install" in configuration :
-      print "we should do an install"
+#      print "we should do an install"
       for t in range( len(configuration['install']) ) :
         installRelDir=configuration['install'][t]['dir']
         installDir = os.path.join(fullBuildDir, installRelDir)
@@ -711,16 +712,6 @@ def run(configuration) :
         if not os.path.isdir( binariesDir ) :
           os.makedirs( binariesDir )
 
-#        outputDirectory = os.path.join(binariesDir, configuration['project'])
-        outputDirectory = binariesDir
-#        print outputDirectory
-
-
-        if not os.path.isdir( outputDirectory) :
-          os.makedirs( outputDirectory)
-
-        # create the output directory
-            
         # tar it up
         # buidDir should be name of tar file -- make unique
         tarCmd = 'tar  --exclude=.svn -czvf   '
@@ -735,7 +726,7 @@ def run(configuration) :
           tarFileName += "-"+configuration['buildTypeInfo']
         tarFileName += ".tgz"
             
-        tarCmd += os.path.join(outputDirectory, tarFileName)
+        tarCmd += os.path.join(binariesDir, tarFileName)
         tarCmd += directories
 
         NBlogMessages.writeMessage( '  '+ tarCmd )
@@ -773,7 +764,7 @@ def run(configuration) :
           if svnResult['returnCode'] != 0 :
             return
           #put tar file into distribution directory
-          copyCmd = 'cp -f "'+os.path.join(outputDirectory, tarFileName)+'" "'+distributeDirectory+'"'
+          copyCmd = 'cp -f "'+os.path.join(binariesDir, tarFileName)+'" "'+distributeDirectory+'"'
           commandHistory += [ copyCmd ]
           result = NBosCommand.run( copyCmd)
           if result['returnCode'] != 0 :
