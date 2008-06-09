@@ -601,19 +601,11 @@ def run(configuration) :
       result['svn version'] = configuration['svnVersion']
       result['command history'] = commandHistory
       r1=r'ERROR SUMMARY: (\d+) errors from'
-      r2=r'LEAK SUMMARY:\n.*(\d+) bytes in.*\n.*(\d+) bytes in.*\n.*(\d+) bytes in.*\n.*(\d+) bytes in.*'
-      errorsum = re.findall(r1, result['stderr'])
-      leaksum  = re.findall(r2, result['stderr'])
-      failures = False
-      for error in errorsum :
-        if error[1]>0 :
-          failures = True
-          break
-      for leak in errorsum :
-        if leak[0]>0 or leak[1]>0 or leak[2]>0 or leak[3]>0 :
-          failures = True
-          break
-      if failures :
+      r2=r'LEAK SUMMARY:\n.*([0-9,]+) bytes in.*\n.*([0-9,]+) bytes in.*\n.*([0-9,]+) bytes in.*\n.*([0-9,]+) bytes in.*'
+      errors = re.findall(r1, result['stderr'])
+      leaks  = re.findall(r2, result['stderr'])
+      if (len(errors) and errors[0]>0) or \
+         (len(leaks) and (leaks[0]>0 or leaks[1]>0 or leaks[2]>0 or leaks[3]>0)) :
         NBemail.sendCmdMsgs(configuration['project'], result, valgrindCmd)
         return
       #if result['returnCode'] != 0 :
@@ -674,7 +666,7 @@ def run(configuration) :
         NBlogMessages.writeMessage('  Examples Directory is ' + examplesDir)
         # copy the examples directory
         if os.path.isdir( examplesDir) == True :
-          NBlogMessages.writeMessage(' copy ' + examplesDir + ' to examples')
+          NBlogMessages.writeMessage('  copy ' + examplesDir + ' to examples')
           copyCmd = 'cp -r '
           copyCmd  += examplesDir
           copyCmd += ' examples'
@@ -688,7 +680,7 @@ def run(configuration) :
         NBlogMessages.writeMessage('  Examples Makefile Directory is ' + examplesMakefileDir)
         # copy the examples directory
         if os.path.isdir( examplesMakefileDir) == True :
-          NBlogMessages.writeMessage(' copy ' + examplesMakefileDir + ' to examplesMakefiles')
+          NBlogMessages.writeMessage('  copy ' + examplesMakefileDir + ' to examplesMakefiles')
           copyCmd = 'cp -r '
           copyCmd  += examplesMakefileDir
           copyCmd += ' examplesMakefiles'

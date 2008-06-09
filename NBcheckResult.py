@@ -102,22 +102,22 @@ def OsiUnitTestSuccessMessages(result,project):
   osisSummaryResult=re.findall(r,result['stdout'][-800:])
   expectedOsis=['clp','sym','dylp','cbcclp']
   for osi in osisSummaryResult :
-    if osi[1] in expectedOsis: expectedOsis.remove(osi[1])
-    numSolved = int(osi[2])
+    if osi[0] in expectedOsis: expectedOsis.remove(osi[0])
+    numSolved = int(osi[1])
     # Sym only solves 89 of the 90
-    if osi[1]=='sym':
+    if osi[0]=='sym':
       if numSolved<89 :
-        retVal=osi[1]+\
+        retVal=osi[0]+\
                " only solved "\
-               +osi[2]\
+               +osi[1]\
                +" out of 90 in "\
-               +osi[3]+" seconds"
+               +osi[2]+" seconds"
     elif numSolved<90 :
-      retVal=osi[1]+\
+      retVal=osi[0]+\
                " only solved "\
-               +osi[2]+\
+               +osi[1]+\
                " out of 90 in "\
-               +osi[3]+" seconds"
+               +osi[2]+" seconds"
   if len(expectedOsis)!=0 :
         retVal="Osi "+expectedOsis[0]+" did not report number solved"
   return retVal      
