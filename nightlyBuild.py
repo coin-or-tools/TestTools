@@ -85,6 +85,11 @@ if VALGRIND_TEST :
   #check to make sure valgrind is really there
   result=NBosCommand.run( "valgrind --help" )
   valgrind_ok = (result['returnCode'] == 0)
+  if not valgrind_ok :
+    NBlogMessages.writeMessage("  Warning: valgrind does not work.")
+    NBlogMessages.writeMessage("    valgrind --help returned "+result['returnCode'])
+    NBlogMessages.writeMessage("    Output of stdout: "+result['stdout'])
+    NBlogMessages.writeMessage("    Output of stderr: "+result['stderr'])
 
 #------------------------------------------------------------------------
 # Loop once for each project (get code, compile & link, and test).

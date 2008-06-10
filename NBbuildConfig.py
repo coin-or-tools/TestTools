@@ -477,15 +477,11 @@ def run(configuration) :
     NBlogMessages.writeMessage( '  '+MAKECMD )
     commandHistory+=[ MAKECMD ]
     
-    #
-    # start kipp
     if configuration['buildMethod']=='mingw' :
       result=NBosCommand.run('sh -c '+MAKECMD) 
     else:
       result=NBosCommand.run(MAKECMD)
       
-    # end kipp
-    # 
     writeResults(result,'make') 
     # Check if make worked
     if result['returnCode'] != 0 :
@@ -652,7 +648,7 @@ def run(configuration) :
     #---------------------------------------------------------------------
 
       # Only build binary if we are using allowed third party software
-      if BUILD_BINARIES == 1 and buildThirdParty:
+      if BUILD_BINARIES > 0 and buildThirdParty:
         directories = ""   
         # if the lib  directory is there, add it
         # delete these if already there
@@ -706,27 +702,43 @@ def run(configuration) :
         if not os.path.isdir( binariesDir ) :
           os.makedirs( binariesDir )
 
-        # tar it up
-        # buidDir should be name of tar file -- make unique
+        # tar and/or zip them up
         tarCmd = 'tar  --exclude=.svn -czvf   '
+        zipCmd = 'zip  -yr '
 
-        tarFileName  = configuration['project'] 
-        tarFileName += "-"+svnVersionFlattened.replace('releases-','').replace('stable-','')
+        archiveFileName  = configuration['project'] 
+        archiveFileName += "-"+svnVersionFlattened.replace('releases-','').replace('stable-','')
         if len(BUILD_INFORMATION) > 0 :
-          tarFileName += "-"+BUILD_INFORMATION
+          archiveFileName += "-"+BUILD_INFORMATION
         if configuration['configOptions']['unique'].find('--enable-debug')>=0 :
-          tarFileName += "-debug"
+          archiveFileName += "-debug"
         if 'buildTypeInfo' in configuration and len(configuration['buildTypeInfo']) > 0 :
-          tarFileName += "-"+configuration['buildTypeInfo']
-        tarFileName += ".tgz"
+          archiveFileName += "-"+configuration['buildTypeInfo']
+        tarFileName = archiveFileName+".tgz"
+        zipFileName = archiveFileName+".zip"
             
         tarCmd += os.path.join(binariesDir, tarFileName)
         tarCmd += directories
+        
+        zipCmd += os.path.join(binariesDir, zipFileName)
+        zipCmd += directories
+        zipCmd += ' -x \\*/.svn/\\*'
 
-        NBlogMessages.writeMessage( '  '+ tarCmd )
-        commandHistory+=[ tarCmd ]
-        result=NBosCommand.run( tarCmd)
-        writeResults(result, tarCmd)
+        failedCmd = ''
+        if BUILD_BINARIES & 1 :
+          NBlogMessages.writeMessage( '  '+ tarCmd )
+          commandHistory+=[ tarCmd ]
+          result=NBosCommand.run( tarCmd)
+          writeResults(result, tarCmd)
+          if result['returnCode']!=0 : failedCmd = tarCmd
+
+        if BUILD_BINARIES & 2 and failedCmd == '':
+          NBlogMessages.writeMessage( '  '+ zipCmd )
+          commandHistory+=[ zipCmd ]
+          result=NBosCommand.run( zipCmd)
+          writeResults(result, zipCmd)
+          if result['returnCode']!=0 : failedCmd = zipCmd
+  
         #delete the examples directory
         if os.path.isdir( 'examples') == True :
           rmDirCmd = 'rm -rf '
@@ -744,11 +756,11 @@ def run(configuration) :
           # figure out what tarResultFail should be
           #result['tar']=tarResultFail
           result['command history']=commandHistory
-          NBemail.sendCmdMsgs(configuration['project'],result,  tarCmd)
-          writeResults(result, tarCmd)
+          NBemail.sendCmdMsgs(configuration['project'], result, failedCmd)
+          writeResults(result, failedCmd)
           return
             
-        # upload tar file to CoinBinary server
+        # upload archive files to CoinBinary server
         if configuration['Distribute'] == True :
           #checkout/update binary directory from CoinBinary server
           distributeDirectory = os.path.join(projectBaseDir,"distribute")
@@ -757,8 +769,8 @@ def run(configuration) :
           svnResult=NBsvnCommand.run(svnCheckoutCmd,'.',configuration['project'])
           if svnResult['returnCode'] != 0 :
             return
-          #put tar file into distribution directory
-          copyCmd = 'cp -f "'+os.path.join(binariesDir, tarFileName)+'" "'+distributeDirectory+'"'
+          #put archive files into distribution directory
+          copyCmd = 'cp -f "'+os.path.join(binariesDir, archiveFileName)+'.*" "'+distributeDirectory+'"'
           commandHistory += [ copyCmd ]
           result = NBosCommand.run( copyCmd)
           if result['returnCode'] != 0 :
@@ -767,21 +779,21 @@ def run(configuration) :
             NBemail.sendCmdMsgs(configuration['project'], result, copyCmd)
             writeResults(result, copyCmd)
             return
-          #add tar file to repository (should just happen nothing if already existing in repo)
-          svnAddCmd = 'svn add "'+os.path.join(distributeDirectory,tarFileName)+'"'
+          #add archive files to repository (should just happen nothing if already existing in repo)
+          svnAddCmd = 'svn add "'+os.path.join(distributeDirectory,archiveFileName)+'.*"'
           commandHistory+=[ svnAddCmd ]
           svnResult=NBsvnCommand.run(svnAddCmd,'.',configuration['project'])
           if svnResult['returnCode'] != 0 and svnResult['stderr'].find('has binary mime type property')<0:
             return
           #set mime type to binary so that there is no confusion about endlines
-          svnPropsetCmd = 'svn propset svn:mime-type application/octet-stream "'+os.path.join(distributeDirectory,tarFileName)+'"'
+          svnPropsetCmd = 'svn propset svn:mime-type application/octet-stream "'+os.path.join(distributeDirectory,archiveFileName)+'.*"'
           commandHistory+=[ svnPropsetCmd ]
           svnResult=NBsvnCommand.run(svnPropsetCmd,'.',configuration['project'])
           if svnResult['returnCode'] != 0 :
             return
           #commit repository
           svnCommitCmd =  'svn commit --non-interactive '
-          svnCommitCmd += '-m "nightlyBuild: adding or updating binary '+tarFileName+'" '
+          svnCommitCmd += '-m "nightlyBuild: adding or updating archive '+archiveFileName+'" '
           if len(COINBINARY_SVN_USERNAME) :
             svnCommitCmd += '--username '+COINBINARY_SVN_USERNAME+' '
           if len(COINBINARY_SVN_PASSWORD) :

@@ -306,9 +306,11 @@ SEND_MAIL_TO_PROJECT_MANAGER = 0
 
 #----------------------------------------------------------------------
 # The nightlyBuild will not build a binary by default
-# If you want binaries built set the flag
-# BUILD_BINARIES = 1
+# If you want binaries built set the flag BUILD_BINARIES to a nonzero value.
 # It is 0 by default
+# If BUILD_BINARIES == 1, then tgz archives are build,
+# if BUILD_BINARIES == 2, then zip archives are build,
+# if BUILD_BINARIES == 3, then tgz and zip archives are build.
 # Note: Binaries of project containing ThirdParty software will not be built
 #----------------------------------------------------------------------
 
