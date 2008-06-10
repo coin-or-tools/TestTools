@@ -223,6 +223,8 @@ def run(configuration) :
       shutil.rmtree(fullBuildDir)
     except shutil.Error :
       NBlogMessages.writeMessage('  Warning: removal of directory '+fullBuildDir+' failed.')
+    except :
+      print "Unexpected error:", sys.exc_info()[0]
 
   #---------------------------------------------------------------------
   # If nothing has changed and the prior run tested OK or there is

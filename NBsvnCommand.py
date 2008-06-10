@@ -53,9 +53,15 @@ def run(svnCmd,dir,project) :
 #------------------------------------------------------------------------
 def latestStableVersion(project) :
   url='https://projects.coin-or.org/svn/'+project+'/stable'
-  handle=urllib2.urlopen(url)
-  html=handle.read()
-  handle.close()
+  if project == "CoinAll":
+    url = 'https://projects.coin-or.org/svn/'+'CoinBinary/'+project+'/stable'
+  try :
+    handle=urllib2.urlopen(url)
+    html=handle.read()
+    handle.close()
+  except urllib2.URLError, (errno, strerror):
+    NBlogMessages.writeMessage('  Warning: URLError exception caught while retrieving '+url+': '+strerror)
+    return False
 
   # In html code find the latest version number
   #   <li><a href="3.2/">3.2/</a></li>
@@ -75,9 +81,13 @@ def latestReleaseVersion(project) :
   url='https://projects.coin-or.org/svn/'+project+'/releases'
   if project == "CoinAll":
     url = 'https://projects.coin-or.org/svn/'+'CoinBinary/'+project+'/releases'
-  handle=urllib2.urlopen(url)
-  html=handle.read()
-  handle.close()
+  try :
+    handle=urllib2.urlopen(url)
+    html=handle.read()
+    handle.close()
+  except urllib2.URLError, (errno, strerror):
+    NBlogMessages.writeMessage('  Warning: URLError exception caught while retrieving '+url+': '+strerror)
+    return False
 
   # In html code find the latest version number
   #   <li><a href="1.6.0/">1.6.0/</a></li>
