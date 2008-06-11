@@ -770,7 +770,7 @@ def run(configuration) :
           if svnResult['returnCode'] != 0 :
             return
           #put archive files into distribution directory
-          copyCmd = 'cp -f "'+os.path.join(binariesDir, archiveFileName)+'.*" "'+distributeDirectory+'"'
+          copyCmd = 'cp -f "'+os.path.join(binariesDir, archiveFileName)+'".* "'+distributeDirectory+'"'
           commandHistory += [ copyCmd ]
           result = NBosCommand.run( copyCmd)
           if result['returnCode'] != 0 :
@@ -780,13 +780,13 @@ def run(configuration) :
             writeResults(result, copyCmd)
             return
           #add archive files to repository (should just happen nothing if already existing in repo)
-          svnAddCmd = 'svn add "'+os.path.join(distributeDirectory,archiveFileName)+'.*"'
+          svnAddCmd = 'svn add "'+os.path.join(distributeDirectory,archiveFileName)+'".*'
           commandHistory+=[ svnAddCmd ]
           svnResult=NBsvnCommand.run(svnAddCmd,'.',configuration['project'])
           if svnResult['returnCode'] != 0 and svnResult['stderr'].find('has binary mime type property')<0:
             return
           #set mime type to binary so that there is no confusion about endlines
-          svnPropsetCmd = 'svn propset svn:mime-type application/octet-stream "'+os.path.join(distributeDirectory,archiveFileName)+'.*"'
+          svnPropsetCmd = 'svn propset svn:mime-type application/octet-stream "'+os.path.join(distributeDirectory,archiveFileName)+'".*'
           commandHistory+=[ svnPropsetCmd ]
           svnResult=NBsvnCommand.run(svnPropsetCmd,'.',configuration['project'])
           if svnResult['returnCode'] != 0 :
