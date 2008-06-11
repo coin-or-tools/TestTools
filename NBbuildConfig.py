@@ -61,6 +61,7 @@ def cleanUpName(messedUpName) :
   cleanedUpName=cleanedUpName.replace(";",'')
   cleanedUpName=cleanedUpName.replace('--enable','')
   cleanedUpName=cleanedUpName.replace('--','-')
+  cleanedUpName=cleanedUpName.replace('*','')
   return cleanedUpName[:240]
 
 #---------------------------------------------------------------------
@@ -602,8 +603,8 @@ def run(configuration) :
       r2=r'LEAK SUMMARY:\n.*([0-9,]+) bytes in.*\n.*([0-9,]+) bytes in.*\n.*([0-9,]+) bytes in.*\n.*([0-9,]+) bytes in.*'
       errors = re.findall(r1, result['stderr'])
       leaks  = re.findall(r2, result['stderr'])
-      if (len(errors) and errors[0]>0) or \
-         (len(leaks) and (leaks[0]>0 or leaks[1]>0 or leaks[2]>0 or leaks[3]>0)) :
+      if (len(errors) and int(errors[0])>0) or \
+         (len(leaks) and (int(leaks[0].replace(',','.'))>0 or int(leaks[1].replace(',','.'))>0 or int(leaks[2].replace(',','.'))>0 or int(leaks[3].replace(',','.'))>0)) :
         NBemail.sendCmdMsgs(configuration['project'], result, valgrindCmd)
         return
       #if result['returnCode'] != 0 :
