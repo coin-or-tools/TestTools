@@ -123,6 +123,25 @@ def OsiUnitTestSuccessMessages(result,project):
   return retVal      
 
 
+def valgrindErrorMessage(result,project):
+  retVal = None
+  r=r'ERROR SUMMARY: (\d+) errors from'
+  errors = re.findall(r, result['stderr'])
+  if len(errors) and int(errors[0])>0 :
+    retVal = "valgrind found "+errors[0]+" errors"
+  return retVal
+
+def valgrindLeakMessage(result,project):
+  retVal = None
+  r=r'LEAK SUMMARY:\n.*lost: ([0-9,]+) bytes in.*\n.*lost: ([0-9,]+) bytes in.*\n.*lost: ([0-9,]+) bytes in.*\n.*reachable: ([0-9,]+) bytes in.*'
+  leaks = re.findall(r, result['stderr'])
+  leaksum = 0
+  if len(leaks) :
+    leaksum = int(leaks[0][0].replace(',','')) + int(leaks[0][1].replace(',','')) + int(leaks[0][2].replace(',','')) + int(leaks[0][3].replace(',',''))
+    if leaksum :
+      retVal = "valgrind found %d bytes of leaking memory" % leaksum
+  return retVal
+
 #-------------------------------------------------------------------------
 #
 # Determine if config needs to be run.

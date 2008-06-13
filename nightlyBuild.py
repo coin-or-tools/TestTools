@@ -174,14 +174,13 @@ for p in PROJECTS :
       # Setup usage of 3rd Party code
       # If not specified, use the moderate setting 'allowed'
       #--------------------------------------------------------------------
-      if 'ThirdParty' in configuration: configuration.pop('ThirdParty')
       if 'ThirdParty' in bc:
         if bc['ThirdParty'].lower() not in ['yes', 'no', 'allowed'] :
           print 'Error. ThirdParty entry of Build type configuration contains invalided value '+bc['ThirdParty']
           sys.exit(1)
         configuration['ThirdParty'] = bc['ThirdParty'].lower();
       else :
-        bc['ThirdParty'] = 'allowed'
+        configuration['ThirdParty'] = 'allowed'
 
       #--------------------------------------------------------------------
       # Set config options
@@ -200,7 +199,6 @@ for p in PROJECTS :
       #--------------------------------------------------------------------
       # Deal with coin projects to be skipped by ./config
       #--------------------------------------------------------------------
-      if 'SkipProjects' in configuration: configuration.pop('SkipProjects')
       if 'SkipProjects' in bc :
         configuration['SkipProjects']=bc['SkipProjects']
       else :
@@ -211,11 +209,16 @@ for p in PROJECTS :
       #---------------------------------------------------------------------
       configuration['test']={}
       if NBprojectConfig.CFG_BLD_TEST.has_key(p) :
-        configuration['test']=NBprojectConfig.CFG_BLD_TEST[p]
-      else :
-        # No test commands so remove from configuration
+        configuration['test'] = NBprojectConfig.CFG_BLD_TEST[p][:]
+        # Remove valgrind tests, if valgrind is not there, the user does not want them, or we do not build in debug mode
+        if not valgrind_ok or bc['OptLevel'] != "Debug" :
+          for testitem in configuration['test'][:] :
+            if testitem['cmd'].find('valgrind')>=0 :
+              configuration['test'].remove(testitem)
+      # If no test commands, remove from configuration
+      if len(configuration['test'])==0 :
         configuration.pop('test')
-        
+
       #---------------------------------------------------------------------
       # Set up install executables
       #---------------------------------------------------------------------
@@ -240,20 +243,6 @@ for p in PROJECTS :
       if 'Distribute' in bc and bc['Distribute'].lower()=='yes' :
         configuration['Distribute']=True
         
-      #---------------------------------------------------------------------
-      # Set up valgring executables
-      # Don't bother if not in debug mode
-      #---------------------------------------------------------------------
-      if 'valgrind' in configuration :
-        configuration.pop('valgrind')
-      # Add valgrind test to configuration, if
-      # - valgrind is there and the user wants valgrind tests,
-      # - we build in debug mode,
-      # - we build in a unix like style, and
-      # - there is a valgrind test specified for the current project
-      if valgrind_ok and bc['OptLevel'] == "Debug" and configuration['buildMethod']=='unixConfig' and p in NBprojectConfig.CFG_BLD_VALGRIND_TEST :
-        configuration['valgrind']=NBprojectConfig.CFG_BLD_VALGRIND_TEST[p]
-
     if configuration['buildMethod']=='msSln' :
       #--------------------------------------------------------------------
       # Doing a microsoft solution  build.  Grap ms sln parms

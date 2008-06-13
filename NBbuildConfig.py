@@ -543,13 +543,11 @@ def run(configuration) :
   #---------------------------------------------------------------------
   # Run all test executables
   #---------------------------------------------------------------------
-#  print "test for the unit test"
   if "test" in configuration :
-#    print "we are going to run the unit test"
     for t in range( len(configuration['test']) ) :
+      testCmd=configuration['test'][t]['cmd']
       testRelDir=configuration['test'][t]['dir']
       testDir = os.path.join(fullBuildDir,testRelDir)
-      testCmd=configuration['test'][t]['cmd']
       if not os.path.isdir(testDir) :
         NBlogMessages.writeMessage('  Directory to run test from does not exist:')
         NBlogMessages.writeMessage('    Intended directory: '+testDir)
@@ -562,7 +560,6 @@ def run(configuration) :
       commandHistory+=[ testCmd ]
       result=NBosCommand.run(testCmd)
       writeResults(result,testCmd)
-
         
       for testFunc in configuration['test'][t]['check'] :
         result['buildDir']=fullBuildDir
@@ -575,50 +572,13 @@ def run(configuration) :
           NBemail.sendCmdMsgs(configuration['project'],result,testCmd)
           return
 
-
-  #---------------------------------------------------------------------
-  # Run valgrind on the unit tests
-  #---------------------------------------------------------------------
-  
-  if "valgrind" in configuration :
-    for t in range( len(configuration['valgrind']) ) :
-      valgrindRelDir=configuration['valgrind'][t]['dir']
-      valgrindDir = os.path.join(fullBuildDir, valgrindRelDir)
-      valgrindCmd=configuration['valgrind'][t]['cmd']
-      if not os.path.isdir( valgrindDir) :
-        NBlogMessages.writeMessage('  Directory to run valgrind on unitTest from does not exist:')
-        NBlogMessages.writeMessage('    fullBuild directory: ' + fullBuildDir)
-        NBlogMessages.writeMessage('    Intended directory: ' + valgrindDir)
-        NBlogMessages.writeMessage('    Intended command: ' + valgrindCmd)
-        continue
-      os.chdir( valgrindDir)
-      NBlogMessages.writeMessage('  cd ' + valgrindDir)
-      NBlogMessages.writeMessage('  ' + valgrindCmd )
-      commandHistory+=[ valgrindCmd ]
-      result = NBosCommand.run(valgrindCmd)
-      writeResults(result, valgrindCmd)
-      result['svn version'] = configuration['svnVersion']
-      result['command history'] = commandHistory
-      r1=r'ERROR SUMMARY: (\d+) errors from'
-      r2=r'LEAK SUMMARY:\n.*([0-9,]+) bytes in.*\n.*([0-9,]+) bytes in.*\n.*([0-9,]+) bytes in.*\n.*([0-9,]+) bytes in.*'
-      errors = re.findall(r1, result['stderr'])
-      leaks  = re.findall(r2, result['stderr'])
-      if (len(errors) and int(errors[0])>0) or \
-         (len(leaks) and (int(leaks[0].replace(',','.'))>0 or int(leaks[1].replace(',','.'))>0 or int(leaks[2].replace(',','.'))>0 or int(leaks[3].replace(',','.'))>0)) :
-        NBemail.sendCmdMsgs(configuration['project'], result, valgrindCmd)
-        return
-      #if result['returnCode'] != 0 :
-      #  NBemail.sendCmdMsgs(configuration['project'], result, valgrindCmd)
-
   #---------------------------------------------------------------------
   # Run all install executables
   # We assume a Unix Installation
   #---------------------------------------------------------------------
 
   if configuration['buildMethod']=='unixConfig' or configuration['buildMethod']=='mingw':
-#    print "check if we should do an intall"
     if "install" in configuration :
-#      print "we should do an install"
       for t in range( len(configuration['install']) ) :
         installRelDir=configuration['install'][t]['dir']
         installDir = os.path.join(fullBuildDir, installRelDir)
@@ -642,11 +602,13 @@ def run(configuration) :
             NBemail.sendCmdMsgs(configuration['project'],result,installCmd)
             return
 
+      # after install, go back into build directory 
+      os.chdir(fullBuildDir)
     
-    #---------------------------------------------------------------------
-    # Build the binary distribution
-    # We assume a Unix distribution
-    #---------------------------------------------------------------------
+      #---------------------------------------------------------------------
+      # Build the binary distribution
+      # We assume a Unix distribution
+      #---------------------------------------------------------------------
 
       # Only build binary if we are using allowed third party software
       if BUILD_BINARIES > 0 and buildThirdParty:

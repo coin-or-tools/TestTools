@@ -42,18 +42,17 @@ CFG_BLD_TEST['CoinUtils']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
-                             NBcheckResult.standardSuccessMessage ] } ]
+                             NBcheckResult.standardSuccessMessage ] },
+                  {'dir':'CoinUtils/test',
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
+                   'check': [ NBcheckResult.valgrindErrorMessage,
+                              NBcheckResult.valgrindLeakMessage ] } ]
 
 CFG_BLD_INSTALL['CoinUtils']=[
                   {'dir':'',
                    'cmd': MAKECMD+' install',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
-
-CFG_BLD_VALGRIND_TEST['CoinUtils']=[
-                  {'dir':'CoinUtils/test',
-                   'cmd': ' valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
-                   'check':[] } ]
 
 
 SLN_BLD_TEST['CoinUtils']=[
@@ -102,11 +101,11 @@ CFG_BLD_TEST['Clp']=[
                    'cmd': '.'+os.sep+'clp -unitTest -dirNetlib=_NETLIBDIR_ -netlib',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage,
-                             NBcheckResult.endWithWoodw] } ]
-CFG_BLD_VALGRIND_TEST['Clp']=[
+                             NBcheckResult.endWithWoodw] },
                   {'dir':'Clp/src',
                    'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./clp -unitTest',
-                   'check':[] } ]
+                   'check':[ NBcheckResult.valgrindErrorMessage,
+                             NBcheckResult.valgrindLeakMessage ] } ]
 
 CFG_BLD_INSTALL['Clp']=[
                   {'dir':'',
@@ -136,11 +135,11 @@ CFG_BLD_TEST['SYMPHONY']=[
                   {'dir':'',
                    'cmd': MAKECMD+' fulltest',
                    'check':[ NBcheckResult.rc0,
-                             NBcheckResult.standardSuccessMessage ] } ]
-CFG_BLD_VALGRIND_TEST['SYMPHONY']=[
+                             NBcheckResult.standardSuccessMessage ] },
                   {'dir':'SYMPHONY/test',
-                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
-                   'check':[] } ]
+                   'cmd':'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
+                   'check':[ NBcheckResult.valgrindErrorMessage,
+                             NBcheckResult.valgrindLeakMessage ] } ]
 
 CFG_BLD_INSTALL['SYMPHONY']=[
                   {'dir':'',
@@ -182,11 +181,11 @@ CFG_BLD_TEST['Osi']=[
                    'cmd': '.'+os.sep+'unitTest -testOsiSolverInterface -netlibDir=_NETLIBDIR_ -cerr2cout',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage,
-                             NBcheckResult.noSolverInterfaceTestingIssueMessage] } ]
-CFG_BLD_VALGRIND_TEST['Osi']=[
+                             NBcheckResult.noSolverInterfaceTestingIssueMessage] },
                   {'dir':'Osi/test',
                    'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
-                   'check':[] } ]
+                   'check':[ NBcheckResult.valgrindErrorMessage,
+                             NBcheckResult.valgrindLeakMessage ] } ]
 
 CFG_BLD_INSTALL['Osi']=[
                   {'dir':'',
@@ -208,11 +207,11 @@ CFG_BLD_TEST['Cgl']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
-                             NBcheckResult.standardSuccessMessage ] } ]
-CFG_BLD_VALGRIND_TEST['Cgl']=[
+                             NBcheckResult.standardSuccessMessage ] },
                   {'dir':'Cgl/test',
                    'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
-                   'check':[] } ]
+                   'check':[ NBcheckResult.valgrindErrorMessage,
+                             NBcheckResult.valgrindLeakMessage ] } ]
 
 CFG_BLD_INSTALL['Cgl']=[
                   {'dir':'',
@@ -231,11 +230,11 @@ CFG_BLD_TEST['Cbc']=[
                              NBcheckResult.cbcMakeTestSuccessMessage ] },
                   {'dir': os.path.join('Cbc','src'),
                    'cmd': '.'+os.sep+'cbc -unitTest -dirMiplib=_MIPLIB3DIR_ -miplib',
-                   'check':[ NBcheckResult.rc0to2 ] } ]
-CFG_BLD_VALGRIND_TEST['Cbc']=[
+                   'check':[ NBcheckResult.rc0to2 ] },
                   {'dir':'Cbc/src',
                    'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./cbc -unitTest',
-                   'check':[] } ]
+                   'check':[ NBcheckResult.valgrindErrorMessage,
+                             NBcheckResult.valgrindLeakMessage ] } ]
 
 if importedCbcRunTimes :
   CFG_BLD_TEST['Cbc'][1]['check'].append(NBcbcRunTimes.cbcSaveRuntimes)
@@ -261,13 +260,20 @@ PROJECT_EMAIL_ADDRS['Ipopt'] = 'andreasw _AT_ us _DOT_ ibm _DOT_ com'
 CFG_BLD_TEST['Ipopt']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
-                   'check':[ NBcheckResult.rc0 ] } ]
-
-# running valgrind on Ipopt fails with "badly formed extended line op encountered!" message for me
-CFG_BLD_VALGRIND_TEST['Ipopt']=[
+                   'check':[ NBcheckResult.rc0 ] },
+# running valgrind on Ipopt fails with "badly formed extended line op encountered!" message for me on gcc4.4
                   {'dir':'Ipopt/test',
-                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./hs071_cpp; valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./hs071_c; valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./hs071_f',
-                   'check':[] } ]
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./hs071_cpp',
+                   'check': [ NBcheckResult.valgrindErrorMessage,
+                              NBcheckResult.valgrindLeakMessage ] }, 
+                  {'dir':'Ipopt/test',
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./hs071_c',
+                   'check': [ NBcheckResult.valgrindErrorMessage,
+                              NBcheckResult.valgrindLeakMessage ] },
+                  {'dir':'Ipopt/test',
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./hs071_f',
+                   'check': [ NBcheckResult.valgrindErrorMessage,
+                              NBcheckResult.valgrindLeakMessage ] } ]
 
 CFG_BLD_INSTALL['Ipopt']=[
                   {'dir':'',
@@ -283,13 +289,16 @@ PROJECT_EMAIL_ADDRS['Bonmin'] = 'pierre _DOT_ bonami _AT_ lif _DOT_ univ-mrs _DO
 CFG_BLD_TEST['Bonmin']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
-                   'check':[ NBcheckResult.rc0 ] } ]
-
-# running valgrind on Bonmin fails with "badly formed extended line op encountered!" message for me
-CFG_BLD_VALGRIND_TEST['Bonmin']=[
+                   'check':[ NBcheckResult.rc0 ] },
+# running valgrind on Bonmin fails with "badly formed extended line op encountered!" message for me on gcc 4.4
                   {'dir':'Bonmin/test',
-                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest; valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./CppExample',
-                   'check':[] } ]
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
+                   'check': [ NBcheckResult.valgrindErrorMessage,
+                              NBcheckResult.valgrindLeakMessage ] },
+                  {'dir':'Bonmin/test',
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./CppExample',
+                   'check': [ NBcheckResult.valgrindErrorMessage,
+                              NBcheckResult.valgrindLeakMessage ] } ]
 
 CFG_BLD_INSTALL['Bonmin']=[
                   {'dir':'',
@@ -305,11 +314,11 @@ CFG_BLD_TEST['FlopC++']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
-                             NBcheckResult.standardSuccessMessage ] } ]
-CFG_BLD_VALGRIND_TEST['FlopC++']=[
+                             NBcheckResult.standardSuccessMessage ] },
                   {'dir':'FlopCpp/test',
                    'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
-                   'check':[] } ]
+                   'check': [ NBcheckResult.valgrindErrorMessage,
+                              NBcheckResult.valgrindLeakMessage ] } ]
 
 CFG_BLD_INSTALL['FlopC++']=[
                   {'dir':'',
@@ -338,14 +347,12 @@ CFG_BLD_TEST['OS']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
-                             NBcheckResult.standardSuccessMessage ] } ]
-
-# running valgrind on OS fails with "badly formed extended line op encountered!" message for me
-CFG_BLD_VALGRIND_TEST['OS']=[
+                             NBcheckResult.standardSuccessMessage ] },
+# running valgrind on OS fails with "badly formed extended line op encountered!" message for me on gcc 4.4
                   {'dir':'OS/test',
                    'cmd': ' valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
-                   'check':[] } ]
-
+                   'check': [ NBcheckResult.valgrindErrorMessage,
+                              NBcheckResult.valgrindLeakMessage ] } ]
 
 CFG_BLD_INSTALL['OS']=[
                   {'dir':'',
@@ -399,11 +406,12 @@ CFG_BLD_TEST['CppAD']=[
                    'check':[ NBcheckResult.rc0 ] }, 
                   {'dir':'',
                    'cmd': os.path.join('.','test_more','test_more'),
-                   'check':[ NBcheckResult.rc0 ] } ]
-CFG_BLD_VALGRIND_TEST['CppAD']=[
+                   'check':[ NBcheckResult.rc0 ] },
+# currently valgrind complains about the use of uninitialized data in some code that looks perfectly fine
+# therefore we do not include the error check here so far 
                   {'dir':'example',
                    'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./example',
-                   'check':[] } ]
+                   'check': [ NBcheckResult.valgrindLeakMessage ] } ]
 
 #take out make install for CppAD since it does not confirm to usual coin procedure (it installs into $HOME/include by default!)
 #CFG_BLD_INSTALL['CppAD']=[
@@ -420,11 +428,11 @@ CFG_BLD_TEST['Smi']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
-                             NBcheckResult.endWithStarDoneStar ] } ]
-CFG_BLD_VALGRIND_TEST['Smi']=[
+                             NBcheckResult.endWithStarDoneStar ] },
                   {'dir':'Smi/test',
                    'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
-                   'check':[] } ]
+                   'check': [ NBcheckResult.valgrindErrorMessage,
+                              NBcheckResult.valgrindLeakMessage] } ]
 
 CFG_BLD_INSTALL['Smi']=[
                   {'dir':'',
