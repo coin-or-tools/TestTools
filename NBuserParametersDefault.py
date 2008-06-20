@@ -181,7 +181,7 @@ BUILDS = {
      ],
    'Ipopt' : 
      [ 
-       { 'SvnVersion': 'trunk',        'OptLevel': 'Default', 'ThirdParty':'Yes', 'Distribute': 'No' }
+       { 'SvnVersion': 'trunk',        'OptLevel': 'Default', 'ThirdParty':'Allowed', 'Distribute': 'No' }
      #,{ 'SvnVersion': 'trunk',        'OptLevel': 'Debug',   'ThirdParty':'Yes' }
      #,{ 'SvnVersion': 'latestStable', 'OptLevel': 'Default', 'ThirdParty':'Yes' }
      #,{ 'SvnVersion': 'latestRelease','OptLevel': 'Default', 'ThirdParty':'Yes' }
@@ -198,7 +198,7 @@ BUILDS = {
    'Bonmin' : 
      [ 
        { 'SvnVersion': 'trunk',        'OptLevel': 'Default', 'ThirdParty':'Yes', 'Distribute': 'No' }
-      #,{ 'SvnVersion': 'branches/0.9', 'OptLevel': 'Default', 'ThirdParty':'Yes' }
+      #,{ 'SvnVersion': 'latestStable', 'OptLevel': 'Default', 'ThirdParty':'Yes' }
      ],
    'OS' :
      [ 
@@ -210,7 +210,8 @@ BUILDS = {
      ],
    'CppAD' : 
      [ 
-       { 'SvnVersion': 'trunk',        'OptLevel': 'Default', 'ThirdParty': 'No', 'AdditionalConfigOptions':'--with-Example --with-TestMore', 'Distribute': 'No' }
+       { 'SvnVersion': 'trunk',        'OptLevel': 'Default', 'ThirdParty': 'Allowed', 'AdditionalConfigOptions':'--with-Example --with-TestMore IPOPT_DIR='+NIGHTLY_BUILD_ROOT_DIR+'/Ipopt/trunk-default' } 
+     #,{ 'SvnVersion': 'trunk',        'OptLevel': 'Default', 'ThirdParty': 'Allowed', 'AdditionalConfigOptions':'--with-Example --with-TestMore', 'Distribute': 'No' }
      #,{ 'SvnVersion': 'trunk',        'OptLevel': 'Debug',   'ThirdParty': 'No', 'AdditionalConfigOptions':'--with-Example --with-TestMore' } 
      #,{ 'SvnVersion': 'latestStable', 'OptLevel': 'Default', 'ThirdParty': 'No', 'AdditionalConfigOptions':'--with-Example --with-TestMore' } 
      #,{ 'SvnVersion': 'latestRelease','OptLevel': 'Default', 'ThirdParty': 'No', 'AdditionalConfigOptions':'--with-Example --with-TestMore' } 
