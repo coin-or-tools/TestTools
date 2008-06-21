@@ -34,12 +34,6 @@ SVN_HISTORY = {}
 THIRD_PARTY_HISTORY = []
 
 #---------------------------------------------------------------------
-# Keep ThirdParty directories for testing for building binaries
-#---------------------------------------------------------------------
-THIRD_PARTY_DIRECTORIES = []
-
-
-#---------------------------------------------------------------------
 # cleanUpName:
 # File and directory names are generated and may contain 
 # undesireable characters.
@@ -312,6 +306,8 @@ def run(configuration) :
 
   #---------------------------------------------------------------------
   # If there are third party apps, then get these apps
+  # Check if we can build binaries, i.e., that we use only allowed 3rd party codes
+  # If only allowed codes should be build, add others onto skip list
   #---------------------------------------------------------------------
   buildThirdParty = True
   if 'ThirdParty' in configuration and configuration['ThirdParty'] != 'no' :
@@ -322,8 +318,6 @@ def run(configuration) :
         #clean up: take care of .svn, .OLD, and non-directory entries
         cleanUpThirdPartyDirs(thirdPartyBaseDir, thirdPartyDirs)
         for d in thirdPartyDirs :
-          THIRD_PARTY_HISTORY.append(d)
-          THIRD_PARTY_DIRECTORIES.append(d)
           dlong = 'ThirdParty/'+d
 
           # if the 3rdparty code is not in the white list and not skipped, but we want to build only allowed projects,
@@ -364,22 +358,26 @@ def run(configuration) :
               writeResults(installReturn,install3rdPartyCmd)
           else :
             NBlogMessages.writeMessage('  skipped a new download of '+d)
-        else :
-          NBlogMessages.writeMessage('  Skipped a new download into '+thirdPartyBaseDir)
-          # but we still need to test for building binaries even if we already
-          # got the ThirdParty code
-          buildThirdParty  = True
-          for d in THIRD_PARTY_DIRECTORIES :
-            thirdPartyDir=os.path.join(thirdPartyBaseDir,d)
-            dlong = 'ThirdParty/'+d
-            # if the 3rdparty code is not in the white list and not skipped, but we want to build only allowed projects,
-            # then we add this 3rdparty code into the list of skipped projects
-            if configuration['ThirdParty'] == 'allowed' and d not in ThirdPartyAllowed and dlong not in configuration['SkipProjects'] :
-              configuration['SkipProjects'].append(dlong)
-            # everything okay if we skip this project
-            if dlong not in configuration['SkipProjects'] and d not in ThirdPartyAllowed  :
-              NBlogMessages.writeMessage('  Warning: we cannot build a binary distribution because of: ' + d)
-              buildThirdParty  = False
+        THIRD_PARTY_HISTORY.append(thirdPartyBaseDir)
+      else : # thirdPartyBaseDir is in THIRD_PARTY_HISTORY
+        NBlogMessages.writeMessage('  Skipped anew download of third party code into '+thirdPartyBaseDir)
+        # but we still need to test for building binaries even if we already
+        # got the ThirdParty code
+        buildThirdParty  = True
+        thirdPartyDirs = os.listdir(thirdPartyBaseDir)
+        #clean up: take care of .svn, .OLD, and non-directory entries
+        cleanUpThirdPartyDirs(thirdPartyBaseDir, thirdPartyDirs)
+        for d in thirdPartyDirs :
+          thirdPartyDir=os.path.join(thirdPartyBaseDir,d)
+          dlong = 'ThirdParty/'+d
+          # if the 3rdparty code is not in the white list and not skipped, but we want to build only allowed projects,
+          # then we add this 3rdparty code into the list of skipped projects
+          if configuration['ThirdParty'] == 'allowed' and d not in ThirdPartyAllowed and dlong not in configuration['SkipProjects'] :
+            configuration['SkipProjects'].append(dlong)
+          # everything okay if we skip this project
+          if dlong not in configuration['SkipProjects'] and d not in ThirdPartyAllowed  :
+            NBlogMessages.writeMessage('  Warning: we cannot build a binary distribution because of: ' + d)
+            buildThirdParty  = False
     
   #---------------------------------------------------------------------
   # Create the build directory if it doesn't exist
