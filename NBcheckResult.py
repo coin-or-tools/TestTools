@@ -133,7 +133,7 @@ def valgrindErrorMessage(result,project):
 
 def valgrindLeakMessage(result,project):
   retVal = None
-  r=r'LEAK SUMMARY:\n.*lost: ([0-9,]+) bytes in.*\n.*lost: ([0-9,]+) bytes in.*\n.*lost: ([0-9,]+) bytes in.*\n.*reachable: ([0-9,]+) bytes in.*'
+  r=r'LEAK SUMMARY:\n.*lost: ([0-9,]+) bytes in.*\n.*lost: ([0-9,]+) bytes in.*\n.*: ([0-9,]+) bytes in.*\n.*: ([0-9,]+) bytes in.*'
   leaks = re.findall(r, result['stderr'])
   leaksum = 0
   if len(leaks) :
