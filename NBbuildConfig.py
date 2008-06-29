@@ -748,26 +748,26 @@ def run(configuration) :
 	  os.chdir(distributeDirectory)
           if BUILD_BINARIES & 1 :
             #add archive files to repository (should just happen nothing if already existing in repo)
-            svnAddCmd = 'svn add "'+tarFileName
+            svnAddCmd = 'svn add '+tarFileName
             commandHistory+=[ svnAddCmd ]
             svnResult=NBsvnCommand.run(svnAddCmd,'.',configuration['project'])
             if svnResult['returnCode'] != 0 and svnResult['stderr'].find('has binary mime type property')<0:
               return
             #set mime type to binary so that there is no confusion about endlines
-            svnPropsetCmd = 'svn propset svn:mime-type application/octet-stream "'+tarFileName
+            svnPropsetCmd = 'svn propset svn:mime-type application/octet-stream '+tarFileName
             commandHistory+=[ svnPropsetCmd ]
             svnResult=NBsvnCommand.run(svnPropsetCmd,'.',configuration['project'])
             if svnResult['returnCode'] != 0 :
               return
           if BUILD_BINARIES & 2 :
             #add archive files to repository (should just happen nothing if already existing in repo)
-            svnAddCmd = 'svn add "'+zipFileName
+            svnAddCmd = 'svn add '+zipFileName
             commandHistory+=[ svnAddCmd ]
             svnResult=NBsvnCommand.run(svnAddCmd,'.',configuration['project'])
             if svnResult['returnCode'] != 0 and svnResult['stderr'].find('has binary mime type property')<0:
               return
             #set mime type to binary so that there is no confusion about endlines
-            svnPropsetCmd = 'svn propset svn:mime-type application/octet-stream "'+zipFileName
+            svnPropsetCmd = 'svn propset svn:mime-type application/octet-stream '+zipFileName
             commandHistory+=[ svnPropsetCmd ]
             svnResult=NBsvnCommand.run(svnPropsetCmd,'.',configuration['project'])
             if svnResult['returnCode'] != 0 :
