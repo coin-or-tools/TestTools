@@ -665,7 +665,10 @@ def run(configuration) :
 
         # tar and/or zip them up
         tarCmd = 'tar  --exclude=.svn -czvf   '
-        zipCmd = 'zip  -yr '
+        if sys.platform == 'win32' :
+          zipCmd = 'zip -r '
+        else :
+          zipCmd = 'zip -yr '
 
         archiveFileName  = configuration['project'] 
         archiveFileName += "-"+svnVersionFlattened.replace('releases-','').replace('stable-','')
@@ -731,14 +734,16 @@ def run(configuration) :
           if svnResult['returnCode'] != 0 :
             return
           #put archive files into distribution directory
-          copyCmd = 'cp -f "'+os.path.join(binariesDir, archiveFileName)+'".* "'+distributeDirectory+'"'
-          commandHistory += [ copyCmd ]
-          result = NBosCommand.run( copyCmd)
-          if result['returnCode'] != 0 :
-            result['svn version'] = configuration['svnVersion']
-            result['command history'] = commandHistory
-            NBemail.sendCmdMsgs(configuration['project'], result, copyCmd)
-            writeResults(result, copyCmd)
+          try :
+            if BUILD_BINARIES & 1 :
+              shutil.copy(os.path.join(binariesDir, tarFileName), distributeDirectory)
+            if BUILD_BINARIES & 2 :
+              shutil.copy(os.path.join(binariesDir, zipFileName), distributeDirectory)
+          except shutil.Error :
+            NBlogMessages.writeMessage(' ERROR: Copying archive file(s) into distribution directory failed.')
+            return
+          except :
+            print "Unexpected error:", sys.exc_info()[0]
             return
           #add archive files to repository (should just happen nothing if already existing in repo)
           svnAddCmd = 'svn add "'+os.path.join(distributeDirectory,archiveFileName)+'".*'
