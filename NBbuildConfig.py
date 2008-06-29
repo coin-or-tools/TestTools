@@ -745,18 +745,33 @@ def run(configuration) :
           except :
             print "Unexpected error:", sys.exc_info()[0]
             return
-          #add archive files to repository (should just happen nothing if already existing in repo)
-          svnAddCmd = 'svn add "'+os.path.join(distributeDirectory,archiveFileName)+'".*'
-          commandHistory+=[ svnAddCmd ]
-          svnResult=NBsvnCommand.run(svnAddCmd,'.',configuration['project'])
-          if svnResult['returnCode'] != 0 and svnResult['stderr'].find('has binary mime type property')<0:
-            return
-          #set mime type to binary so that there is no confusion about endlines
-          svnPropsetCmd = 'svn propset svn:mime-type application/octet-stream "'+os.path.join(distributeDirectory,archiveFileName)+'".*'
-          commandHistory+=[ svnPropsetCmd ]
-          svnResult=NBsvnCommand.run(svnPropsetCmd,'.',configuration['project'])
-          if svnResult['returnCode'] != 0 :
-            return
+	  os.chdir(distributeDirectory)
+          if BUILD_BINARIES & 1 :
+            #add archive files to repository (should just happen nothing if already existing in repo)
+            svnAddCmd = 'svn add "'+tarFileName
+            commandHistory+=[ svnAddCmd ]
+            svnResult=NBsvnCommand.run(svnAddCmd,'.',configuration['project'])
+            if svnResult['returnCode'] != 0 and svnResult['stderr'].find('has binary mime type property')<0:
+              return
+            #set mime type to binary so that there is no confusion about endlines
+            svnPropsetCmd = 'svn propset svn:mime-type application/octet-stream "'+tarFileName
+            commandHistory+=[ svnPropsetCmd ]
+            svnResult=NBsvnCommand.run(svnPropsetCmd,'.',configuration['project'])
+            if svnResult['returnCode'] != 0 :
+              return
+          if BUILD_BINARIES & 2 :
+            #add archive files to repository (should just happen nothing if already existing in repo)
+            svnAddCmd = 'svn add "'+zipFileName
+            commandHistory+=[ svnAddCmd ]
+            svnResult=NBsvnCommand.run(svnAddCmd,'.',configuration['project'])
+            if svnResult['returnCode'] != 0 and svnResult['stderr'].find('has binary mime type property')<0:
+              return
+            #set mime type to binary so that there is no confusion about endlines
+            svnPropsetCmd = 'svn propset svn:mime-type application/octet-stream "'+zipFileName
+            commandHistory+=[ svnPropsetCmd ]
+            svnResult=NBsvnCommand.run(svnPropsetCmd,'.',configuration['project'])
+            if svnResult['returnCode'] != 0 :
+              return
           #commit repository
           svnCommitCmd =  'svn commit --non-interactive '
           svnCommitCmd += '-m "nightlyBuild: adding or updating archive '+archiveFileName+'" '
@@ -764,12 +779,12 @@ def run(configuration) :
             svnCommitCmd += '--username '+COINBINARY_SVN_USERNAME+' '
           if len(COINBINARY_SVN_PASSWORD) :
             svnCommitCmd += '--password '+COINBINARY_SVN_PASSWORD+' '
-          svnCommitCmd += distributeDirectory
           if len(COINBINARY_SVN_PASSWORD)==0 :
             commandHistory+=[ svnCommitCmd ]
           svnResult=NBsvnCommand.run(svnCommitCmd,'.',configuration['project'])
           if svnResult['returnCode'] != 0 :
             return
+          os.chdir(fullBuildDir)
                 
 
   
