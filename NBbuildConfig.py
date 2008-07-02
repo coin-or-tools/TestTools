@@ -663,45 +663,27 @@ def run(configuration) :
         if not os.path.isdir( binariesDir ) :
           os.makedirs( binariesDir )
 
-        #add the AUTHORS, INSTALL, LICENSE, and README file
-        copyCmd = 'cp  '
-        copyCmd  += os.path.join(projectCheckOutDir, configuration['project'], 'AUTHORS')
-        copyCmd += ' AUTHORS'
-        result = NBosCommand.run( copyCmd)
-        writeResults(result, copyCmd)
-        commandHistory+=[ copyCmd ]
+        #add the AUTHORS,  LICENSE, and README file
+        fileAUT = open('AUTHORS', 'w')
+        fileAUT.write('See the project directories in share/doc/coin for the AUTHORS files')
+        fileAUT.close()
         if os.path.isfile( "AUTHORS") == True :
            directories += ' AUTHORS  '
+        
 
-           
-        copyCmd = 'cp  '
-        copyCmd  += os.path.join(projectCheckOutDir, configuration['project'], 'INSTALL')
-        copyCmd += ' INSTALL'
-        result = NBosCommand.run( copyCmd)
-        writeResults(result, copyCmd)
-        commandHistory+=[ copyCmd ]
-        if os.path.isfile( "INSTALL") == True :
-           directories += ' INSTALL  '
-
-        copyCmd = 'cp  '
-        copyCmd  += os.path.join(projectCheckOutDir, configuration['project'], 'LICENSE')
-        copyCmd += ' LICENSE'
-        result = NBosCommand.run( copyCmd)
-        writeResults(result, copyCmd)
-        commandHistory+=[ copyCmd ]
+        fileLIC = open('LICENSE', 'w')
+        fileLIC.write('See the project directories in share/doc/coin for the LICENSE files')
+        fileLIC.close()
         if os.path.isfile( "LICENSE") == True :
            directories += ' LICENSE  '
 
-        copyCmd = 'cp  '
-        copyCmd  += os.path.join(projectCheckOutDir, configuration['project'], 'README')
-        copyCmd += ' README'
-        result = NBosCommand.run( copyCmd)
-        writeResults(result, copyCmd)
-        commandHistory+=[ copyCmd ]
+           
+ 
+        fileRED = open('README', 'w')
+        fileRED.write('See the project directories in share/doc/coin for the README files')
+        fileRED.close()
         if os.path.isfile( "README") == True :
-           directories += ' README  '
-
-        
+           directories += ' README  '       
         
 
         # tar and/or zip them up
