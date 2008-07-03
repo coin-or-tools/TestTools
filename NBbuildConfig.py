@@ -343,6 +343,9 @@ def run(configuration) :
               commandHistory+=[ install3rdPartyCmd ]
               if configuration['buildMethod']=='mingw' :
                 install3rdPartyCmd = os.path.join(".","get."+d)
+                # apply patch if mumps and mingw and gcc
+                if d == "Mumps"  and  BUILD_INFORMATION.find("mingw") > 0 and BUILD_INFORMATION.find("gcc") > 0 :
+                  install3rdPartyCmd = install3rdPartyCmd + "  -patch"
                 #what a pain replace("\\", "/") does not work
                 # we must split and then join, ugh
                 pathParts = install3rdPartyCmd.split("\\")
@@ -695,6 +698,11 @@ def run(configuration) :
           archiveFileName += "-"+configuration['buildTypeInfo']
         tarFileName = archiveFileName+".tgz"
         zipFileName = archiveFileName+".zip"
+
+        #kludge for gcc and mingw
+
+        if BUILD_INFORMATION.find("mingw") > 0 and BUILD_INFORMATION.find("gcc") > 0 :
+          binariesDir = "../binaries"
             
         tarCmd += os.path.join(binariesDir, tarFileName)
         tarCmd += directories
