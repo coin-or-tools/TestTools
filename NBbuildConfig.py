@@ -663,25 +663,17 @@ def run(configuration) :
         if not os.path.isdir( binariesDir ) :
           os.makedirs( binariesDir )
 
-        #add the AUTHORS,  LICENSE, and README file
-        fileAUT = open('AUTHORS', 'w')
-        fileAUT.write('See the project directories in share/doc/coin for the AUTHORS files')
-        fileAUT.close()
-        if os.path.isfile( "AUTHORS") == True :
-           directories += ' AUTHORS  '
-        
-
-        fileLIC = open('LICENSE', 'w')
-        fileLIC.write('See the project directories in share/doc/coin for the LICENSE files')
-        fileLIC.close()
-        if os.path.isfile( "LICENSE") == True :
-           directories += ' LICENSE  '
-
+        #add the README file
            
- 
-        fileRED = open('README', 'w')
-        fileRED.write('See the project directories in share/doc/coin for the README files')
-        fileRED.close()
+        thePath = os.path.join(SCRIPT_PATH,"NBReadMe.txt")
+        fileReadMe = open(thePath, 'r')
+        filetext = fileReadMe.read()
+        fileReadMe.close()
+
+        fileReadMe = open('README', 'w')
+        fileReadMe.write( filetext)
+        fileReadMe.close()
+        
         if os.path.isfile( "README") == True :
            directories += ' README  '       
         

@@ -7,6 +7,7 @@
 # This file is a template for a user-given parameter file.
 # It contains variables that the person running this script need to set or modify.
 #----------------------------------------------------------------------
+import sys
 
 #----------------------------------------------------------------------
 # NIGHTLY_BUILD_ROOT_DIR: 
@@ -365,3 +366,7 @@ VALGRIND_TEST = False
 #----------------------------------------------------------------------
 
 ThirdPartyAllowed = ['ASL', 'Blas', 'Lapack', 'Mumps', 'GAMSIO']
+
+# THE CURRENT PATH
+
+SCRIPT_PATH = sys.path[ 0]
