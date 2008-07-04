@@ -702,12 +702,14 @@ def run(configuration) :
         #kludge for gcc and mingw
 
         if BUILD_INFORMATION.find("mingw") > 0 and BUILD_INFORMATION.find("gcc") > 0 :
-          binariesDir = "../binaries"
-            
-        tarCmd += os.path.join(binariesDir, tarFileName)
+            tarCmd +=  "../binaries/" + tarFileName
+        else :
+            tarCmd += os.path.join(binariesDir, tarFileName)
         tarCmd += directories
-        
-        zipCmd += os.path.join(binariesDir, zipFileName)
+        if BUILD_INFORMATION.find("mingw") > 0 and BUILD_INFORMATION.find("gcc") > 0 :
+            zipCmd +=  "../binaries/" + zipFileName
+        else :
+            zipCmd += os.path.join(binariesDir, zipFileName)     
         zipCmd += directories
         zipCmd += ' -x \\*/.svn/\\*'
 
