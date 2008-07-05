@@ -684,7 +684,11 @@ def run(configuration) :
             zipCmd = 'zip -yr '
 
           tarCmd += tarFileName+' '+archiveName
-          zipCmd += zipFileName+' '+archiveName+' -x \\*/.svn/\\*'
+          if  BUILD_INFORMATION.find("mingw") > 0 :
+            #zipCmd += 'a -tzip' + ' ' +zipFileName+' '+archiveName+' -x\\!*.svn'
+            zipCmd += 'a -tzip' + ' ' +zipFileName+' '+archiveName +' -x!*.svn'
+          else :
+            zipCmd += zipFileName+' '+archiveName+' -x \\*/.svn/\\*'
 
           failedCmd = ''
           if BUILD_BINARIES & 1 :
