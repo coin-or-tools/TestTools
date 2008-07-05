@@ -629,10 +629,10 @@ def run(configuration) :
             archiveName += "-"+configuration['buildTypeInfo']
         
           archiveDir = os.path.join(binariesDir, archiveName)
-
           if os.path.isdir(archiveDir) :
             NBlogMessages.writeMessage('  delete old archive directory '+archiveDir)
             shutil.rmtree(archiveDir, True)
+          os.makedirs( archiveDir )
         
           NBlogMessages.writeMessage('  copy files for binary distribution into directory '+archiveDir)
           # if the lib directory is there, copy it
