@@ -613,209 +613,166 @@ def run(configuration) :
 
       # Only build binary if we are using allowed third party software
       if BUILD_BINARIES > 0 and buildThirdParty:
-        directories = ""   
-        # if the lib  directory is there, add it
-        # delete these if already there
-        if os.path.isdir( "lib") == True :
-          directories  += " lib "
-
-        # if the include directory is there, add it
-        if os.path.isdir( "include") == True :
-          directories +=  " include "
-
-        # if the examples directory is there, add it
-        examplesDir = os.path.join(projectCheckOutDir, configuration['project'], 'examples')
-        NBlogMessages.writeMessage('  Examples Directory is ' + examplesDir)
-        # copy the examples directory
-        if os.path.isdir( examplesDir) == True :
-          NBlogMessages.writeMessage('  copy ' + examplesDir + ' to examples')
-          copyCmd = 'cp -r '
-          copyCmd  += examplesDir
-          copyCmd += ' examples'
-          result = NBosCommand.run( copyCmd)
-          writeResults(result, copyCmd)
-          commandHistory+=[ copyCmd ]
-          if os.path.isdir( 'examples') == True :  directories +=  " examples"
-        ##
-        # now get the makefiles
-        examplesMakefileDir = os.path.join(fullBuildDir, configuration['project'], 'examples')
-        NBlogMessages.writeMessage('  Examples Makefile Directory is ' + examplesMakefileDir)
-        # copy the examples directory
-        if os.path.isdir( examplesMakefileDir) == True :
-          NBlogMessages.writeMessage('  copy ' + examplesMakefileDir + ' to examplesMakefiles')
-          copyCmd = 'cp -r '
-          copyCmd  += examplesMakefileDir
-          copyCmd += ' examplesMakefiles'
-          result = NBosCommand.run( copyCmd)
-          writeResults(result, copyCmd)
-          commandHistory+=[ copyCmd ]
-          if os.path.isdir( 'examplesMakefiles') == True :  directories +=  " examplesMakefiles"
-        # done with examples directory
-
-        # if the bin directory is there, add it
-        if os.path.isdir( "bin") == True :
-          directories +=  " bin "
-
-        # if the share directory is there, add it
-        if os.path.isdir( "share") == True :
-          directories +=  " share "
-
-        #if the directory that stores the binaries is not there create it
-        binariesDir=os.path.join(projectBaseDir,"binaries")
-
-        if not os.path.isdir( binariesDir ) :
-          os.makedirs( binariesDir )
-
-        #add the README file
-           
-        thePath = os.path.join(SCRIPT_PATH,"NBReadMe.txt")
-        fileReadMe = open(thePath, 'r')
-        filetext = fileReadMe.read()
-        fileReadMe.close()
-
-        fileReadMe = open('README', 'w')
-        fileReadMe.write( filetext)
-        fileReadMe.close()
+        try:
+          #if the directory that stores the binaries is not there create it
+          binariesDir=os.path.join(projectBaseDir,"binaries")
+          if not os.path.isdir( binariesDir ) :
+            os.makedirs( binariesDir )
+          
+          archiveName  = configuration['project'] 
+          archiveName += "-"+svnVersionFlattened.replace('releases-','').replace('stable-','')
+          if len(BUILD_INFORMATION) > 0 :
+            archiveName += "-"+BUILD_INFORMATION
+          if configuration['configOptions']['unique'].find('--enable-debug')>=0 :
+            archiveName += "-debug"
+          if 'buildTypeInfo' in configuration and len(configuration['buildTypeInfo']) > 0 :
+            archiveName += "-"+configuration['buildTypeInfo']
         
-        if os.path.isfile( "README") == True :
-           directories += ' README  '       
+          archiveDir = os.path.join(binariesDir, archiveName)
+
+          if os.path.isdir(archiveDir) :
+            NBlogMessages.writeMessage('  delete old archive directory '+archiveDir)
+            shutil.rmtree(archiveDir, True)
         
+          NBlogMessages.writeMessage('  copy files for binary distribution into directory '+archiveDir)
+          # if the lib directory is there, copy it
+          if os.path.isdir( "lib") :
+            #NBlogMessages.writeMessage('  copy lib directory')
+            shutil.copytree("lib", os.path.join(archiveDir, "lib"), True)
 
-        # tar and/or zip them up
-        tarCmd = 'tar  --exclude=.svn -czvf   '
-        if sys.platform == 'win32' :
-          zipCmd = 'zip -r '
-        else :
-          zipCmd = 'zip -yr '
+          # if the include directory is there, copy it
+          if os.path.isdir( "include") :
+            #NBlogMessages.writeMessage('  copy include directory')
+            shutil.copytree("include", os.path.join(archiveDir, "include"), True)
+        
+          # copy the examples directory
+          examplesDir = os.path.join(projectCheckOutDir, configuration['project'], 'examples')
+          #NBlogMessages.writeMessage('  Examples Directory is ' + examplesDir)
+          if os.path.isdir( examplesDir) :
+            #NBlogMessages.writeMessage('  copy examples source directory '+examplesDir)
+            shutil.copytree(examplesDir, os.path.join(archiveDir, "examples"), True)
+          
+          # copy the examples Makefiles directory
+          examplesMakefileDir = os.path.join(fullBuildDir, configuration['project'], 'examples')
+          #NBlogMessages.writeMessage('  Examples Makefile Directory is ' + examplesMakefileDir)
+          if os.path.isdir( examplesMakefileDir) :
+            #NBlogMessages.writeMessage('  copy examples makefile directory ' + examplesMakefileDir)
+            shutil.copytree(examplesDir, os.path.join(archiveDir, 'examplesMakefiles'), True)
 
-        archiveFileName  = configuration['project'] 
-        archiveFileName += "-"+svnVersionFlattened.replace('releases-','').replace('stable-','')
-        if len(BUILD_INFORMATION) > 0 :
-          archiveFileName += "-"+BUILD_INFORMATION
-        if configuration['configOptions']['unique'].find('--enable-debug')>=0 :
-          archiveFileName += "-debug"
-        if 'buildTypeInfo' in configuration and len(configuration['buildTypeInfo']) > 0 :
-          archiveFileName += "-"+configuration['buildTypeInfo']
-        tarFileName = archiveFileName+".tgz"
-        zipFileName = archiveFileName+".zip"
+          # if the bin directory is there, copy it
+          if os.path.isdir( "bin") :
+            #NBlogMessages.writeMessage('  copy bin directory')
+            shutil.copytree("bin", os.path.join(archiveDir, "bin"), True)
 
-        #kludge for gcc and mingw
+          # if the share directory is there, copy it
+          if os.path.isdir( "share") :
+            #NBlogMessages.writeMessage('  copy share directory')
+            shutil.copytree("share", os.path.join(archiveDir, "share"), True)
+          
+          shutil.copy(os.path.join(SCRIPT_PATH,"NBReadMe.txt"), os.path.join(archiveDir,"README"))
+          
+          # tar and/or zip them up
+          os.chdir(binariesDir)
 
-        if BUILD_INFORMATION.find("mingw") > 0 and BUILD_INFORMATION.find("gcc") > 0 :
-            tarCmd +=  "../binaries/" + tarFileName
-        else :
-            tarCmd += os.path.join(binariesDir, tarFileName)
-        tarCmd += directories
-        if BUILD_INFORMATION.find("mingw") > 0 and BUILD_INFORMATION.find("gcc") > 0 :
-            zipCmd +=  "../binaries/" + zipFileName
-        else :
-            zipCmd += os.path.join(binariesDir, zipFileName)     
-        zipCmd += directories
-        zipCmd += ' -x \\*/.svn/\\*'
+          tarFileName = archiveName+".tgz"
+          zipFileName = archiveName+".zip"
 
-        failedCmd = ''
-        if BUILD_BINARIES & 1 :
-          NBlogMessages.writeMessage( '  '+ tarCmd )
-          commandHistory+=[ tarCmd ]
-          result=NBosCommand.run( tarCmd)
-          writeResults(result, tarCmd)
-          if result['returnCode']!=0 : failedCmd = tarCmd
+          tarCmd = 'tar  --exclude=.svn -czvf   '
+          if sys.platform == 'win32' :
+            zipCmd = 'zip -r '
+          else :
+            zipCmd = 'zip -yr '
 
-        if BUILD_BINARIES & 2 and failedCmd == '':
-          NBlogMessages.writeMessage( '  '+ zipCmd )
-          commandHistory+=[ zipCmd ]
-          result=NBosCommand.run( zipCmd)
-          writeResults(result, zipCmd)
-          if result['returnCode']!=0 : failedCmd = zipCmd
-  
-        #delete the examples directory
-        if os.path.isdir( 'examples') == True :
-          rmDirCmd = 'rm -rf '
-          rmDirCmd += 'examples'
-          commandHistory += [ rmDirCmd]
-          NBosCommand.run( rmDirCmd)
-        #delete the examplesMakefiles directory
-        if os.path.isdir( 'examplesMakefiles') == True :
-          rmDirCmd = 'rm -rf '
-          rmDirCmd += 'examplesMakefiles'
-          commandHistory += [ rmDirCmd]
-          NBosCommand.run( rmDirCmd)
-        if result['returnCode'] != 0 :
-          result['svn version']=configuration['svnVersion']
-          # figure out what tarResultFail should be
-          #result['tar']=tarResultFail
-          result['command history']=commandHistory
-          NBemail.sendCmdMsgs(configuration['project'], result, failedCmd)
-          writeResults(result, failedCmd)
-          return
-            
-        # upload archive files to CoinBinary server
-        if configuration['Distribute'] == True :
-          #checkout/update binary directory from CoinBinary server
-          distributeDirectory = os.path.join(projectBaseDir,"distribute")
-          svnCheckoutCmd = 'svn checkout https://projects.coin-or.org/svn/CoinBinary/binary/'+configuration['project']+' '+distributeDirectory
-          commandHistory+=[ svnCheckoutCmd ]
-          svnResult=NBsvnCommand.run(svnCheckoutCmd,'.',configuration['project'])
-          if svnResult['returnCode'] != 0 :
+          tarCmd += tarFileName+' '+archiveName
+          zipCmd += zipFileName+' '+archiveName+' -x \\*/.svn/\\*'
+
+          failedCmd = ''
+          if BUILD_BINARIES & 1 :
+            NBlogMessages.writeMessage( '  '+ tarCmd )
+            commandHistory+=[ tarCmd ]
+            result=NBosCommand.run( tarCmd)
+            writeResults(result, tarCmd)
+            if result['returnCode']!=0 : failedCmd = tarCmd
+
+          if BUILD_BINARIES & 2 and failedCmd == '':
+            NBlogMessages.writeMessage( '  '+ zipCmd )
+            commandHistory+=[ zipCmd ]
+            result=NBosCommand.run( zipCmd)
+            writeResults(result, zipCmd)
+            if result['returnCode']!=0 : failedCmd = zipCmd
+
+          if result['returnCode'] != 0 :
+            result['svn version']=configuration['svnVersion']
+            result['command history']=commandHistory
+            NBemail.sendCmdMsgs(configuration['project'], result, failedCmd)
+            writeResults(result, failedCmd)
             return
-          #put archive files into distribution directory
-          try :
+      
+          # remove directory where we collected files for binary distribution...
+          shutil.rmtree(archiveDir)
+
+          # upload archive files to CoinBinary server
+          if configuration['Distribute'] == True :
+            #checkout/update binary directory from CoinBinary server
+            distributeDirectory = os.path.join(projectBaseDir,"distribute")
+            svnCheckoutCmd = 'svn checkout https://projects.coin-or.org/svn/CoinBinary/binary/'+configuration['project']+' '+distributeDirectory
+            commandHistory+=[ svnCheckoutCmd ]
+            svnResult=NBsvnCommand.run(svnCheckoutCmd,'.',configuration['project'])
+            if svnResult['returnCode'] != 0 :
+              return
+            #put archive files into distribution directory
+            archives=[]
             if BUILD_BINARIES & 1 :
               shutil.copy(os.path.join(binariesDir, tarFileName), distributeDirectory)
+              archives.append(tarFileName)
             if BUILD_BINARIES & 2 :
               shutil.copy(os.path.join(binariesDir, zipFileName), distributeDirectory)
-          except shutil.Error :
-            NBlogMessages.writeMessage(' ERROR: Copying archive file(s) into distribution directory failed.')
-            return
-          except :
-            print "Unexpected error:", sys.exc_info()[0]
-            return
-	  os.chdir(distributeDirectory)
-          if BUILD_BINARIES & 1 :
-            #add archive files to repository (should just happen nothing if already existing in repo)
-            svnAddCmd = 'svn add '+tarFileName
-            commandHistory+=[ svnAddCmd ]
-            svnResult=NBsvnCommand.run(svnAddCmd,'.',configuration['project'])
-            if svnResult['returnCode'] != 0 and svnResult['stderr'].find('has binary mime type property')<0:
-              return
-            #set mime type to binary so that there is no confusion about endlines
-            svnPropsetCmd = 'svn propset svn:mime-type application/octet-stream '+tarFileName
-            commandHistory+=[ svnPropsetCmd ]
-            svnResult=NBsvnCommand.run(svnPropsetCmd,'.',configuration['project'])
+              archives.append(zipFileName)
+
+            os.chdir(distributeDirectory)
+            for archive in archives :
+              #add archive files to repository (should just happen nothing if already existing in repo)
+              svnAddCmd = 'svn add '+archive
+              commandHistory+=[ svnAddCmd ]
+              svnResult=NBsvnCommand.run(svnAddCmd,'.',configuration['project'])
+              if svnResult['returnCode'] != 0 and svnResult['stderr'].find('has binary mime type property')<0:
+                return
+              #set mime type to binary so that there is no confusion about endlines
+              svnPropsetCmd = 'svn propset svn:mime-type application/octet-stream '+archive
+              commandHistory+=[ svnPropsetCmd ]
+              svnResult=NBsvnCommand.run(svnPropsetCmd,'.',configuration['project'])
+              if svnResult['returnCode'] != 0 :
+                return
+
+            #commit repository
+            svnCommitCmd =  'svn commit --non-interactive '
+            svnCommitCmd += '-m "nightlyBuild: adding or updating archive '+archiveName+'" '
+            if len(COINBINARY_SVN_USERNAME) :
+              svnCommitCmd += '--username '+COINBINARY_SVN_USERNAME+' '
+            if len(COINBINARY_SVN_PASSWORD) :
+              svnCommitCmd += '--password '+COINBINARY_SVN_PASSWORD+' '
+            if len(COINBINARY_SVN_PASSWORD)==0 :
+              commandHistory+=[ svnCommitCmd ]
+            svnResult=NBsvnCommand.run(svnCommitCmd,'.',configuration['project'])
             if svnResult['returnCode'] != 0 :
               return
-          if BUILD_BINARIES & 2 :
-            #add archive files to repository (should just happen nothing if already existing in repo)
-            svnAddCmd = 'svn add '+zipFileName
-            commandHistory+=[ svnAddCmd ]
-            svnResult=NBsvnCommand.run(svnAddCmd,'.',configuration['project'])
-            if svnResult['returnCode'] != 0 and svnResult['stderr'].find('has binary mime type property')<0:
-              return
-            #set mime type to binary so that there is no confusion about endlines
-            svnPropsetCmd = 'svn propset svn:mime-type application/octet-stream '+zipFileName
-            commandHistory+=[ svnPropsetCmd ]
-            svnResult=NBsvnCommand.run(svnPropsetCmd,'.',configuration['project'])
-            if svnResult['returnCode'] != 0 :
-              return
-          #commit repository
-          svnCommitCmd =  'svn commit --non-interactive '
-          svnCommitCmd += '-m "nightlyBuild: adding or updating archive '+archiveFileName+'" '
-          if len(COINBINARY_SVN_USERNAME) :
-            svnCommitCmd += '--username '+COINBINARY_SVN_USERNAME+' '
-          if len(COINBINARY_SVN_PASSWORD) :
-            svnCommitCmd += '--password '+COINBINARY_SVN_PASSWORD+' '
-          if len(COINBINARY_SVN_PASSWORD)==0 :
-            commandHistory+=[ svnCommitCmd ]
-          svnResult=NBsvnCommand.run(svnCommitCmd,'.',configuration['project'])
-          if svnResult['returnCode'] != 0 :
-            return
+
           os.chdir(fullBuildDir)
-                
+        except (IOError, os.error), why:
+          NBlogMessages.writeMessage(' ERROR in creating or distributing binary distribution: '+str(why))
+          result={'stdout':'', 'stderr':str(why), 'svn version':configuration['svnVersion'], 'command history':commandHistory}
+          NBemail.sendCmdMsgs(configuration['project'], result, 'creating or distributing binary distribution')
+          return
+        except :
+          print "Unexpected error:", sys.exc_info()[0]
+          result={'stdout':'', 'stderr':sys.exc_info()[0], 'svn version':configuration['svnVersion'], 'command history':commandHistory}
+          NBemail.sendCmdMsgs(configuration['project'], result, 'creating or distributing binary distribution')
+          return
 
   
-  #---------------------------------------------------------------------
-  # Everything build and all tests passed.
-  #---------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
+  # Everything build, all tests passed, and binaries were build and distributed.
+  #-----------------------------------------------------------------------------
   os.chdir(fullBuildDir)
   f=open('NBallTestsPassed','w')
   f.close()
