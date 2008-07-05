@@ -504,7 +504,7 @@ def run(configuration) :
       slnFileDir = os.path.join(projectCheckOutDir,\
                           configuration['project'],\
                           'MSVisualStudio',\
-                          'v8')
+                          MSVS_VERSION)
     if not os.path.isdir(slnFileDir) :
       NBlogMessages.writeMessage("  Solution file directory does not exist: "+slnFileDir)
       return
