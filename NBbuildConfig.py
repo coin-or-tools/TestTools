@@ -9,6 +9,7 @@ import os
 import sys
 import re
 import shutil
+import stat
 try :
   # Many older but currently used versions of python does not have hashlib
   import hashlib
@@ -93,6 +94,22 @@ def writeResults(result,filenameSuffix) :
   stderrfile=open('NBstderr-'+cleanedUpSuffix,'w')
   stderrfile.write(result['stderr'])
   stderrfile.close()
+  
+#---------------------------------------------------------------------
+# setFilesWritable:
+# Sets all files and directories to be readable, writeable, and executable.
+# So shutil.rmtree on Windows can remove the whole dir.
+#---------------------------------------------------------------------
+def setFilesWritable(dir) :
+  for root, dirs, files in os.walk(dir):
+    for name in files:
+        #print "change mode of file "+name+" in "+root
+        os.chmod(os.path.join(root, name), stat.S_IRWXU)
+    for name in dirs:
+        #print "change mode of dir  "+name+" in "+root
+        os.chmod(os.path.join(root, name), stat.S_IRWXU)
+
+
   
 #------------------------------------------------------------------------
 #  Given a configuration, build and test it.
@@ -631,7 +648,8 @@ def run(configuration) :
           archiveDir = os.path.join(binariesDir, archiveName)
           if os.path.isdir(archiveDir) :
             NBlogMessages.writeMessage('  delete old archive directory '+archiveDir)
-            shutil.rmtree(archiveDir, True)
+            setFilesWritable(archiveDir)
+            shutil.rmtree(archiveDir)
           os.makedirs( archiveDir )
         
           NBlogMessages.writeMessage('  copy files for binary distribution into directory '+archiveDir)
@@ -713,6 +731,7 @@ def run(configuration) :
             return
       
           # remove directory where we collected files for binary distribution...
+          setFilesWritable(archiveDir)
           shutil.rmtree(archiveDir)
 
           # upload archive files to CoinBinary server
@@ -767,11 +786,11 @@ def run(configuration) :
           result={'stdout':'', 'stderr':str(why), 'svn version':configuration['svnVersion'], 'command history':commandHistory}
           NBemail.sendCmdMsgs(configuration['project'], result, 'creating or distributing binary distribution')
           return
-        except :
-          print "Unexpected error:", sys.exc_info()[0]
-          result={'stdout':'', 'stderr':sys.exc_info()[0], 'svn version':configuration['svnVersion'], 'command history':commandHistory}
-          NBemail.sendCmdMsgs(configuration['project'], result, 'creating or distributing binary distribution')
-          return
+#        except :
+#          print "Unexpected error:", sys.exc_info()[0]
+#          result={'stdout':'', 'stderr':sys.exc_info()[0], 'svn version':configuration['svnVersion'], 'command history':commandHistory}
+#          NBemail.sendCmdMsgs(configuration['project'], result, 'creating or distributing binary distribution')
+#          return
 
   
   #-----------------------------------------------------------------------------
