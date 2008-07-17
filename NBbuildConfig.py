@@ -232,11 +232,17 @@ def run(configuration) :
   if configuration['clear previous build'] and os.path.isdir(fullBuildDir) :
     NBlogMessages.writeMessage('  Remove previous build in directory '+fullBuildDir)
     try:
+      setFilesWritable(fullBuildDir)
       shutil.rmtree(fullBuildDir)
-    except shutil.Error :
-      NBlogMessages.writeMessage('  Warning: removal of directory '+fullBuildDir+' failed.')
+    except (IOError, os.error), why:
+      NBlogMessages.writeMessage('  ERROR removing previous build directory: '+str(why))
+#    except shutil.Error :
+#      NBlogMessages.writeMessage('  Warning: removal of directory '+fullBuildDir+' failed.')
     except :
-      print "Unexpected error:", sys.exc_info()[0]
+      exception = sys.exc_info()[:2]
+      NBlogMessages.writeMessage('  ERROR removing previous build directory: '+exception[0])
+      NBlogMessages.writeMessage('   '+exception[1])
+#     NBlogMessages.writeMessage('  Warning: removal of directory '+fullBuildDir+' failed.')
 
   #---------------------------------------------------------------------
   # If nothing has changed and the prior run tested OK or there is
