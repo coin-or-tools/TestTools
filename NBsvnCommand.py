@@ -29,7 +29,7 @@ execfile('NBuserParameters.py')
 def run(svnCmd,dir,project) :
   if dir != '.' :
     os.chdir(dir)
-    NBlogMessages.writeMessage('  cd '+dir)
+#    NBlogMessages.writeMessage('  cd '+dir)
   NBlogMessages.writeMessage('  '+svnCmd)
 # result = NBosCommand.run(svnCmd)
 

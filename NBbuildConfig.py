@@ -226,23 +226,6 @@ def run(configuration) :
   #for a list of commands that have been executed
   commandHistory = []
 
-  #---------------------------------------------------------------------
-  # Completely remove a previous build if the user indicates this
-  #---------------------------------------------------------------------
-  if configuration['clear previous build'] and os.path.isdir(fullBuildDir) :
-    NBlogMessages.writeMessage('  Remove previous build in directory '+fullBuildDir)
-    try:
-      setFilesWritable(fullBuildDir)
-      shutil.rmtree(fullBuildDir)
-    except (IOError, os.error), why:
-      NBlogMessages.writeMessage('  ERROR removing previous build directory: '+str(why))
-#    except shutil.Error :
-#      NBlogMessages.writeMessage('  Warning: removal of directory '+fullBuildDir+' failed.')
-    except :
-      exception = sys.exc_info()[:2]
-      NBlogMessages.writeMessage('  ERROR removing previous build directory: '+exception[0])
-      NBlogMessages.writeMessage('   '+exception[1])
-#     NBlogMessages.writeMessage('  Warning: removal of directory '+fullBuildDir+' failed.')
 
   #---------------------------------------------------------------------
   # If nothing has changed and the prior run tested OK or there is
@@ -287,6 +270,19 @@ def run(configuration) :
         return
       else:
         NBlogMessages.writeMessage('  No changes but run always selected')
+    # Completely remove a previous build if the user indicates this
+    if configuration['clear previous build'] :
+      os.chdir(projectBaseDir)
+      NBlogMessages.writeMessage('  Remove previous build in directory '+fullBuildDir)
+      try:
+        setFilesWritable(fullBuildDir)
+        shutil.rmtree(fullBuildDir)
+      except (IOError, os.error), why:
+        NBlogMessages.writeMessage('  ERROR removing previous build directory: '+str(why))
+      except :
+        exception = sys.exc_info()[:2]
+        NBlogMessages.writeMessage('  ERROR removing previous build directory: '+exception[0])
+        NBlogMessages.writeMessage('   '+exception[1])
   else :
     NBlogMessages.writeMessage('  Targets have not yet been built')
 
@@ -434,7 +430,7 @@ def run(configuration) :
       skipOptions=' COIN_SKIP_PROJECTS="'+skipOptions+'"'
 
     os.chdir(fullBuildDir)
-    NBlogMessages.writeMessage('  cd '+fullBuildDir)
+#    NBlogMessages.writeMessage('  cd '+fullBuildDir)
 
     # Assemble all config options together and create config command
     configOptions ="-C "+configuration['configOptions']['unique']

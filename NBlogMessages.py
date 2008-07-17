@@ -45,7 +45,8 @@ def closeLogFile():
 #------------------------------------------------------------------------
 def writeMessage( msg ) :
   global LOG_MESSAGES
-  logMsg = time.ctime(time.time())+': '
+  logMsg = time.strftime("%d %b %H:%M:%S: ")
+#  logMsg = time.ctime(time.time())+': '
   logMsg += msg
   LOG_MESSAGES+=logMsg+'\n'
   if LOGPRINT :
