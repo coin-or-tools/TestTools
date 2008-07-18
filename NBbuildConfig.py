@@ -433,8 +433,8 @@ def run(configuration) :
 #    NBlogMessages.writeMessage('  cd '+fullBuildDir)
 
     # Assemble all config options together and create config command
-    configOptions ="-C "+configuration['configOptions']['unique']
-    configOptions+=configuration['configOptions']['invariant']
+    configOptions ="-C "+configuration['configOptions']['invariant']
+    configOptions+=configuration['configOptions']['unique']
     configOptions+=skipOptions
     configOptions=configOptions.replace("  "," ")
     configOptions=configOptions.replace("  "," ")
