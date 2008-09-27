@@ -59,8 +59,8 @@ def latestStableVersion(project) :
     handle=urllib2.urlopen(url)
     html=handle.read()
     handle.close()
-  except urllib2.URLError, (errno, strerror):
-    NBlogMessages.writeMessage('  Warning: URLError exception caught while retrieving '+url+': '+strerror)
+  except urllib2.URLError, why:
+    NBlogMessages.writeMessage('  Warning: URLError exception caught while retrieving '+url+': '+str(why))
     return False
 
   # In html code find the latest version number
@@ -85,8 +85,8 @@ def latestReleaseVersion(project) :
     handle=urllib2.urlopen(url)
     html=handle.read()
     handle.close()
-  except urllib2.URLError, (errno, strerror):
-    NBlogMessages.writeMessage('  Warning: URLError exception caught while retrieving '+url+': '+strerror)
+  except urllib2.URLError, why:
+    NBlogMessages.writeMessage('  Warning: URLError exception caught while retrieving '+url+': '+str(why))
     return False
 
   # In html code find the latest version number
