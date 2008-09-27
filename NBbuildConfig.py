@@ -690,6 +690,9 @@ def run(configuration) :
             shutil.copytree("share", os.path.join(archiveDir, "share"), True)
           
           shutil.copy(os.path.join(SCRIPT_PATH,"NBReadMe.txt"), os.path.join(archiveDir,"README"))
+
+          if configuration['project'] == 'CoinUtils' :
+            shutil.copytree(os.path.join(SCRIPT_PATH, "CoinAllExamples"), os.path.join(archiveDir,"CoinAllExamples"), True)
           
           # tar and/or zip them up
           os.chdir(binariesDir)
