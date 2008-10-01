@@ -743,7 +743,7 @@ def run(configuration) :
           if configuration['Distribute'] == True :
             #checkout/update binary directory from CoinBinary server
             distributeDirectory = os.path.join(projectBaseDir,"distribute")
-            svnCheckoutCmd = 'svn checkout https://projects.coin-or.org/svn/CoinBinary/binary/'+configuration['project']+' '+distributeDirectory
+            svnCheckoutCmd = 'svn checkout -N https://projects.coin-or.org/svn/CoinBinary/binary/'+configuration['project']+' '+distributeDirectory
             commandHistory+=[ svnCheckoutCmd ]
             svnResult=NBsvnCommand.run(svnCheckoutCmd,'.',configuration['project'])
             if svnResult['returnCode'] != 0 :
