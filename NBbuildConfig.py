@@ -483,9 +483,10 @@ def run(configuration) :
             failedProject=matches[-1]
             NBlogMessages.writeMessage("  configure failed for subproject "+failedProject)
             logFileName = os.path.join(failedProject,"config.log") 
-            logFilePtr = open(logFileName,'r')
-            logFileContent = logFilePtr.read()
-            logFilePtr.close()
+            if os.path.isfile(logFileName) :
+              logFilePtr = open(logFileName,'r')
+              logFileContent = logFilePtr.read()
+              logFilePtr.close()
 
           # Add contents of log file to message
           error_msg['config.log'] = logFileContent
