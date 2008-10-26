@@ -26,7 +26,24 @@ NIGHTLY_BUILD_ROOT_DIR = '/xxx'
 #----------------------------------------------------------------------
 # List of Projects to be processed by script
 #----------------------------------------------------------------------
-PROJECTS = ['CoinUtils','Clp','Osi','DyLP','SYMPHONY','Vol','Cgl','Cbc','Smi','FlopC++','Ipopt','Bonmin','OS','CppAD','CoinAll']
+PROJECTS = [
+  'CoinUtils',
+  'Clp',
+  'Cgl',
+  'Osi',
+  'Cbc',
+  'CoinMP',
+  'DyLP',
+  'FlopC++',
+  'Ipopt',
+  'Smi',
+  'SYMPHONY',
+  'Vol',
+  'Bonmin',
+  'CppAD',
+  'OS',
+  'CoinAll'
+]
 
 #----------------------------------------------------------------------
 # Addition of GAMSlinks project to list of projects
@@ -128,12 +145,12 @@ BUILDS = {
    #  ],
    'CoinUtils' : 
      [
-       { 'SvnVersion': 'trunk',         'OptLevel': 'Default', 'ThirdParty': 'No', 'Distribute': 'No' } 
-     #,{ 'SvnVersion': 'trunk',         'OptLevel': 'Debug',   'ThirdParty': 'No' } 
-     #,{ 'SvnVersion': 'latestStable',  'OptLevel': 'Default', 'ThirdParty': 'No' } 
-     #,{ 'SvnVersion': 'latestStable',  'OptLevel': 'Debug',   'ThirdParty': 'No' } 
-     #,{ 'SvnVersion': 'latestRelease', 'OptLevel': 'Default', 'ThirdParty': 'No' }  
-     #,{ 'SvnVersion': 'latestRelease', 'OptLevel': 'Debug',   'ThirdParty': 'No' } 
+       { 'SvnVersion': 'trunk',         'OptLevel': 'Default', 'ThirdParty': 'Allowed', 'Distribute': 'No' } 
+     #,{ 'SvnVersion': 'trunk',         'OptLevel': 'Debug',   'ThirdParty': 'Allowed' } 
+     #,{ 'SvnVersion': 'latestStable',  'OptLevel': 'Default', 'ThirdParty': 'Allowed' } 
+     #,{ 'SvnVersion': 'latestStable',  'OptLevel': 'Debug',   'ThirdParty': 'Allowed' } 
+     #,{ 'SvnVersion': 'latestRelease', 'OptLevel': 'Default', 'ThirdParty': 'Allowed' }  
+     #,{ 'SvnVersion': 'latestRelease', 'OptLevel': 'Debug',   'ThirdParty': 'Allowed' } 
      ],
    'Osi' : 
      [ 
@@ -159,11 +176,11 @@ BUILDS = {
      [ 
        { 'Reference' : 'CoinUtils' }
      ],
-   'Cbc' : 
-     [ 
+   'Cbc' :
+     [
        { 'Reference' : 'CoinUtils' } 
        # And build a parallel version with Third Party
-     ,{ 
+      ,{
         'SvnVersion': 'latestStable', 
         'OptLevel': 'Default', 
         'ThirdParty': 'Yes', 
@@ -171,6 +188,10 @@ BUILDS = {
         'Distribute' : 'No',
         'BuildTypeInfo': 'parallel' 
       }
+     ],
+   'CoinMP' : 
+     [
+       { 'Reference' : 'CoinUtils' }
      ],
    'Smi' : 
      [ 
@@ -321,7 +342,7 @@ BUILD_BINARIES = 0
 #----------------------------------------------------------------------
 # You may wish to include platform, compiler, or other build information
 # in the binary build name.
-# Example: BUILD_INFORMATION = 'linux-i386-gcc4.2'
+# Example: BUILD_INFORMATION = 'linux-x86-gcc4.2'
 #----------------------------------------------------------------------
 
 BUILD_INFORMATION = ''
