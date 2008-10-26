@@ -66,7 +66,7 @@ def latestStableVersion(project) :
   # In html code find the latest version number
   #   <li><a href="3.2/">3.2/</a></li>
   #   <li><a href="3.3/">3.3/</a></li>
-  r=r'<li><a href="(\d*\.\d*)/">(\d*\.\d*)/</a></li>'
+  r=r'<li><a href="(\d+\.?\d+)/">(\d+\.?\d+)/</a></li>'
   findResult=re.findall(r,html)
   if len(findResult)==0: return False
   latestStableVersionRepeated2Times = findResult[-1:][0]
@@ -91,7 +91,7 @@ def latestReleaseVersion(project) :
 
   # In html code find the latest version number
   #   <li><a href="1.6.0/">1.6.0/</a></li>
-  r=r'<li><a href="(\d*\.\d*.\d*)/">(\d*\.\d*.\d*)/</a></li>'
+  r=r'<li><a href="(\d+\.?\d+\.?\d+)/">(\d+\.?\d+\.?\d+)/</a></li>'
   findResult=re.findall(r,html)
   if len(findResult)==0: return False
   latestReleaseVersionRepeated2Times = findResult[-1:][0]
