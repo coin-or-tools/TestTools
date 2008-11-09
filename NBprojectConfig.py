@@ -245,7 +245,6 @@ CFG_BLD_TEST['Ipopt']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0 ] },
-# running valgrind on Ipopt fails with "badly formed extended line op encountered!" message for me on gcc4.4
                   {'dir':'Ipopt/test',
                    'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./hs071_cpp',
                    'check': [ NBcheckResult.valgrindErrorMessage,
@@ -272,7 +271,6 @@ CFG_BLD_TEST['Bonmin']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0 ] },
-# running valgrind on Bonmin fails with "badly formed extended line op encountered!" message for me on gcc 4.4
                   {'dir':'Bonmin/test',
                    'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
                    'check': [ NBcheckResult.valgrindErrorMessage,
@@ -461,3 +459,34 @@ SLN_BLD_TEST['CoinMP']=[
                    'cmd':'unitTest',
                    'check':[ NBcheckResult.rc0 ] } ]
 #does not have references to third party packages
+
+#----------------------------------------------------------------------
+PROJECT_EMAIL_ADDRS['Couenne'] = 'belotti _AT_ lehigh _DOT_ edu'
+
+CFG_BLD_TEST['Couenne']=[
+                  {'dir':'',
+                   'cmd': MAKECMD+' test',
+                   'check':[ NBcheckResult.rc0 ] },
+                  {'dir':'Couenne/src/main',
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full --show-reachable=yes ./couenne ../../test/toy.nl',
+                   'check':[ NBcheckResult.valgrindErrorMessage,
+                             NBcheckResult.valgrindLeakMessage ] },
+                  {'dir':'Couenne/src/main',
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full --show-reachable=yes ./couenne ../../test/qquad.nl',
+                   'check':[ NBcheckResult.valgrindErrorMessage,
+                             NBcheckResult.valgrindLeakMessage ] },
+                  {'dir':'Couenne/src/main',
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full --show-reachable=yes ./couenne ../../test/geoid.nl',
+                   'check':[ NBcheckResult.valgrindErrorMessage,
+                             NBcheckResult.valgrindLeakMessage ] },
+                  {'dir':'Couenne/src/main',
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full --show-reachable=yes ./couenne ../../test/small2.nl',
+                   'check':[ NBcheckResult.valgrindErrorMessage,
+                             NBcheckResult.valgrindLeakMessage ] }                  
+                  ]
+
+CFG_BLD_INSTALL['Couenne']=[
+                  {'dir':'',
+                   'cmd': MAKECMD+' install' } ]
+
+#does have references to third party packages

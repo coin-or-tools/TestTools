@@ -40,6 +40,7 @@ PROJECTS = [
   'SYMPHONY',
   'Vol',
   'Bonmin',
+  'Couenne',
   'CppAD',
   'OS',
   'CoinAll'
@@ -215,7 +216,11 @@ BUILDS = {
      ],
    'LaGO' :
      [
-       { 'Reference' : 'Ipopt' },
+       { 'Reference' : 'Ipopt' }
+     ],
+   'Couenne' : 
+     [
+       { 'Reference' : 'CoinUtils' }
      ],
    'Bonmin' : 
      [ 
