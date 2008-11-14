@@ -273,12 +273,14 @@ CFG_BLD_TEST['Bonmin']=[
                    'check':[ NBcheckResult.rc0 ] },
                   {'dir':'Bonmin/test',
                    'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
-                   'check': [ NBcheckResult.valgrindErrorMessage,
-                              NBcheckResult.valgrindLeakMessage ] },
+                   'check': [ NBcheckResult.valgrindErrorMessage
+                             #,NBcheckResult.valgrindLeakMessage
+                            ] },
                   {'dir':'Bonmin/test',
                    'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./CppExample',
-                   'check': [ NBcheckResult.valgrindErrorMessage,
-                              NBcheckResult.valgrindLeakMessage ] } ]
+                   'check': [ NBcheckResult.valgrindErrorMessage
+                             #,NBcheckResult.valgrindLeakMessage
+                            ] } ]
 
 CFG_BLD_INSTALL['Bonmin']=[
                   {'dir':'',
@@ -292,11 +294,12 @@ CFG_BLD_TEST['FlopC++']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
-                             NBcheckResult.standardSuccessMessage ] },
-                  {'dir':'FlopCpp/test',
-                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
-                   'check': [ NBcheckResult.valgrindErrorMessage,
-                              NBcheckResult.valgrindLeakMessage ] } ]
+                             NBcheckResult.standardSuccessMessage ] }
+#                  ,{'dir':'FlopCpp/test',
+#                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
+#                   'check': [ NBcheckResult.valgrindErrorMessage,
+#                              NBcheckResult.valgrindLeakMessage ] }
+                ]
 
 CFG_BLD_INSTALL['FlopC++']=[
                   {'dir':'',
@@ -324,7 +327,6 @@ CFG_BLD_TEST['OS']=[
                    'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] },
-# running valgrind on OS fails with "badly formed extended line op encountered!" message for me on gcc 4.4
                   {'dir':'OS/test',
                    'cmd': ' valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
                    'check': [ NBcheckResult.valgrindErrorMessage,
@@ -444,8 +446,9 @@ CFG_BLD_TEST['CoinMP']=[
                    'check':[ NBcheckResult.rc0 ] },
                   {'dir':'CoinMP/test',
                    'cmd': 'valgrind --tool=memcheck --leak-check=full --show-reachable=yes ./unitTest',
-                   'check':[ NBcheckResult.valgrindErrorMessage,
-                             NBcheckResult.valgrindLeakMessage ] } ]
+                   'check':[ NBcheckResult.valgrindErrorMessage
+                            #,NBcheckResult.valgrindLeakMessage
+                           ] } ]
 
 CFG_BLD_INSTALL['CoinMP']=[
                   {'dir':'',
@@ -469,20 +472,24 @@ CFG_BLD_TEST['Couenne']=[
                    'check':[ NBcheckResult.rc0 ] },
                   {'dir':'Couenne/src/main',
                    'cmd': 'valgrind --tool=memcheck --leak-check=full --show-reachable=yes ./couenne ../../test/toy.nl',
-                   'check':[ NBcheckResult.valgrindErrorMessage,
-                             NBcheckResult.valgrindLeakMessage ] },
+                   'check':[ NBcheckResult.valgrindErrorMessage
+                            #,NBcheckResult.valgrindLeakMessage
+                           ] },
                   {'dir':'Couenne/src/main',
                    'cmd': 'valgrind --tool=memcheck --leak-check=full --show-reachable=yes ./couenne ../../test/qquad.nl',
-                   'check':[ NBcheckResult.valgrindErrorMessage,
-                             NBcheckResult.valgrindLeakMessage ] },
+                   'check':[ NBcheckResult.valgrindErrorMessage
+                            #,NBcheckResult.valgrindLeakMessage
+                           ] },
                   {'dir':'Couenne/src/main',
                    'cmd': 'valgrind --tool=memcheck --leak-check=full --show-reachable=yes ./couenne ../../test/geoid.nl',
-                   'check':[ NBcheckResult.valgrindErrorMessage,
-                             NBcheckResult.valgrindLeakMessage ] },
+                   'check':[ NBcheckResult.valgrindErrorMessage
+                            #,NBcheckResult.valgrindLeakMessage
+                           ] },
                   {'dir':'Couenne/src/main',
                    'cmd': 'valgrind --tool=memcheck --leak-check=full --show-reachable=yes ./couenne ../../test/small2.nl',
-                   'check':[ NBcheckResult.valgrindErrorMessage,
-                             NBcheckResult.valgrindLeakMessage ] }                  
+                   'check':[ NBcheckResult.valgrindErrorMessage
+                            #,NBcheckResult.valgrindLeakMessage
+                           ] }
                   ]
 
 CFG_BLD_INSTALL['Couenne']=[
