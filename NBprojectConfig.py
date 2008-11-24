@@ -148,7 +148,7 @@ SLN_BLD_TEST['SYMPHONY']=[ {
                    'check':[ NBcheckResult.rc0 ] } ]
 
 #----------------------------------------------------------------------
-#PROJECT_EMAIL_ADDRS['Vol'] = 'barahon _AT_ us _DOT_ ibm _DOT_ com'
+PROJECT_EMAIL_ADDRS['Vol'] = 'barahon _AT_ us _DOT_ ibm _DOT_ com'
 CFG_BLD_TEST['Vol']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
