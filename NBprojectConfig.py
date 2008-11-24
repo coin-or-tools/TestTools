@@ -65,7 +65,7 @@ SLN_BLD_TEST['CoinUtils']=[
 #does not have references to third party packages
 
 #----------------------------------------------------------------------
-PROJECT_EMAIL_ADDRS['DyLP'] = 'lou _AT_ cs _DOT_ sfu _DOT_ ca'
+#PROJECT_EMAIL_ADDRS['DyLP'] = 'lou _AT_ cs _DOT_ sfu _DOT_ ca'
 
 CFG_BLD_TEST['DyLP']=[
                   {'dir':'',
@@ -120,7 +120,7 @@ SLN_BLD_TEST['Clp']=[
                              NBcheckResult.endWithWoodw] } ]
 
 #----------------------------------------------------------------------
-PROJECT_EMAIL_ADDRS['SYMPHONY'] = 'tkr2 _AT_ lehigh _DOT_ edu'
+#PROJECT_EMAIL_ADDRS['SYMPHONY'] = 'tkr2 _AT_ lehigh _DOT_ edu'
 CFG_BLD_TEST['SYMPHONY']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
@@ -148,7 +148,7 @@ SLN_BLD_TEST['SYMPHONY']=[ {
                    'check':[ NBcheckResult.rc0 ] } ]
 
 #----------------------------------------------------------------------
-PROJECT_EMAIL_ADDRS['Vol'] = 'barahon _AT_ us _DOT_ ibm _DOT_ com'
+#PROJECT_EMAIL_ADDRS['Vol'] = 'barahon _AT_ us _DOT_ ibm _DOT_ com'
 CFG_BLD_TEST['Vol']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
@@ -239,7 +239,7 @@ SLN_BLD_TEST['Cbc']=[
                    'check':[ NBcheckResult.rc0to2 ] } ]
 
 #----------------------------------------------------------------------
-PROJECT_EMAIL_ADDRS['Ipopt'] = 'andreasw _AT_ us _DOT_ ibm _DOT_ com'
+#PROJECT_EMAIL_ADDRS['Ipopt'] = 'andreasw _AT_ us _DOT_ ibm _DOT_ com'
 
 CFG_BLD_TEST['Ipopt']=[
                   {'dir':'',
@@ -265,7 +265,7 @@ CFG_BLD_INSTALL['Ipopt']=[
 #third party packages are not optional here
 
 #----------------------------------------------------------------------
-PROJECT_EMAIL_ADDRS['Bonmin'] = 'pierre _DOT_ bonami _AT_ lif _DOT_ univ-mrs _DOT_ fr'
+#PROJECT_EMAIL_ADDRS['Bonmin'] = 'pierre _DOT_ bonami _AT_ lif _DOT_ univ-mrs _DOT_ fr'
 
 CFG_BLD_TEST['Bonmin']=[
                   {'dir':'',
@@ -288,7 +288,7 @@ CFG_BLD_INSTALL['Bonmin']=[
 #third party packages are not optional here
 
 #----------------------------------------------------------------------
-PROJECT_EMAIL_ADDRS['FlopC++'] = 'Tim _DOT_ Hultberg _AT_ eumetsat _DOT_ int'
+#PROJECT_EMAIL_ADDRS['FlopC++'] = 'Tim _DOT_ Hultberg _AT_ eumetsat _DOT_ int'
 
 CFG_BLD_TEST['FlopC++']=[
                   {'dir':'',
@@ -359,7 +359,7 @@ CFG_BLD_INSTALL['LaGO']=[
                    'cmd': MAKECMD+' install' } ]
 
 #----------------------------------------------------------------------
-PROJECT_EMAIL_ADDRS['CoinAll'] = 'tkr2 _AT_ lehigh _DOT_ edu'
+#PROJECT_EMAIL_ADDRS['CoinAll'] = 'tkr2 _AT_ lehigh _DOT_ edu'
 CFG_BLD_TEST['CoinAll']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
@@ -370,7 +370,7 @@ CFG_BLD_INSTALL['CoinAll']=[
                    'cmd': MAKECMD+' install' } ]
 
 #----------------------------------------------------------------------
-PROJECT_EMAIL_ADDRS['CppAD'] = 'bradbell _AT_ washington _DOT_ edu'
+PROJECT_EMAIL_ADDRS['CppAD'] = 'bradbell _AT_ seanet _DOT_ com'
 
 CFG_BLD_TEST['CppAD']=[
                   {'dir':'',
@@ -438,7 +438,7 @@ SLN_BLD_TEST['GAMSlinks']=[ ]
 #does have references to third party packages
 
 #----------------------------------------------------------------------
-PROJECT_EMAIL_ADDRS['CoinMP'] = 'bjarni _AT_ maximalsoftware _DOT_ com'
+#PROJECT_EMAIL_ADDRS['CoinMP'] = 'bjarni _AT_ maximalsoftware _DOT_ com'
 
 CFG_BLD_TEST['CoinMP']=[
                   {'dir':'',
