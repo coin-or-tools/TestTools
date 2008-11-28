@@ -65,7 +65,7 @@ SLN_BLD_TEST['CoinUtils']=[
 #does not have references to third party packages
 
 #----------------------------------------------------------------------
-#PROJECT_EMAIL_ADDRS['DyLP'] = 'lou _AT_ cs _DOT_ sfu _DOT_ ca'
+PROJECT_EMAIL_ADDRS['DyLP'] = 'lou _AT_ cs _DOT_ sfu _DOT_ ca'
 
 CFG_BLD_TEST['DyLP']=[
                   {'dir':'',
