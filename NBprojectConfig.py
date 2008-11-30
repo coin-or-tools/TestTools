@@ -108,12 +108,12 @@ CFG_BLD_INSTALL['Clp']=[
                    'cmd': MAKECMD+' install' } ]
 
 SLN_BLD_TEST['Clp']=[
-                  {'dir':r'Clp\MSVisualStudio\v8\clp\Release',
+                  {'dir':r'Clp\MSVisualStudio\v8\Release',
                    'cmd':'clp -dirSample=_SAMPLEDIR_ -unitTest -dirNetlib=_NETLIBDIR_ -netlib',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage,
                              NBcheckResult.endWithWoodw] },
-                  {'dir':r'Clp\MSVisualStudio\v8\clp\Debug',
+                  {'dir':r'Clp\MSVisualStudio\v8\Debug',
                    'cmd':'clp -dirSample=_SAMPLEDIR_ -unitTest -dirNetlib=_NETLIBDIR_ -netlib',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage,
