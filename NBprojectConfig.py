@@ -120,7 +120,7 @@ SLN_BLD_TEST['Clp']=[
                              NBcheckResult.endWithWoodw] } ]
 
 #----------------------------------------------------------------------
-#PROJECT_EMAIL_ADDRS['SYMPHONY'] = 'tkr2 _AT_ lehigh _DOT_ edu'
+PROJECT_EMAIL_ADDRS['SYMPHONY'] = 'tkr2 _AT_ lehigh _DOT_ edu'
 CFG_BLD_TEST['SYMPHONY']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
@@ -239,7 +239,7 @@ SLN_BLD_TEST['Cbc']=[
                    'check':[ NBcheckResult.rc0to2 ] } ]
 
 #----------------------------------------------------------------------
-#PROJECT_EMAIL_ADDRS['Ipopt'] = 'andreasw _AT_ us _DOT_ ibm _DOT_ com'
+PROJECT_EMAIL_ADDRS['Ipopt'] = 'andreasw _AT_ us _DOT_ watson _DOT_ com'
 
 CFG_BLD_TEST['Ipopt']=[
                   {'dir':'',
@@ -359,7 +359,7 @@ CFG_BLD_INSTALL['LaGO']=[
                    'cmd': MAKECMD+' install' } ]
 
 #----------------------------------------------------------------------
-#PROJECT_EMAIL_ADDRS['CoinAll'] = 'tkr2 _AT_ lehigh _DOT_ edu'
+PROJECT_EMAIL_ADDRS['CoinAll'] = 'tkr2 _AT_ lehigh _DOT_ edu'
 CFG_BLD_TEST['CoinAll']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
