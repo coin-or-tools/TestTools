@@ -544,7 +544,9 @@ def run(configuration) :
 
       return
 
-    vcbuild='vcbuild /u ' + slnFileName + ' $ALL'
+    #vcbuild='vcbuild /u ' + slnFileName + ' $ALL'
+    # Horand Gassmann asked for errfile, logcommands & logfile
+    vcbuild='vcbuild /u /errfile:NBerrfile-vcbuild /logcommands /logfile:NBlogfile-vcbuild ' + slnFileName + ' $ALL'
              
     NBlogMessages.writeMessage("  "+vcbuild)
     commandHistory+=[ vcbuild ]
@@ -558,6 +560,7 @@ def run(configuration) :
         error_msg = result
         error_msg['svn version']=configuration['svnVersion']
         error_msg['command history']=commandHistory
+        error_msg['diagnostic files']=['NBerrfile-vcbuild','NBlogfile-vcbuild']
         NBemail.sendCmdMsgs(configuration['project'],error_msg,vcbuild)
         return
 

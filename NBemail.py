@@ -180,6 +180,34 @@ def sendCmdMsgs(project,cmdMsgs,cmd):
         encoders.encode_base64(attachment)
       attachment.add_header('Content-Disposition', 'attachment', filename='config.log.gz')
       emailFull.attach(attachment)
+
+    # If diagnostic files exist, then add to email.
+    # Windows vcbuild generates some of these files
+    if cmdMsgs.has_key('diagnostic files') :
+      for df in cmdMsgs['diagnostic files'] :
+        if os.path.isfile(df) :
+          fp = StringIO()
+          gzipfile = GzipFile(mode = 'wb', fileobj = fp)
+          if True :  
+            dfFilePtr = open(df, 'rb')
+            gzipfile.writelines(dfFilePtr )
+          else :
+            dfAsString = df+' file not read.'
+            dfFilePtr = open(df,'r')
+            dfAsString = dfFilePtr.read()
+            gzipfile.write(dfAsString)
+          dfFilePtr.close()
+          gzipfile.close()
+          attachment = MIMEBase('application', 'octet-stream')
+          attachment.set_payload(fp.getvalue())
+          fp.close()
+          if email_firstletter_capital :
+            Encoders.encode_base64(attachment)
+          else :
+            encoders.encode_base64(attachment)
+          attachment.add_header('Content-Disposition','attachment',filename=df+'.txt.gz')
+          emailFull.attach(attachment)
+      
     
     #use a Generator to generate email, so we can turn off wrapping the header (because of our enormous subject length)
     fp = StringIO()
