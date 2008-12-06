@@ -160,7 +160,7 @@ CFG_BLD_INSTALL['Vol']=[
 #does not have references to third party packages
 
 #----------------------------------------------------------------------
-PROJECT_EMAIL_ADDRS['Osi'] = 'mjs _AT_ ces _DOT_ clemson _DOT_ edu'
+PROJECT_EMAIL_ADDRS['Osi'] = 'mjs _AT_ clemson _DOT_ edu'
 CFG_BLD_TEST['Osi']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
