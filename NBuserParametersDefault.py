@@ -397,5 +397,5 @@ ThirdPartyAllowed = ['ASL', 'Blas', 'Lapack', 'Mumps', 'GAMSIO']
 
 SCRIPT_PATH = sys.path[ 0]
 
-# Set the version of MS Visual Studio to Build v8 by default
-MSVS_VERSION='v8'
+# Set the version of MS Visual Studio to Build v9 by default
+MSVS_VERSION='v9'

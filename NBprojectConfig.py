@@ -55,11 +55,11 @@ CFG_BLD_INSTALL['CoinUtils']=[
 
 SLN_BLD_TEST['CoinUtils']=[
                   {'dir':r'CoinUtils\MSVisualStudio',
-                   'cmd':'v8\unitTestCoinUtils\Release\unitTestCoinUtils',
+                   'cmd':MSVS_VERSION+'\unitTestCoinUtils\Release\unitTestCoinUtils',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage] },
                   {'dir':r'CoinUtils\MSVisualStudio',
-                   'cmd':'v8\unitTestCoinUtils\Debug\unitTestCoinUtils',
+                   'cmd':MSVS_VERSION+'\unitTestCoinUtils\Debug\unitTestCoinUtils',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage] } ]
 #does not have references to third party packages
@@ -108,12 +108,12 @@ CFG_BLD_INSTALL['Clp']=[
                    'cmd': MAKECMD+' install' } ]
 
 SLN_BLD_TEST['Clp']=[
-                  {'dir':r'Clp\MSVisualStudio\v8\Release',
+                  {'dir':r'Clp\MSVisualStudio\\'+MSVS_VERSION+'\Release',
                    'cmd':'clp -dirSample=_SAMPLEDIR_ -unitTest -dirNetlib=_NETLIBDIR_ -netlib',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage,
                              NBcheckResult.endWithWoodw] },
-                  {'dir':r'Clp\MSVisualStudio\v8\Debug',
+                  {'dir':r'Clp\MSVisualStudio\\'+MSVS_VERSION+'\Debug',
                    'cmd':'clp -dirSample=_SAMPLEDIR_ -unitTest -dirNetlib=_NETLIBDIR_ -netlib',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage,
@@ -140,10 +140,10 @@ CFG_BLD_INSTALL['SYMPHONY']=[
                    'cmd': MAKECMD+' install' } ]
 
 SLN_BLD_TEST['SYMPHONY']=[ {
-                   'dir':r'SYMPHONY\MSVisualStudio\v8\Release',
+                   'dir':r'SYMPHONY\MSVisualStudio\\'+MSVS_VERSION+'\Release',
                    'cmd':r'symphony -F _NETLIBDIR_\25fv47.mps',
                    'check':[ NBcheckResult.rc0 ] },
-                  {'dir':r'SYMPHONY\MSVisualStudio\v8\Debug',
+                  {'dir':r'SYMPHONY\MSVisualStudio\\'+MSVS_VERSION+'\Debug',
                    'cmd':r'symphony -F _NETLIBDIR_\25fv47.mps',
                    'check':[ NBcheckResult.rc0 ] } ]
 
@@ -182,10 +182,10 @@ CFG_BLD_INSTALL['Osi']=[
                    'cmd': MAKECMD+' install' } ]
 
 SLN_BLD_TEST['Osi']=[
-                  {'dir':r'Osi\MSVisualStudio\v8\OsiExamplesBuild\Release',
+                  {'dir':r'Osi\MSVisualStudio\\'+MSVS_VERSION+'\OsiExamplesBuild\Release',
                    'cmd':'OsiExamplesBuild',
                    'check':[ NBcheckResult.rc0 ] },
-                  {'dir':r'Osi\MSVisualStudio\v8\OsiExamplesBuild\Debug',
+                  {'dir':r'Osi\MSVisualStudio\\'+MSVS_VERSION+'\OsiExamplesBuild\Debug',
                    'cmd':'OsiExamplesBuild',
                    'check':[ NBcheckResult.rc0 ] } ]
 
@@ -231,10 +231,10 @@ CFG_BLD_INSTALL['Cbc']=[
                    'cmd': MAKECMD+' install' } ]
 
 SLN_BLD_TEST['Cbc']=[
-                  {'dir':r'Cbc\MSVisualStudio\v8\cbcSolve\Release',
+                  {'dir':r'Cbc\MSVisualStudio\\'+MSVS_VERSION+'\cbcSolve\Release',
                    'cmd':'cbcSolve -dirSample=_SAMPLEDIR_ -unitTest -dirMiplib=_MIPLIB3DIR_ -miplib',
                    'check':[ NBcheckResult.rc0to2 ] },
-                  {'dir':r'Cbc\MSVisualStudio\v8\cbcSolve\Debug',
+                  {'dir':r'Cbc\MSVisualStudio\\'+MSVS_VERSION+'\cbcSolve\Debug',
                    'cmd':'cbcSolve -dirSample=_SAMPLEDIR_ -unitTest -dirMiplib=_MIPLIB3DIR_ -miplib',
                    'check':[ NBcheckResult.rc0to2 ] } ]
 
@@ -306,13 +306,13 @@ CFG_BLD_INSTALL['FlopC++']=[
                    'cmd': MAKECMD+' install' } ]
 
 SLN_FILE['FlopC++']=r'FlopCpp.sln'
-SLN_DIR['FlopC++']=r'FlopCpp\MSVisualStudio\v8'
+SLN_DIR['FlopC++']=r'FlopCpp\MSVisualStudio\\'+MSVS_VERSION
 SLN_BLD_TEST['FlopC++']=[
-                  {'dir':r'FlopCpp\MSVisualStudio\v8\Release',
+                  {'dir':r'FlopCpp\MSVisualStudio\\'+MSVS_VERSION+'\Release',
                    'cmd':'unitTest',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] },
-                  {'dir':r'FlopCpp\MSVisualStudio\v8\Debug',
+                  {'dir':r'FlopCpp\MSVisualStudio\\'+MSVS_VERSION+'\Debug',
                    'cmd':'unitTest',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage ] } ]
@@ -412,11 +412,11 @@ CFG_BLD_INSTALL['Smi']=[
 
 SLN_BLD_TEST['Smi']=[
                   {'dir':r'Smi\test',
-                   'cmd':r'..\MSVisualStudio\v8\unitTestSmi\Release\smiUnitTest',
+                   'cmd':r'..\MSVisualStudio\\'+MSVS_VERSION+'\unitTestSmi\Release\smiUnitTest',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.endWithStarDoneStar ] },
                   {'dir':r'Smi\test',
-                   'cmd':r'..\MSVisualStudio\v8\unitTestSmi\Debug\smiUnitTest',
+                   'cmd':r'..\MSVisualStudio\\'+MSVS_VERSION+'\unitTestSmi\Debug\smiUnitTest',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.endWithStarDoneStar ] } ]
 #does not have references to third party packages
@@ -455,10 +455,10 @@ CFG_BLD_INSTALL['CoinMP']=[
                    'cmd': MAKECMD+' install' } ]
 
 SLN_BLD_TEST['CoinMP']=[
-                  {'dir':r'CoinMP\MSVisualStudio\v8\CoinMP\Release',
+                  {'dir':r'CoinMP\MSVisualStudio\\'+MSVS_VERSION+'\CoinMP\Release',
                    'cmd':'unitTest',
                    'check':[ NBcheckResult.rc0 ] },
-                  {'dir':r'CoinMP\MSVisualStudio\v8\coinMP\Debug',
+                  {'dir':r'CoinMP\MSVisualStudio\\'+MSVS_VERSION+'\coinMP\Debug',
                    'cmd':'unitTest',
                    'check':[ NBcheckResult.rc0 ] } ]
 #does not have references to third party packages
