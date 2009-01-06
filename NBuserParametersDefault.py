@@ -8,6 +8,7 @@
 # It contains variables that the person running this script need to set or modify.
 #----------------------------------------------------------------------
 import sys
+import datetime
 
 #----------------------------------------------------------------------
 # NIGHTLY_BUILD_ROOT_DIR: 
@@ -58,7 +59,7 @@ PROJECTS = [
 # attempt to install the solver links in your GAMS system before testing.
 # Finally, GAMSlinks builds only on some selected platforms, see website.
 # Windows is very likely to fail.
-# Adding -DDISALLOW_PRINTING to the CXXFLAGS truns off printing to
+# Adding -DDISALLOW_PRINTING to the CXXFLAGS turns off printing to
 # stdout in Cbc. It might be required to pass the tests. 
 #----------------------------------------------------------------------
 
@@ -77,30 +78,37 @@ PROJECTS = [
 #   This is ignored on windows when building with MS compiler solution file
 #   because both Release and Debug are built.
 #
+#  BuildDirSuffix: A string used as the suffix for the build directory name
+#   The default build directory name is of the form <svnspec>-<suffix>, where
+#   <svnspec> is constructed from SvnVersion and <suffix> is constructed from
+#   the values of CONFIGURE_FLAGS and AdditionalConfigOptions. This can get
+#   overly long. BuildDirSuffix allows the user to specify a value for
+#   <suffix>.
+#
 #  ThirdParty: 'Yes', 'Allowed', or 'No'.  Some projects provide scripts for
 #   downloading third party code. If 'Yes' then these scripts will be run.
 #   If 'No' then the options for skipping the use of third party codes are
 #   used when running "./configure".
 #   If 'Allowed' (the default), then the options for skipping third party codes
-#   are set only for those that are not on the ThirdPartyAllowed list (see below).
+#   are set only for those that are not on the ThirdPartyAllowed list (see
+#   below).
 #   Presently this ignored on windows when building with MS compiler
 #   solution file because ThirdParty code is never used.
 #
 #  Distribute: 'Yes' or 'No'.  Specifies if the result of the build will be
-#    uploaded into the CoinBinary repository.
-#    You need to turn BUILD_BINARIES on for this and have writing permissions
-#    for the CoinBinary repository.
-#    Further, you should fill in BUILD_INFORMATION (see below).
-#    Finally, you probably want to set ThirdParty to 'Allowed' or 'No', since the
-#    scripts do not distributing binaries with third party codes that are not in
-#    ThirdPartyAllowed. 
+#   uploaded into the CoinBinary repository.  You need to turn BUILD_BINARIES
+#   on for this and have writing permissions for the CoinBinary repository.
+#   Further, you should fill in BUILD_INFORMATION (see below).  Finally, you
+#   probably want to set ThirdParty to 'Allowed' or 'No', since the scripts
+#   do not distributing binaries with third party codes that are not in
+#   ThirdPartyAllowed.
 #
 #  BuildTypeInfo: A string describing the current build types.
 #    This string is used as part of the archive name that is created if
 #    BUILD_BINARIES is on. It should be used to distinguish several builds
 #    of the same svn version.    
 #
-#  AdditionConfigOptions: This provides the ability to specify an
+#  AdditionalConfigOptions: This provides the ability to specify an
 #    additional './configure' option to be applied to this specific build.
 #    CONFIGURE_FLAGS can be set if one wants to specify addtional configure
 #    options to all builds.
@@ -292,25 +300,31 @@ CLEAR_PREVIOUS_BUILD = 0
 #   If LOGPRINT is 1, then log messages will go to stdout as well.
 #   The LOGFILE will be used relative to the NIGHTLY_BUILD_ROOT_DIR, i.e.,
 #   log will be written into NIGHTLY_BUILD_ROOT_DIR+'/'+LOGFILE
+#   To generate log file names that incorporate a timestamp, you can use,
+#   for example,
+#   LOGFILE = 'nb'+ ts.strftime("%y%m%d%H%M") + '.log'
 #----------------------------------------------------------------------
 LOGPRINT = 1
 LOGFILE = ''
 
 #----------------------------------------------------------------------
 # Values for sending mail:
-#  EMAIL_STOREFILE: If set, then e-mails are not send but stored in a file.
-#                   The filename is relative to NIGHTLY_BUILD_ROOT_DIR.
-#                   If set, then no values for the SMTP_ fields need to be given.
-#  SMTP_SERVER_NAME: name of smtp server. For gmail server 
-#                 this is smtp.gmail.com
+#  EMAIL_STOREFILE: If set, then e-mails are not sent; instead, they are
+#                   stored in a file. The filename is relative to
+#                   NIGHTLY_BUILD_ROOT_DIR. If set, then no values for the
+#		    SMTP_ variables need to be given.
+#  SMTP_SERVER_NAME: The name of the SMTP server. For gmail server this is
+#                    smtp.gmail.com
 #  SMTP_SERVER_PORT: port number of the smtp server. This is typically 25,
-#                 but for gmail server it is 587.
-#  SMTP_SSL_SERVER: 0 or 1. If 1 then SMTP uses SSL (sometimes called startltls).
-#                 For gmail this is 1.
-#  SMTP_USER_NAME: name of authorized user on server. If using gmail server
-#                 this is gmail_userid@gmail.com which is coded as
-#                 'gmail_userid _AT_ gmail _DOT_ com.  
-#  SMTP_PASSWORD_FILENAME: name of file containing smtp user's password
+#                    but for gmail server it is 587.
+#  SMTP_SSL_SERVER: 0 or 1. If 1 then SMTP uses SSL (sometimes called
+#                   startltls). For gmail this is 1.
+#  SMTP_LOGIN_REQD: 0 or 1. If 1, valid values must be provided for
+#		    SMTP_USER_NAME and SMTP_PASSWORD_FILENAME.
+#  SMTP_USER_NAME: The name of an authorized user on the SMTP server. If using
+#                  the gmail server, this is gmail_userid@gmail.com, which is
+#                  coded as 'gmail_userid _AT_ gmail _DOT_ com.  
+#  SMTP_PASSWORD_FILENAME: The name of a file containing smtp user's password
 #  SENDER_EMAIL_ADDR: email sent by this script will be from this address
 #  MY_EMAIL_ADDR: All problems detected by the script will be sent to
 #                 this email address. The intention is for this to be

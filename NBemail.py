@@ -242,23 +242,26 @@ def sendWHdr(toAddrs,msgWHeader):
     emailfile.close()
     return
 
-  # Get smtp server password
-  if os.path.isfile(SMTP_PASSWORD_FILENAME) :
-    pwFilePtr = open(SMTP_PASSWORD_FILENAME,'r')
-    smtppass  = pwFilePtr.read().strip()
-    #print smtppass
-    pwFilePtr.close()
-  else :
-    NBlogMessages.writeMessage( "Failure reading pwFileName=" + SMTP_PASSWORD_FILENAME )
-    sys.exit(1)
-    
+  # Get smtp server password if we need to log in
+  if SMTP_LOGIN_REQD == 1 :
+    if os.path.isfile(SMTP_PASSWORD_FILENAME) :
+      pwFilePtr = open(SMTP_PASSWORD_FILENAME,'r')
+      smtppass  = pwFilePtr.read().strip()
+      #print smtppass
+      pwFilePtr.close()
+    else :
+      NBlogMessages.writeMessage( "Failure reading pwFileName=" + SMTP_PASSWORD_FILENAME )
+      sys.exit(1)
+
   session = smtplib.SMTP(SMTP_SERVER_NAME,SMTP_SERVER_PORT)
   #session.set_debuglevel(1)
   if SMTP_SSL_SERVER==1 :
     session.ehlo('x')
     session.starttls()
-    session.ehlo('x')  
-  session.login(unscrambleAddress(SMTP_USER_NAME),smtppass)
+    session.ehlo('x')
+
+  if SMTP_LOGIN_REQD == 1 :
+    session.login(unscrambleAddress(SMTP_USER_NAME),smtppass)
 
   rc = session.sendmail(unscrambleAddress(SENDER_EMAIL_ADDR),toAddrs,msgWHeader)
   if rc!={} :

@@ -196,18 +196,21 @@ def run(configuration) :
   buildDir=svnVersionFlattened
 
   if configuration['buildMethod']=='unixConfig' or configuration['buildMethod']=='mingw' :
-    if len( configuration['configOptions']['unique']) > 150 and importedHashlib :
-      buildDir += hashlib.md5( configuration['configOptions']['unique']).hexdigest()
-    else:
-      buildDir+=configuration['configOptions']['unique']
-    for d in configuration['SkipProjects'] :
-      buildDir+="No"+d
-    if configuration['ThirdParty']=='yes' :
-      buildDir+='-AllThirdParty'
-    if configuration['ThirdParty']=='no' :
-      buildDir+='-NoThirdParty'
-    buildDir=cleanUpName(buildDir)
-    if buildDir==svnVersionFlattened : buildDir+='-default'
+    if configuration.has_key('BuildDirSuffix') :
+      buildDir += '-'+configuration['BuildDirSuffix']
+    else :
+      if len( configuration['configOptions']['unique']) > 150 and importedHashlib :
+	buildDir += hashlib.md5( configuration['configOptions']['unique']).hexdigest()
+      else:
+	buildDir+=configuration['configOptions']['unique']
+      for d in configuration['SkipProjects'] :
+	buildDir+="No"+d
+      if configuration['ThirdParty']=='yes' :
+	buildDir+='-AllThirdParty'
+      if configuration['ThirdParty']=='no' :
+	buildDir+='-NoThirdParty'
+      buildDir=cleanUpName(buildDir)
+      if buildDir==svnVersionFlattened : buildDir+='-default'
     
   
   fullBuildDir = os.path.join(projectBaseDir,buildDir)
@@ -229,7 +232,7 @@ def run(configuration) :
 
   #---------------------------------------------------------------------
   # If nothing has changed and the prior run tested OK or there is
-  # a known problem being worked on, then there
+  # a known problem being worked on (`afterChange'), then there
   # is no need to do anything.
   #---------------------------------------------------------------------
   if os.path.isdir(fullBuildDir) :
@@ -270,6 +273,8 @@ def run(configuration) :
         return
       else:
         NBlogMessages.writeMessage('  No changes but run always selected')
+
+    # Build directory exists, but there's work to do.
     # Completely remove a previous build if the user indicates this
     if configuration['clear previous build'] :
       os.chdir(projectBaseDir)
@@ -284,6 +289,7 @@ def run(configuration) :
         NBlogMessages.writeMessage('  ERROR removing previous build directory: '+exception[0])
         NBlogMessages.writeMessage('   '+exception[1])
   else :
+    # Build directory does not yet exist.
     NBlogMessages.writeMessage('  Targets have not yet been built')
 
 
@@ -325,8 +331,8 @@ def run(configuration) :
 
   #---------------------------------------------------------------------
   # If there are third party apps, then get these apps
-  # Check if we can build binaries, i.e., that we use only allowed 3rd party codes
-  # If only allowed codes should be build, add others onto skip list
+  # Check if we can build binaries, i.e., that we use only allowed 3rd party
+  # codes. If only allowed codes should be built, add others onto skip list
   #---------------------------------------------------------------------
   buildThirdParty = True
   if 'ThirdParty' in configuration and configuration['ThirdParty'] != 'no' :
@@ -339,7 +345,8 @@ def run(configuration) :
         for d in thirdPartyDirs :
           dlong = 'ThirdParty/'+d
 
-          # if the 3rdparty code is not in the white list and not skipped, but we want to build only allowed projects,
+          # if the 3rdparty code is not in the white list and not skipped,
+	  # but we want to build only allowed projects,
           # then we add this 3rdparty code into the list of skipped projects
           if configuration['ThirdParty'] == 'allowed' and d not in ThirdPartyAllowed and dlong not in configuration['SkipProjects'] :
             configuration['SkipProjects'].append(dlong)
@@ -382,7 +389,7 @@ def run(configuration) :
             NBlogMessages.writeMessage('  skipped a new download of '+d)
         THIRD_PARTY_HISTORY.append(thirdPartyBaseDir)
       else : # thirdPartyBaseDir is in THIRD_PARTY_HISTORY
-        NBlogMessages.writeMessage('  Skipped anew download of third party code into '+thirdPartyBaseDir)
+        NBlogMessages.writeMessage('  Skipped a new download of third party code into '+thirdPartyBaseDir)
         # but we still need to test for building binaries even if we already
         # got the ThirdParty code
         buildThirdParty  = True

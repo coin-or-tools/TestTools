@@ -119,7 +119,7 @@ for p in PROJECTS :
       continue
 
     #--------------------------------------------------------------------
-    # Setup subversion verion
+    # Setup subversion version
     #--------------------------------------------------------------------
     if 'SvnVersion' not in bc :
       print 'Error. BUILDS does not contain SvnVersion'
@@ -129,8 +129,8 @@ for p in PROJECTS :
     if bc['SvnVersion']=='latestStable' :
       lsv=NBsvnCommand.latestStableVersion(p)
       if not lsv :
-        print 'Error. BUILDS configured to use lastest stable svn version'
-        print '       Project does not have a stable version or error retreiving version number'
+        print 'Error. BUILDS configured to use latest stable svn version'
+        print '       Project does not have a stable version or error retrieving version number'
         print '       Project is '+p
         print '       BuildConfig is '+str(bc)
         print '       Skipping this BuildConfig'
@@ -139,8 +139,8 @@ for p in PROJECTS :
     elif bc['SvnVersion']=='latestRelease' :
       lrv=NBsvnCommand.latestReleaseVersion(p)
       if not lrv :
-        print 'Error. BUILDS configured to use lastest release svn version'
-        print '       Project does not have a release version or error retreiving version number'
+        print 'Error. BUILDS configured to use latest release svn version'
+        print '       Project does not have a release version or error retrieving version number'
         print '       Project is '+p
         print '       BuildConfig is '+str(bc)
         print '       Skipping this BuildConfig'
@@ -171,6 +171,12 @@ for p in PROJECTS :
       #--------------------------------------------------------------------
       # Doing a unix config type build.  Grab unix config parms
       #--------------------------------------------------------------------
+
+      #--------------------------------------------------------------------
+      # Allow user to specify build directory suffix
+      #--------------------------------------------------------------------
+      if 'BuildDirSuffix' in bc:
+	configuration['BuildDirSuffix'] = bc['BuildDirSuffix']
 
       #--------------------------------------------------------------------
       # Setup usage of 3rd Party code
