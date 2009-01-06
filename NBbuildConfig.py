@@ -346,7 +346,7 @@ def run(configuration) :
           dlong = 'ThirdParty/'+d
 
           # if the 3rdparty code is not in the white list and not skipped,
-	  # but we want to build only allowed projects,
+          # but we want to build only allowed projects,
           # then we add this 3rdparty code into the list of skipped projects
           if configuration['ThirdParty'] == 'allowed' and d not in ThirdPartyAllowed and dlong not in configuration['SkipProjects'] :
             configuration['SkipProjects'].append(dlong)
@@ -369,9 +369,6 @@ def run(configuration) :
               commandHistory+=[ install3rdPartyCmd ]
               if configuration['buildMethod']=='mingw' :
                 install3rdPartyCmd = os.path.join(".","get."+d)
-                # apply patch if mumps and mingw and gcc
-                if d == "Mumps"  and  BUILD_INFORMATION.find("mingw") > 0 and BUILD_INFORMATION.find("gcc") > 0 :
-                  install3rdPartyCmd = install3rdPartyCmd + "  -patch"
                 #what a pain replace("\\", "/") does not work
                 # we must split and then join, ugh
                 pathParts = install3rdPartyCmd.split("\\")
