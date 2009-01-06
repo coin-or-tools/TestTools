@@ -358,11 +358,16 @@ def run(configuration) :
           thirdPartyDir=os.path.join(thirdPartyBaseDir,d)
           os.chdir(thirdPartyDir)
           
-          # If the install command has been updated since the last
-          # install, then do a new install
+          # If the install command or a patch file has been updated
+          # since the last install, then do a new install
           if os.path.isfile('NBinstalldone') :
             if NBosCommand.newer(install3rdPartyCmd,'NBinstalldone') :
               os.remove('NBinstalldone')
+            else :
+              thirdpartyfiles = os.listdir(thirdPartyDir)
+              for file in thirdpartyfiles :
+                if len(re.findall(r'.patch', file)) != 0 and NBosCommand.newer(file, 'NBinstalldone') :
+                  os.remove('NBinstalldone')
           if not os.path.isfile('NBinstalldone') :
             if os.path.isfile(install3rdPartyCmd) :
               NBlogMessages.writeMessage('  '+install3rdPartyCmd)
