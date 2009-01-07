@@ -338,6 +338,7 @@ EMAIL_STOREFILE = ''
 SMTP_SERVER_NAME = 'xxx.smtp.server.name'
 SMTP_SERVER_PORT = 25
 SMTP_SSL_SERVER = 0
+SMTP_LOGIN_REQD = 1 
 SMTP_USER_NAME = 'xxxx'
 SMTP_PASSWORD_FILENAME = '/xxx/yyy/smtpPassWordFile'
 SENDER_EMAIL_ADDR='xxx _AT_ yyyy _DOT_ edu'
