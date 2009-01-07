@@ -114,6 +114,14 @@ def sendCmdMsgs(project,cmdMsgs,cmd):
     for cmditem in cmdMsgs['command history'] :
       emailText += "  "+cmditem+"\n"
 
+  if cmdMsgs.has_key('svn revision number') :
+    emailText += "\nSVN revision number of project and external projects:\n"
+    for cod,rev in cmdMsgs['svn revision number'].items():
+      emailText += "\n"
+      emailText += "  checkout directory: "+cod+"\n"
+      emailText += "  svn url: "+rev.split()[0]+"\n"
+      emailText += "  svn revision number: "+rev.split()[1]+"\n"
+
   emailText += "\nstderr messages are:\n" 
   emailText += cmdMsgs['stderr']
 

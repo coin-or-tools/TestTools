@@ -415,7 +415,7 @@ def run(configuration) :
   #---------------------------------------------------------------------
   if not os.path.isdir(fullBuildDir) : 
     os.makedirs(fullBuildDir)
-
+       
   #---------------------------------------------------------------------
   # Source is now available, so now it is time to run config
   #---------------------------------------------------------------------
@@ -479,7 +479,8 @@ def run(configuration) :
         error_msg = result
         error_msg['configure flags']=configOptions
         error_msg['svn version']=configuration['svnVersion']
-        error_msg['command history']=commandHistory 
+        error_msg['command history']=commandHistory
+        error_msg['svn revision number']=NBsvnCommand.svnRevisionNumbers(fullBuildDir)
         logFileName = 'config.log'
         if os.path.isfile(logFileName) :
           logFilePtr = open(logFileName,'r')
@@ -519,6 +520,7 @@ def run(configuration) :
       result['configure flags']=configOptions
       result['svn version']=configuration['svnVersion']
       result['command history']=commandHistory
+      result['svn revision number']=NBsvnCommand.svnRevisionNumbers(fullBuildDir)
       NBemail.sendCmdMsgs(configuration['project'],result,'make')
       return
 
@@ -570,6 +572,7 @@ def run(configuration) :
         error_msg['svn version']=configuration['svnVersion']
         error_msg['command history']=commandHistory
         error_msg['diagnostic files']=['NBerrfile-vcbuild','NBlogfile-vcbuild']
+        error_msg['svn revision number']=NBsvnCommand.svnRevisionNumbers(fullBuildDir)
         NBemail.sendCmdMsgs(configuration['project'],error_msg,vcbuild)
         return
 
@@ -602,6 +605,7 @@ def run(configuration) :
           result['svn version']=configuration['svnVersion']
           result['test']=testResultFail
           result['command history']=commandHistory
+          result['svn revision number']=NBsvnCommand.svnRevisionNumbers(fullBuildDir)
           NBemail.sendCmdMsgs(configuration['project'],result,testCmd)
           return
 
@@ -632,6 +636,7 @@ def run(configuration) :
             # figure out what installResultFail should be
             #result['install']=installResultFail
             result['command history']=commandHistory
+            result['svn revision number']=NBsvnCommand.svnRevisionNumbers(fullBuildDir)
             NBemail.sendCmdMsgs(configuration['project'],result,installCmd)
             return
 
@@ -744,6 +749,7 @@ def run(configuration) :
           if result['returnCode'] != 0 :
             result['svn version']=configuration['svnVersion']
             result['command history']=commandHistory
+            error_msg['svn revision number']=NBsvnCommand.svnRevisionNumbers(fullBuildDir)
             NBemail.sendCmdMsgs(configuration['project'], result, failedCmd)
             writeResults(result, failedCmd)
             return

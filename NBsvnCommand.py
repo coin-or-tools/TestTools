@@ -195,9 +195,15 @@ def newer(source,target) :
   return False
 
 #------------------------------------------------------------------------
-# svnRevisions(target)
+# svnRevisionNumbers(target)
 # Return svn version and version of all referenced externals
+#
+# target is the full path of the directory containing svn checkedout project
 #------------------------------------------------------------------------
+def svnRevisionNumbers(target) :
+  retVal={}
+  svnRevisions(target,retVal)
+  return retVal
 def svnRevisions(relPath,revisions) :
   #path=os.path.join(basePath,relPath)
   #os.chdir(path)
@@ -208,19 +214,32 @@ def svnRevisions(relPath,revisions) :
   revisions[relPath]=url+" "+str(rev)
   
   # get externals
-  result = NBosCommand.run('svn propget svn:externals '+relPath)
-  if result['returnCode']!=0 : print 'error getting external property'
+  print 'url="'+url+'"'
+  print 'relPath="'+relPath+'"'
+  print " "
+  result = NBosCommand.run('svn propget svn:externals '+url)
+  if result['returnCode']!=0 :
+    print 'error getting external property'
+    print 'url="'+url+'"'
+    print 'result='
+    print result
+    return
   externals = result['stdout']
 
   for external in externals.split('\n'):
-    if external=="" : continue
+    if external.strip()=="" : continue
+    #print "external='"+external+"'"
     p=external.split()
+    #print p
     path=os.path.join(relPath,p[0])
     #print path
     svnRevisions(path,revisions)
   return
 
-#r={}
-#path=os.chdir('/home/jp/COIN/Cbc/trunk')
-#svnRevisions('.',r)
-#print r
+
+#r=svnRevisionNumbers(r'F:\COIN\nightlyBuild\buildDir\OS\trunk')
+#for cod,rev in r.items():
+#  print "  checkout directory: "+cod
+#  print "  svn url: "+rev.split()[0]
+#  print "  svn revision number: "+rev.split()[1]
+#  print " "
