@@ -78,7 +78,7 @@ if sys.platform=='win32' :
   # assume Bourne shell in path
   if FORCE_VCBUILD != 1 :
     result=NBosCommand.run( "sh -c ls" )
-    if result['returnCode'] == 0 : configuration['buildMethod']='mingw'
+    if result['returnCode'] == 0 : configuration['buildMethod']='mingwOrCygwinOrMsys'
 else :
   configuration['buildMethod']='unixConfig'
   
@@ -167,7 +167,7 @@ for p in PROJECTS :
     #--------------------------------------------------------------------
     # Process Parameters that are used by unix configure style build
     #--------------------------------------------------------------------
-    if configuration['buildMethod']=='unixConfig' or configuration['buildMethod']=='mingw':
+    if configuration['buildMethod']=='unixConfig' or configuration['buildMethod']=='mingwOrCygwinOrMsys':
       #--------------------------------------------------------------------
       # Doing a unix config type build.  Grab unix config parms
       #--------------------------------------------------------------------

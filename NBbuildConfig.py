@@ -195,7 +195,7 @@ def run(configuration) :
 
   buildDir=svnVersionFlattened
 
-  if configuration['buildMethod']=='unixConfig' or configuration['buildMethod']=='mingw' :
+  if configuration['buildMethod']=='unixConfig' or configuration['buildMethod']=='mingwOrCygwinOrMsys' :
     if configuration.has_key('BuildDirSuffix') :
       buildDir += '-'+configuration['BuildDirSuffix']
     else :
@@ -372,7 +372,7 @@ def run(configuration) :
             if os.path.isfile(install3rdPartyCmd) :
               NBlogMessages.writeMessage('  '+install3rdPartyCmd)
               commandHistory+=[ install3rdPartyCmd ]
-              if configuration['buildMethod']=='mingw' :
+              if configuration['buildMethod']=='mingwOrCygwinOrMsys' :
                 install3rdPartyCmd = os.path.join(".","get."+d)
                 #what a pain replace("\\", "/") does not work
                 # we must split and then join, ugh
@@ -419,7 +419,7 @@ def run(configuration) :
   #---------------------------------------------------------------------
   # Source is now available, so now it is time to run config
   #---------------------------------------------------------------------
-  if configuration['buildMethod']=='unixConfig' or configuration['buildMethod']=='mingw':
+  if configuration['buildMethod']=='unixConfig' or configuration['buildMethod']=='mingwOrCygwinOrMsys':
     skipOptions=''
 
     if 'SkipProjects' in configuration :
@@ -449,7 +449,7 @@ def run(configuration) :
     configOptions=configOptions.replace("  "," ")
     configOptions=configOptions.replace('=" ','="')
 
-    if configuration['buildMethod']=='mingw' :
+    if configuration['buildMethod']=='mingwOrCygwinOrMsys' :
       #configCmd = os.path.join(projectCheckOutDir,"configure ")
       configCmd = os.path.join("..",svnVersionFlattened,"configure ")
        # svnVersionFlattened
@@ -480,7 +480,7 @@ def run(configuration) :
         error_msg['configure flags']=configOptions
         error_msg['svn version']=configuration['svnVersion']
         error_msg['command history']=commandHistory
-        error_msg['svn revision number']=NBsvnCommand.svnRevisionNumbers(fullBuildDir)
+        error_msg['svn revision number']=NBsvnCommand.svnRevisionNumbers(projectCheckOutDir)
         logFileName = 'config.log'
         if os.path.isfile(logFileName) :
           logFilePtr = open(logFileName,'r')
@@ -509,7 +509,7 @@ def run(configuration) :
     NBlogMessages.writeMessage( '  '+MAKECMD )
     commandHistory+=[ MAKECMD ]
     
-    if configuration['buildMethod']=='mingw' :
+    if configuration['buildMethod']=='mingwOrCygwinOrMsys' :
       result=NBosCommand.run('sh -c '+MAKECMD) 
     else:
       result=NBosCommand.run(MAKECMD)
@@ -520,7 +520,7 @@ def run(configuration) :
       result['configure flags']=configOptions
       result['svn version']=configuration['svnVersion']
       result['command history']=commandHistory
-      result['svn revision number']=NBsvnCommand.svnRevisionNumbers(fullBuildDir)
+      result['svn revision number']=NBsvnCommand.svnRevisionNumbers(projectCheckOutDir)
       NBemail.sendCmdMsgs(configuration['project'],result,'make')
       return
 
@@ -572,7 +572,7 @@ def run(configuration) :
         error_msg['svn version']=configuration['svnVersion']
         error_msg['command history']=commandHistory
         error_msg['diagnostic files']=['NBerrfile-vcbuild','NBlogfile-vcbuild']
-        error_msg['svn revision number']=NBsvnCommand.svnRevisionNumbers(fullBuildDir)
+        error_msg['svn revision number']=NBsvnCommand.svnRevisionNumbers(projectCheckOutDir)
         NBemail.sendCmdMsgs(configuration['project'],error_msg,vcbuild)
         return
 
@@ -605,7 +605,7 @@ def run(configuration) :
           result['svn version']=configuration['svnVersion']
           result['test']=testResultFail
           result['command history']=commandHistory
-          result['svn revision number']=NBsvnCommand.svnRevisionNumbers(fullBuildDir)
+          result['svn revision number']=NBsvnCommand.svnRevisionNumbers(projectCheckOutDir)
           NBemail.sendCmdMsgs(configuration['project'],result,testCmd)
           return
 
@@ -614,7 +614,7 @@ def run(configuration) :
   # We assume a Unix Installation
   #---------------------------------------------------------------------
 
-  if configuration['buildMethod']=='unixConfig' or configuration['buildMethod']=='mingw':
+  if configuration['buildMethod']=='unixConfig' or configuration['buildMethod']=='mingwOrCygwinOrMsys':
     if "install" in configuration :
       for t in range( len(configuration['install']) ) :
         installRelDir=configuration['install'][t]['dir']
@@ -636,7 +636,7 @@ def run(configuration) :
             # figure out what installResultFail should be
             #result['install']=installResultFail
             result['command history']=commandHistory
-            result['svn revision number']=NBsvnCommand.svnRevisionNumbers(fullBuildDir)
+            result['svn revision number']=NBsvnCommand.svnRevisionNumbers(projectCheckOutDir)
             NBemail.sendCmdMsgs(configuration['project'],result,installCmd)
             return
 
@@ -749,7 +749,7 @@ def run(configuration) :
           if result['returnCode'] != 0 :
             result['svn version']=configuration['svnVersion']
             result['command history']=commandHistory
-            error_msg['svn revision number']=NBsvnCommand.svnRevisionNumbers(fullBuildDir)
+            error_msg['svn revision number']=NBsvnCommand.svnRevisionNumbers(projectCheckOutDir)
             NBemail.sendCmdMsgs(configuration['project'], result, failedCmd)
             writeResults(result, failedCmd)
             return

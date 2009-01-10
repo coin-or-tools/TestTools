@@ -105,7 +105,7 @@ def latestReleaseVersion(project) :
 #------------------------------------------------------------------------
 def svnRevision(url) :
   retVal=-1
-  result = NBosCommand.run('svn info --xml '+url)
+  result = NBosCommand.run('svn info --xml '+svnDir(url))
   if result['returnCode']==0 :
 #    reg=r'Last Changed Rev: (\d+)'
     reg=r'<commit\s*revision=\"(\d+)\"'
@@ -121,7 +121,9 @@ def svnRevision(url) :
 #------------------------------------------------------------------------
 def svnUrl(dir) :
   retVal='error in NBsvnCommand.svnUrl'
-  result = NBosCommand.run('svn info --xml '+dir)
+  svnCommandText='svn info --xml '+svnDir(dir)
+  retVal += ': '+svnCommandText
+  result = NBosCommand.run(svnCommandText)
   if result['returnCode']==0 :
     reg=r'<url>(.+)</url>'
     found=re.findall(reg,result['stdout'])
@@ -202,22 +204,27 @@ def newer(source,target) :
 #------------------------------------------------------------------------
 def svnRevisionNumbers(target) :
   retVal={}
+  #stripTarget=target.strip()
   svnRevisions(target,retVal)
   return retVal
 def svnRevisions(relPath,revisions) :
-  #path=os.path.join(basePath,relPath)
+  #print "svnRevisions:"
+  #print "  relPath="+relPath
+  #print revisions
+  stripRelPath=relPath.strip()
+  #path=os.path.join(basePath,stripRelPath)
   #os.chdir(path)
   
-  rev=svnRevision(relPath)
+  rev=svnRevision(stripRelPath)
   if rev==-1 : rev = "Error getting svn revision"
-  url=svnUrl(relPath)
-  revisions[relPath]=url+" "+str(rev)
+  url=svnUrl(stripRelPath)
+  revisions[stripRelPath]=url+" "+str(rev)
   
   # get externals
-  print 'url="'+url+'"'
-  print 'relPath="'+relPath+'"'
-  print " "
-  result = NBosCommand.run('svn propget svn:externals '+url)
+  #print '  url="'+url+'"'
+  #print '  relPath="'+stripRelPath+'"'
+  #print " "
+  result = NBosCommand.run('svn propget svn:externals '+svnDir(url))
   if result['returnCode']!=0 :
     print 'error getting external property'
     print 'url="'+url+'"'
@@ -231,10 +238,30 @@ def svnRevisions(relPath,revisions) :
     #print "external='"+external+"'"
     p=external.split()
     #print p
-    path=os.path.join(relPath,p[0])
+    path=os.path.join(stripRelPath,p[0])
     #print path
     svnRevisions(path,revisions)
   return
+
+
+#------------------------------------------------------------------------
+# Function for manipulating directory string to a form needed by svn
+#  dir: String representing directory name
+#  return: directory in form needed by svn
+#
+#  On cygwin a directory might be in the form
+#     /cygdrive/c/COIN/clp/trunk
+#  For some unfortunate reason svn wants the directory to be 
+#    c:/COIN/clp/trunk
+#------------------------------------------------------------------------
+def svnDir(dir) :
+  retVal=dir
+  if not dir.startswith("/cygdrive/"): return retVal
+  # is the 11th character not a /
+  if dir.find("/",11) != 11 : return retVal
+  retVal=dir[10:11]+":/"+dir[12:]
+  return retVal
+
 
 
 #r=svnRevisionNumbers(r'F:\COIN\nightlyBuild\buildDir\OS\trunk')
