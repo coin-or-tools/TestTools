@@ -15,6 +15,7 @@ In NBuserParameters.py you can specify:
 Please read the comments in NBuserParametersDefault.py about detailed information which settings can be made and how they are specified.
 To get things running properly, you will need to specify at least information about the sending of emails.
 
+-----------------------
 
 To build on Windows using the Microsoft compiler and the COIN-OR project supplied solution
 files (.sln) the following hints may be useful:
@@ -34,7 +35,7 @@ files (.sln) the following hints may be useful:
   set INCLUDE=E:\Microsoft Platform SDK for Windows Server 2003 R2\Include;%INCLUDE%
 
 
-- A summary of the commands that have worked to start nightlyBuild for a DOS window are:
+- A summary of the commands that have worked to start nightlyBuild from a DOS window are:
     "E:\Microsoft Visual Studio 8\Common7\Tools\vsvars32.bat"
     set LIB=E:\Microsoft Platform SDK for Windows Server 2003 R2\Lib
     set LIB=E:\Microsoft Visual Studio 8\VC\lib;%LIB%
@@ -42,4 +43,28 @@ files (.sln) the following hints may be useful:
     f:
     cd \testScripts\
     nightlyBuild.py
+
+-----------------------
+
+Hints for  running nightlyBuild on windows with cygwin and gcc:
+   Install cygwin. Be sure to select gcc, python, make
+
+   Presently (1/12/2009) there is an issue with cygwin make 3.81.-1.
+   For a fix see:
+   https://projects.coin-or.org/BuildTools/wiki/current-issues
+  
+   Windows Control Panel - Scheduled Tasks:
+     Run: F:\jp\COIN\testTools\nightlyBuild.cmd >temp.txt
+     Start In: F:\jp\COIN\testTools
+
+   nightlyBuild.cmd is:
+     set PATH=F:\Programs\cygwin\bin;%PATH%
+     F:
+     chdir F:\Programs\cygwin\bin
+     bash --login -s <f:\\jp\COIN\\testTools\\nightlyBuild.sh
+
+   nightlyBuild.sh is:
+     #! /usr/bin/env bash
+     cd /cygdrive/f/jp/COIN/testTools; ./nightlyBuild.py
+
 
