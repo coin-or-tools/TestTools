@@ -175,8 +175,11 @@ for p in PROJECTS :
       #--------------------------------------------------------------------
       # Allow user to specify build directory suffix
       #--------------------------------------------------------------------
-      if 'BuildDirSuffix' in bc:
+      configuration['BuildDirSuffix']=""
+      if 'BuildDirSuffix' in bc :
 	configuration['BuildDirSuffix'] = bc['BuildDirSuffix']
+      else :
+	configuration.pop('BuildDirSuffix')
 
       #--------------------------------------------------------------------
       # Setup usage of 3rd Party code
