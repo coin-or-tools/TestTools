@@ -16,15 +16,15 @@ import NBosCommand
 import NBsvnCommand
 import NBcheckResult
 import NBbuildConfig
+import NBcommandline
 
-
-execfile('NBuserParametersDefault.py')
-execfile('NBuserParameters.py')
 
 #------------------------------------------------------------------------
 #  Main Program Starts Here
 #------------------------------------------------------------------------
 
+execfile('NBuserParametersDefault.py')
+execfile(NBcommandline.getParameterFile())
 
 
 #------------------------------------------------------------------------

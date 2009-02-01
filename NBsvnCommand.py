@@ -13,9 +13,10 @@ import sys
 import NBlogMessages
 import NBemail
 import NBosCommand
+import NBcommandline
 
 execfile('NBuserParametersDefault.py')
-execfile('NBuserParameters.py')
+execfile(NBcommandline.getParameterFile())
 
 #------------------------------------------------------------------------
 # Function for executing svn commands

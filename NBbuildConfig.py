@@ -23,9 +23,10 @@ import NBemail
 import NBosCommand
 import NBsvnCommand
 import NBcheckResult
+import NBcommandline
 
 execfile('NBuserParametersDefault.py')
-execfile('NBuserParameters.py')
+execfile(NBcommandline.getParameterFile())
 
 #---------------------------------------------------------------------
 # Keep history so same project is not repeatedly getting code from

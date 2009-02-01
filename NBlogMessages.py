@@ -7,9 +7,10 @@
 
 import time
 import os
+import NBcommandline
 
 execfile('NBuserParametersDefault.py')
-execfile('NBuserParameters.py')
+execfile(NBcommandline.getParameterFile())
 
 LOG_MESSAGES=''
 FULL_LOG_MESSAGES=''

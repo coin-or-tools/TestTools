@@ -7,6 +7,7 @@
 
 import os
 import NBcheckResult
+import NBcommandline
 
 try :
   # Can not import this on some platforms because they may not have MySQLdb
@@ -18,7 +19,7 @@ else :
 
 #to get MAKECMD  
 execfile('NBuserParametersDefault.py')
-execfile('NBuserParameters.py')
+execfile(NBcommandline.getParameterFile())
 
 #----------------------------------------------------------------------
 # This file defines variables which describe how the specific

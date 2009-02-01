@@ -36,9 +36,10 @@ from gzip import GzipFile
 
 import NBprojectConfig
 import NBlogMessages
+import NBcommandline
 
 execfile('NBuserParametersDefault.py')
-execfile('NBuserParameters.py')
+execfile(NBcommandline.getParameterFile())
 
 #------------------------------------------------------------------------
 #
