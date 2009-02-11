@@ -11,6 +11,13 @@ import sys
 import datetime
 
 #----------------------------------------------------------------------
+# DRYRUN:
+#   If set to 1, all configuration processing will be performed, but no work
+#   will be done. Useful for debugging.
+#----------------------------------------------------------------------
+DRYRUN = 0
+
+#----------------------------------------------------------------------
 # NIGHTLY_BUILD_ROOT_DIR: 
 #   directory where code will be checked out and builds
 #   done. If the directory does not exist, it will be created.
@@ -66,92 +73,123 @@ PROJECTS = [
 #PROJECTS.append('GAMSlinks')
 
 #----------------------------------------------------------------------
-#  Define how a COIN-OR project is to be built and tested.
-#  A project can be built multiple times in different ways.
-#
-#  SvnVersion: Specifies where in subversion the source should be obtained.
+
+# Define how a COIN-OR project is to be built and tested. A project can be
+# built multiple times in different ways. The keys described here can be
+# specified for each build. If a key is not specified for a given build, the
+# default behaviour is used (in other words, the values do not carry over from
+# one build to the next).
+
+# SvnVersion: Specifies where in subversion the source should be obtained.
 #   Examples: 'trunk', 'latestStable', 'releases/1.2.0'
+#   Default Value: none
 #
-#  OptLevel: 'Default' or 'Debug'. Specifies if "./configure" needs
-#   additional parameters to build with debug.  The default is supposed
-#   to be an optimized build.
-#   This is ignored on windows when building with MS compiler solution file
-#   because both Release and Debug are built.
+#   The special keys 'latestStable' and 'latestRelease' will use the most
+#   recent stable or release version, respectively.
+
+# OptLevel: Specifies an optimised build or a debugging build.
+#   Legal Values: 'Default' or 'Debug'. 
+#   Default Value: `Default'
 #
-#  BuildDirSuffix: A string used as the suffix for the build directory name
-#   The default build directory name is of the form <svnspec>-<suffix>, where
-#   <svnspec> is constructed from SvnVersion and <suffix> is constructed from
-#   the values of CONFIGURE_FLAGS and AdditionalConfigOptions. This can get
-#   overly long. BuildDirSuffix allows the user to specify a value for
-#   <suffix>.
+#   `Default' produces an optimised (release) build, `Debug' a debugging build.
+#   This is ignored when building with a Microsoft solution (.sln) file
+#   because both builds are always created.
+
+# BuildDirSuffix: A string to be used as the suffix for the name of the
+#   subdirectory where this build will be created.
 #
-#  ThirdParty: 'Yes', 'Allowed', or 'No'.  Some projects provide scripts for
-#   downloading third party code. If 'Yes' then these scripts will be run.
-#   If 'No' then the options for skipping the use of third party codes are
-#   used when running "./configure".
-#   If 'Allowed' (the default), then the options for skipping third party codes
-#   are set only for those that are not on the ThirdPartyAllowed list (see
-#   below).
-#   Presently this ignored on windows when building with MS compiler
-#   solution file because ThirdParty code is never used.
+#   A build is placed in a directory named
+#   NIGHTLY_BUILD_ROOT_DIR/<project>/<builddir>. The default value for
+#   <builddir> is of the form <svnspec>-<suffix>, where <svnspec> is
+#   constructed from the SvnVersion key and <suffix> is constructed from the
+#   AdditionalConfigOptions key and the CONFIGURE_FLAGS variable. This default
+#   name is guaranteed unique but is not necessarily human-friendly.
+#   BuildDirSuffix allows the user to specify a human-friendly value for
+#   <suffix>. It is the user's responsibility to ensure that this name is
+#   unique for each build of a project.
+
+# ThirdParty: Specfies the handling of third party codes.
+#   Legal Values: 'Yes', 'Allowed', or 'No'.
+#   Default Value: `Allowed'
 #
-#  Distribute: 'Yes' or 'No'.  Specifies if the result of the build will be
-#   uploaded into the CoinBinary repository.  You need to turn BUILD_BINARIES
-#   on for this and have writing permissions for the CoinBinary repository.
-#   Further, you should fill in BUILD_INFORMATION (see below).  Finally, you
-#   probably want to set ThirdParty to 'Allowed' or 'No', since the scripts
-#   do not distributing binaries with third party codes that are not in
-#   ThirdPartyAllowed.
+#   Some projects provide scripts for downloading third party code. If the
+#   value is 'Yes' then these scripts will be run. If the value is 'No' then
+#   the options for skipping the use of all third party codes will be specified
+#   when running "./configure". If the value is 'Allowed', the options for
+#   "./configure" will be set to skip the use of any third party code not
+#   specified in the THIRD_PARTY_ALLOWED variable (see below). This key is
+#   ignored when building with a Microsoft solution (.sln) file because third
+#   party code is never used.
+
+# Distribute: Specifies if the result of the build will be uploaded into the
+#   CoinBinary repository.
+#   Legal Values: 'Yes' or 'No'.
+#   Default Value: `No'
 #
-#  BuildTypeInfo: A string describing the current build types.
+#   The upload will fail unless you have write permission in the CoinBinary
+#   repository. You must specify a value for the BUILD_BINARIES variable.
+#   You should also specify a value for the BUILD_INFORMATION variable.  Both
+#   of these are described below. Finally, you probably want to set the
+#   ThirdParty key to 'Allowed' or 'No', because COIN cannot distribute
+#   binaries which contain third party codes that are not specified in
+#   the THIRD_PARTY_ALLOWED variable (see below).
+
+# BuildTypeInfo: Specify a string describing the current build.
+#    Default Value: none
+#
 #    This string is used as part of the archive name that is created if
 #    BUILD_BINARIES is on. It should be used to distinguish several builds
-#    of the same svn version.    
-#
-#  AdditionalConfigOptions: This provides the ability to specify an
-#    additional './configure' option to be applied to this specific build.
-#    CONFIGURE_FLAGS can be set if one wants to specify addtional configure
-#    options to all builds.
+#    of the same svn version. See also BUILD_INFORMATION below.
+
+# AdditionalConfigOptions: Specify additional './configure' options to be
+#    applied to this specific build.
 #    Example: '--enable-cbc-parallel'
-#    This is ignored on windows when building with MS compiler solution file
-#    because configure is not run.
 #
-#  Run : 'always', 'noSuccessOrAfterChange', 'afterChange'
-#    This specifies when a specific configuration will be run.
-#    nightlyBuild can determine if the source code has been updated
-#    since the last run. nightlyBuild also records when a run 
-#    successful run has occured.  This can be used to decide if a new
-#    run should be done.
-#    'always': the configuration is always run.  This is useful for
-#              debugging.
-#    'noSuccessOrAfterChange': This is the default behavior.  If
-#              the prior run did not successfully complete or
-#              the source code has changed then the run is done.
-#    'afterChange': Only run if the source code has changed since
-#              the last run.  This is useful if there is a known
-#              problem that is waiting for a fix. There is no
-#              point in repeating a known failure unless a possible
-#              fix has been committed to svn.
+#    See also CONFIGURE_FLAGS, used to specify addtional `./configure'
+#    options for all builds. This key is ignored when building with a
+#    Microsoft solution (.sln) file because configure is not run.
+
+# Run: Specify when a specific build should be performed.
+#   Legal Values: 'always', 'noSuccessOrAfterChange', 'afterChange'
+#   Default: 'noSuccessOrAfterChange'
 #
-#  Reference: This specifies that the build is to be done in the way
-#    of the referenced name.
+#   nightlyBuild can determine if the source code has been updated
+#   since the last time this build was performed. It also records the result
+#   of performing the build. Together, these can be used to decide if the
+#   build needs to be performed on this run of nightlyBuild.
+#   'always':  Always perform this build. This is useful for debugging.
+#   'noSuccessOrAfterChange':  Perform this build if the prior run of this
+#              build produced an error, or the source code has changed.
+#   'afterChange':  Perform this build only if the source code has changed
+#              since the last run. This is useful if there is a known problem
+#              that is waiting for a fix. There is no point in repeating a
+#              known failure unless a possible fix has been committed to svn.
+
+# Reference: Specify that the builds for the referenced project should be added
+#    to the list of builds used for this project.
 #    Example: 'CoinUtils'
-#    The example indicates that the build configurations specified
-#    for CoinUtils are to be used for building.
+#    Default: none
 #
-#  SkipProjects: Give a list of external projects that are skipped
-#    by the corresponding build. This list of projects is added to the
-#    COIN_SKIP_PROJECTS variable of the configure call.
-#    Example: ['Ipopt', 'ThirdParty/HSL']
-#    Note, that you need to use brackets "[ ]" here, not parentheses "( )".
+#    Handy in the case where there's a set of common builds that should be
+#    performed for all projects. Define them for one project and then reference
+#    them from other projects.
+
+# SkipProjects: Specifies a list of external projects that will be skipped
+#    in this build.
+#    Example: '['Ipopt','ThirdParty/HSL']'
 #
+#    This list of projects is added to the COIN_SKIP_PROJECTS variable of
+#    the `./configure' call. Note that you need to use brackets "[ ]" here,
+#    not parentheses "( )". (Put another way, the value should be correct
+#    syntax for a python list_display.)
+
 #----------------------------------------------------------------------
 BUILDS = {
-   #'DefaultProject'   : 
-   #  [ 
-   #    { 'SvnVersion': 'trunk',        'OptLevel': 'Default', 'ThirdParty':'Yes' }, 
-   #    { 'SvnVersion': 'latestStable', 'OptLevel': 'Debug',   'ThirdParty':'No'  } 
-   #  ],
+#  'ExampleProjectWithTwoBuilds'   : 
+#    [ 
+#      { 'SvnVersion':'trunk', 'OptLevel':'Default', 'ThirdParty':'Yes' }, 
+#      { 'SvnVersion':'latestStable', 'OptLevel':'Debug', 'ThirdParty':'No' } 
+#    ],
    'CoinUtils' : 
      [
        { 'SvnVersion': 'trunk',         'OptLevel': 'Default', 'ThirdParty': 'Allowed', 'Distribute': 'No' } 
@@ -288,9 +326,6 @@ MAKECMD = 'make'
 
 CLEAR_PREVIOUS_BUILD = 0
 
-
-
-
 #----------------------------------------------------------------------
 # LOGPRINT:
 #   switch for logoutput to stdout. If set to 1 (default) log will go to
@@ -304,6 +339,7 @@ CLEAR_PREVIOUS_BUILD = 0
 #   for example,
 #   LOGFILE = 'nb'+ ts.strftime("%y%m%d%H%M") + '.log'
 #----------------------------------------------------------------------
+
 LOGPRINT = 1
 LOGFILE = ''
 
@@ -312,7 +348,7 @@ LOGFILE = ''
 #  EMAIL_STOREFILE: If set, then e-mails are not sent; instead, they are
 #                   stored in a file. The filename is relative to
 #                   NIGHTLY_BUILD_ROOT_DIR. If set, then no values for the
-#		    SMTP_ variables need to be given.
+#                   SMTP_ variables need to be given.
 #  SMTP_SERVER_NAME: The name of the SMTP server. For gmail server this is
 #                    smtp.gmail.com
 #  SMTP_SERVER_PORT: port number of the smtp server. This is typically 25,
@@ -320,7 +356,7 @@ LOGFILE = ''
 #  SMTP_SSL_SERVER: 0 or 1. If 1 then SMTP uses SSL (sometimes called
 #                   startltls). For gmail this is 1.
 #  SMTP_LOGIN_REQD: 0 or 1. If 1, valid values must be provided for
-#		    SMTP_USER_NAME and SMTP_PASSWORD_FILENAME.
+#                   SMTP_USER_NAME and SMTP_PASSWORD_FILENAME.
 #  SMTP_USER_NAME: The name of an authorized user on the SMTP server. If using
 #                  the gmail server, this is gmail_userid@gmail.com, which is
 #                  coded as 'gmail_userid _AT_ gmail _DOT_ com.  
@@ -406,7 +442,7 @@ VALGRIND_TEST = False
 # in the binary distribution
 #----------------------------------------------------------------------
 
-ThirdPartyAllowed = ['ASL', 'Blas', 'Lapack', 'Mumps', 'GAMSIO']
+THIRD_PARTY_ALLOWED = ['ASL', 'Blas', 'Lapack', 'Mumps', 'GAMSIO']
 
 # THE CURRENT PATH
 

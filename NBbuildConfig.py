@@ -11,7 +11,7 @@ import re
 import shutil
 import stat
 try :
-  # Many older but currently used versions of python does not have hashlib
+  # Many older but currently used versions of python do not have hashlib
   import hashlib
 except ImportError:
   importedHashlib=False
@@ -133,7 +133,7 @@ def setFilesWritable(dir) :
 #
 #  configuration['ThirdParty']='yes', 'no', or 'allowed'.
 #   If 'yes' then all 3rd party code will be used.
-#   If 'allowed' then only 3rd party code in the ThirdPartyAllowed list will be used. 
+#   If 'allowed' then only 3rd party code in the THIRD_PARTY_ALLOWED list will be used. 
 #   If 'no' then no 3rd party code will be used.
 #   Only used if configuration['buildMethod']=='unixConfig'
 #
@@ -156,7 +156,7 @@ def setFilesWritable(dir) :
 #
 #  configuration['slnFile']= path and name of solution file if it is not
 #    in the standard location.
-#    Only used if configuration['buildMethod']=='unixConfig'
+#    Only used if configuration['buildMethod']=='msSoln'
 #
 #  configuration['test']=vector of triples indicating tests that 
 #    are to be run after building the project. Each triple consists
@@ -224,7 +224,9 @@ def run(configuration) :
   NBlogMessages.writeMessage('  Checkout directory: '+projectCheckOutDir)
   NBlogMessages.writeMessage('  Build directory: '+fullBuildDir)
 
-
+  if DRYRUN == 1 :
+    NBlogMessages.writeMessage(str(configuration))
+    return
 
   
   #for a list of commands that have been executed
@@ -349,10 +351,10 @@ def run(configuration) :
           # if the 3rdparty code is not in the white list and not skipped,
           # but we want to build only allowed projects,
           # then we add this 3rdparty code into the list of skipped projects
-          if configuration['ThirdParty'] == 'allowed' and d not in ThirdPartyAllowed and dlong not in configuration['SkipProjects'] :
+          if configuration['ThirdParty'] == 'allowed' and d not in THIRD_PARTY_ALLOWED and dlong not in configuration['SkipProjects'] :
             configuration['SkipProjects'].append(dlong)
           # everything okay if we skip this project
-          if dlong not in configuration['SkipProjects'] and d not in ThirdPartyAllowed :
+          if dlong not in configuration['SkipProjects'] and d not in THIRD_PARTY_ALLOWED :
             NBlogMessages.writeMessage('  Warning: we cannot build a binary distribution because of: ' + d)
             buildThirdParty  = False
           install3rdPartyCmd=os.path.join(".","get."+d)
@@ -404,10 +406,10 @@ def run(configuration) :
           dlong = 'ThirdParty/'+d
           # if the 3rdparty code is not in the white list and not skipped, but we want to build only allowed projects,
           # then we add this 3rdparty code into the list of skipped projects
-          if configuration['ThirdParty'] == 'allowed' and d not in ThirdPartyAllowed and dlong not in configuration['SkipProjects'] :
+          if configuration['ThirdParty'] == 'allowed' and d not in THIRD_PARTY_ALLOWED and dlong not in configuration['SkipProjects'] :
             configuration['SkipProjects'].append(dlong)
           # everything okay if we skip this project
-          if dlong not in configuration['SkipProjects'] and d not in ThirdPartyAllowed  :
+          if dlong not in configuration['SkipProjects'] and d not in THIRD_PARTY_ALLOWED  :
             NBlogMessages.writeMessage('  Warning: we cannot build a binary distribution because of: ' + d)
             buildThirdParty  = False
     
