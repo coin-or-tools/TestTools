@@ -162,6 +162,7 @@ CFG_BLD_INSTALL['Vol']=[
 
 #----------------------------------------------------------------------
 PROJECT_EMAIL_ADDRS['Osi'] = 'mjs _AT_ clemson _DOT_ edu'
+
 CFG_BLD_TEST['Osi']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
@@ -361,10 +362,28 @@ CFG_BLD_INSTALL['LaGO']=[
 
 #----------------------------------------------------------------------
 PROJECT_EMAIL_ADDRS['CoinAll'] = 'tkr2 _AT_ lehigh _DOT_ edu'
+
 CFG_BLD_TEST['CoinAll']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
-                   'check':[ NBcheckResult.rc0 ] } ]
+                   'check':[ NBcheckResult.rc0 ] },
+                  {'dir': os.path.join('Clp','src'),
+                   'cmd': '.'+os.sep+'clp -unitTest -dirNetlib=_NETLIBDIR_ -netlib',
+                   'check':[ NBcheckResult.rc0,
+                             NBcheckResult.standardSuccessMessage,
+                             NBcheckResult.endWithWoodw] },
+                  {'dir':'SYMPHONY',
+                   'cmd': MAKECMD+' fulltest',
+                   'check':[ NBcheckResult.rc0,
+                             NBcheckResult.standardSuccessMessage ] },
+                  {'dir': os.path.join('Osi','test'),
+                   'cmd': '.'+os.sep+'unitTest -testOsiSolverInterface -netlibDir=_NETLIBDIR_ -cerr2cout',
+                   'check':[ NBcheckResult.rc0,
+                             NBcheckResult.standardSuccessMessage,
+                             NBcheckResult.noSolverInterfaceTestingIssueMessage] },
+                  {'dir': os.path.join('Cbc','src'),
+                   'cmd': '.'+os.sep+'cbc -unitTest -dirMiplib=_MIPLIB3DIR_ -miplib',
+                   'check':[ NBcheckResult.rc0to2 ] } ]
 
 CFG_BLD_INSTALL['CoinAll']=[
                   {'dir':'',
