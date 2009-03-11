@@ -9,6 +9,7 @@ import os
 import urllib2
 import re
 import sys
+import time
 
 import NBlogMessages
 import NBemail
@@ -38,6 +39,7 @@ def run(svnCmd,dir,project) :
   for i in range(1, SVN_UPDATE_TRIALS + 1):
     result = NBosCommand.run(svnCmd)
     if result['returnCode'] == 0 : return result
+    time.sleep(SVN_UPDATE_SLEEP_TIME)
     
 # if we are here something went wrong
 

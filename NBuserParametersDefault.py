@@ -423,11 +423,14 @@ FORCE_VCBUILD = 2
 
 #----------------------------------------------------------------------
 # Sometimes an svn update does not work and we need to try a second 
-# or third time. The default is just one.  Increase this number if
-# desired in your NBuserParameters.py file.
+# or third time. The default is just one.  
+# If more than one svn update is attempted nightlyBuild will wait 
+# before making the next update attempt. The default delay is 1 second.
+# Increase these numbers if desired in your NBuserParameters.py file.
 #----------------------------------------------------------------------
 
 SVN_UPDATE_TRIALS = 1
+SVN_UPDATE_SLEEP_TIME = 1
 
 
 #----------------------------------------------------------------------
