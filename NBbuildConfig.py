@@ -605,6 +605,7 @@ def run(configuration) :
         result['srcDir']=projectCheckOutDir
         testResultFail=testFunc(result,configuration['project'])
         if testResultFail :
+          result['configure flags']=configOptions
           result['svn version']=configuration['svnVersion']
           result['test']=testResultFail
           result['command history']=commandHistory
@@ -638,6 +639,7 @@ def run(configuration) :
             result['svn version']=configuration['svnVersion']
             # figure out what installResultFail should be
             #result['install']=installResultFail
+            result['configure flags']=configOptions
             result['command history']=commandHistory
             result['svn revision number']=NBsvnCommand.svnRevisionNumbers(projectCheckOutDir)
             NBemail.sendCmdMsgs(configuration['project'],result,installCmd)
