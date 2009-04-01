@@ -55,6 +55,23 @@ def run(svnCmd,dir,project) :
 # Function which returns the latest stable version of a project
 #------------------------------------------------------------------------
 def latestStableVersion(project) :
+  url='https://projects.coin-or.org/'+project+'/chrome/site/'+project+'-latest-stable.txt'
+  if project == "CoinAll":
+    url='https://projects.coin-or.org/CoinBinary/chrome/site/CoinAll-latest-stable.txt'
+  try :
+    handle=urllib2.urlopen(url)
+    latestStableVersion=handle.read()
+    handle.close()
+  except urllib2.URLError, why:
+    NBlogMessages.writeMessage('  Warning: URLError exception caught while retrieving '+url+': '+str(why))
+    return False
+
+  latestStableVersion=re.findall(r'(\d+\.?\d+)',latestStableVersion)
+  if len(latestStableVersion) == 1:
+    return latestStableVersion[0]
+
+  NBlogMessages.writeMessage('  Warning: Retrieving latest stable version number from '+url+' failed: Got '+latestStableVersion)
+
   url='https://projects.coin-or.org/svn/'+project+'/stable'
   if project == "CoinAll":
     url = 'https://projects.coin-or.org/svn/'+'CoinBinary/'+project+'/stable'
@@ -81,6 +98,23 @@ def latestStableVersion(project) :
 # If there isn't a release version then False is returned
 #------------------------------------------------------------------------
 def latestReleaseVersion(project) :
+  url='https://projects.coin-or.org/'+project+'/chrome/site/'+project+'-latest-release.txt'
+  if project == "CoinAll":
+    url='https://projects.coin-or.org/CoinBinary/chrome/site/CoinAll-latest-release.txt'
+  try :
+    handle=urllib2.urlopen(url)
+    latestReleaseVersion=handle.read()
+    handle.close()
+  except urllib2.URLError, why:
+    NBlogMessages.writeMessage('  Warning: URLError exception caught while retrieving '+url+': '+str(why))
+    return False
+
+  latestReleaseVersion=re.findall(r'(\d+\.?\d+\.?\d+)',latestReleaseVersion)
+  if len(latestReleaseVersion) == 1:
+    return latestReleaseVersion[0]
+
+  NBlogMessages.writeMessage('  Warning: Retrieving latest release version number from '+url+' failed: Got '+latestStableVersion)
+  
   url='https://projects.coin-or.org/svn/'+project+'/releases'
   if project == "CoinAll":
     url = 'https://projects.coin-or.org/svn/'+'CoinBinary/'+project+'/releases'
