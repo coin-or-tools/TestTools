@@ -52,88 +52,72 @@ def run(svnCmd,dir,project) :
 
 
 #------------------------------------------------------------------------
-# Function which returns the latest stable version of a project
+# Function which returns the latest stable or release version of a project
+# sr: must be 'stable' or 'releases'
 #------------------------------------------------------------------------
-def latestStableVersion(project) :
-  url='https://projects.coin-or.org/'+project+'/chrome/site/'+project+'-latest-stable.txt'
+def latestVersion(project,sr) :
+  chromeFailed=False
+  errMsg=""
+  if sr == "stable" :
+    reexp1=r'(\d+\.?\d+)'
+    reexp2=r'<li><a href="(\d+\.?\d+)/">(\d+\.?\d+)/</a></li>'
+    chromeFile=sr
+  else :
+    reexp1=r'(\d+\.?\d+\.?\d+)'
+    reexp2=r'<li><a href="(\d+\.?\d+\.?\d+)/">(\d+\.?\d+\.?\d+)/</a></li>'
+    chromeFile='release'
+  url='https://projects.coin-or.org/'+project+'/chrome/site/'+project+'-latest-'+chromeFile+'.txt'
   if project == "CoinAll":
-    url='https://projects.coin-or.org/CoinBinary/chrome/site/CoinAll-latest-stable.txt'
+    url='https://projects.coin-or.org/CoinBinary/chrome/site/CoinAll-latest-'+chromeFile+'.txt'
   try :
     handle=urllib2.urlopen(url)
-    latestStableVersion=handle.read()
+    latestVersion=handle.read()
     handle.close()
   except urllib2.URLError, why:
-    NBlogMessages.writeMessage('  Warning: URLError exception caught while retrieving '+url+': '+str(why))
-    return False
+    errMsg='  Warning: URLError exception caught while retrieving '+url+': '+str(why)+'.  '+errMsg
+    chromeFailed=True
 
-  latestStableVersion=re.findall(r'(\d+\.?\d+)',latestStableVersion)
-  if len(latestStableVersion) == 1:
-    return latestStableVersion[0]
+  if not chromeFailed :
+    latestVersion=re.findall(reexp1,latestVersion)
+    if len(latestVersion) == 1:
+      return latestVersion[0]
+    else :
+      chromeFailed=True
+      errMsg='  Warning: Retrieving latest stable version number from '+url+' failed. Got '+str(latestVersion)+'.  '+errMsg
 
-  NBlogMessages.writeMessage('  Warning: Retrieving latest stable version number from '+url+' failed: Got '+latestStableVersion)
-
-  url='https://projects.coin-or.org/svn/'+project+'/stable'
+  # Accessing the chrome file did not work, so use the older method.
+  # The chrome method does not work for FlopC++
+  url='https://projects.coin-or.org/svn/'+project+'/'+sr
   if project == "CoinAll":
-    url = 'https://projects.coin-or.org/svn/'+'CoinBinary/'+project+'/stable'
+    url = 'https://projects.coin-or.org/svn/'+'CoinBinary/'+project+'/'+sr
   try :
     handle=urllib2.urlopen(url)
     html=handle.read()
     handle.close()
   except urllib2.URLError, why:
-    NBlogMessages.writeMessage('  Warning: URLError exception caught while retrieving '+url+': '+str(why))
+    errMsg='  Warning: URLError exception caught while retrieving '+url+': '+str(why)+'.  '+errMsg
+    NBlogMessages.writeMessage(errMsg)
     return False
 
   # In html code find the latest version number
-  #   <li><a href="3.2/">3.2/</a></li>
-  #   <li><a href="3.3/">3.3/</a></li>
-  r=r'<li><a href="(\d+\.?\d+)/">(\d+\.?\d+)/</a></li>'
-  findResult=re.findall(r,html)
+  findResult=re.findall(reexp2,html)
   if len(findResult)==0: return False
-  latestStableVersionRepeated2Times = findResult[-1:][0]
-  latestStableVersion=latestStableVersionRepeated2Times[0]
-  return latestStableVersion
+  latestVersionRepeated2Times = findResult[-1:][0]
+  latestVersion=latestVersionRepeated2Times[0]
+  return latestVersion
+
+#------------------------------------------------------------------------
+# Function which returns the latest stable version of a project
+#------------------------------------------------------------------------
+def latestStableVersion(project) :
+  return latestVersion(project,'stable')
 
 #------------------------------------------------------------------------
 # Function which returns the latest release version of a project
 # If there isn't a release version then False is returned
 #------------------------------------------------------------------------
 def latestReleaseVersion(project) :
-  url='https://projects.coin-or.org/'+project+'/chrome/site/'+project+'-latest-release.txt'
-  if project == "CoinAll":
-    url='https://projects.coin-or.org/CoinBinary/chrome/site/CoinAll-latest-release.txt'
-  try :
-    handle=urllib2.urlopen(url)
-    latestReleaseVersion=handle.read()
-    handle.close()
-  except urllib2.URLError, why:
-    NBlogMessages.writeMessage('  Warning: URLError exception caught while retrieving '+url+': '+str(why))
-    return False
-
-  latestReleaseVersion=re.findall(r'(\d+\.?\d+\.?\d+)',latestReleaseVersion)
-  if len(latestReleaseVersion) == 1:
-    return latestReleaseVersion[0]
-
-  NBlogMessages.writeMessage('  Warning: Retrieving latest release version number from '+url+' failed: Got '+latestStableVersion)
-  
-  url='https://projects.coin-or.org/svn/'+project+'/releases'
-  if project == "CoinAll":
-    url = 'https://projects.coin-or.org/svn/'+'CoinBinary/'+project+'/releases'
-  try :
-    handle=urllib2.urlopen(url)
-    html=handle.read()
-    handle.close()
-  except urllib2.URLError, why:
-    NBlogMessages.writeMessage('  Warning: URLError exception caught while retrieving '+url+': '+str(why))
-    return False
-
-  # In html code find the latest version number
-  #   <li><a href="1.6.0/">1.6.0/</a></li>
-  r=r'<li><a href="(\d+\.?\d+\.?\d+)/">(\d+\.?\d+\.?\d+)/</a></li>'
-  findResult=re.findall(r,html)
-  if len(findResult)==0: return False
-  latestReleaseVersionRepeated2Times = findResult[-1:][0]
-  latestReleaseVersion=latestReleaseVersionRepeated2Times[0]
-  return latestReleaseVersion
+  return latestVersion(project,'releases')
 
 
 #------------------------------------------------------------------------
