@@ -76,6 +76,9 @@ def latestVersion(project,sr) :
   except urllib2.URLError, why:
     errMsg='  Warning: URLError exception caught while retrieving '+url+': '+str(why)+'.  '+errMsg
     chromeFailed=True
+  except httplib.HTTPException, why:
+    errMsg='  Warning: HTTPException caught while retrieving '+url+': '+str(why)+'.  '+errMsg
+    chromeFailed=True
 
   if not chromeFailed :
     latestVersion=re.findall(reexp1,latestVersion)
@@ -96,6 +99,10 @@ def latestVersion(project,sr) :
     handle.close()
   except urllib2.URLError, why:
     errMsg='  Warning: URLError exception caught while retrieving '+url+': '+str(why)+'.  '+errMsg
+    NBlogMessages.writeMessage(errMsg)
+    return False
+  except httplib.HTTPException, why:
+    errMsg='  Warning: HTTPException caught while retrieving '+url+': '+str(why)+'.  '+errMsg
     NBlogMessages.writeMessage(errMsg)
     return False
 
