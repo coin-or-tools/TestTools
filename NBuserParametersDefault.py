@@ -445,7 +445,7 @@ VALGRIND_TEST = False
 # in the binary distribution
 #----------------------------------------------------------------------
 
-THIRD_PARTY_ALLOWED = ['ASL', 'Blas', 'Lapack', 'Mumps', 'GAMSIO', 'Metis']
+THIRD_PARTY_ALLOWED = ['ASL', 'Blas', 'Lapack', 'Mumps', 'GAMSIO']
 
 # THE CURRENT PATH
 
