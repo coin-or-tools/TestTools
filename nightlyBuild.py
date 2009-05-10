@@ -144,7 +144,7 @@ for p in PROJECTS :
         print '       Project is '+p
         print '       BuildConfig is '+str(bc)
         print '       Skipping this BuildConfig'
-        sys.exit(1)
+        continue
       configuration['svnVersion']='releases/'+lrv
     else:
       configuration['svnVersion']=bc['SvnVersion']
