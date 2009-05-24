@@ -51,7 +51,8 @@ PROJECTS = [
   'Couenne',
   'CppAD',
   'OS',
-  'CoinAll'
+  'CoinAll',
+  'ADOL-C'
 ]
 
 #----------------------------------------------------------------------
@@ -292,6 +293,10 @@ BUILDS = {
    'GAMSlinks' :
      [ 
        { 'Reference' : 'Ipopt' }
+     ],
+   'ADOL-C' : 
+     [
+       { 'Reference' : 'CoinUtils' }
      ]
   }
 

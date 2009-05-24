@@ -517,3 +517,18 @@ CFG_BLD_INSTALL['Couenne']=[
                    'cmd': MAKECMD+' install' } ]
 
 #does have references to third party packages
+
+#----------------------------------------------------------------------
+PROJECT_EMAIL_ADDRS['ADOL-C'] = 'andrea _DOT_ walther _AT_ uni-paderborn _DOT_ de'
+
+CFG_BLD_TEST['ADOL-C']=[
+#                  {'dir':'',
+#                   'cmd': MAKECMD+' test',
+#                   'check':[ NBcheckResult.rc0 ] },
+                  ]
+
+#CFG_BLD_INSTALL['ADOL-C']=[
+#                  {'dir':'',
+#                   'cmd': MAKECMD+' install' } ]
+
+#does not have references to third party packages
