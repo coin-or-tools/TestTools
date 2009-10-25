@@ -328,6 +328,16 @@ def run(configuration) :
         runConfigure = False
 
     SVN_HISTORY[projectCheckOutDir]=runConfigure
+    
+    if 'postCheckout' in configuration:
+      for cmd in configuration['postCheckout'] :
+        os.chdir(projectCheckOutDir)
+        NBlogMessages.writeMessage('  execute post checkout command '+cmd)
+        commandHistory+=[ cmd ]
+        result=NBosCommand.run(cmd)
+        writeResults(result,cmd)
+        if result['returnCode'] :
+          NBlogMessages.writeMessage('  Warning: '+cmd+' returned '+str(result['returnCode']))
   else :
     NBlogMessages.writeMessage('  "svn update" skipped. nightlyBuild has already updated for prior build configuration')
     runConfigure=SVN_HISTORY[projectCheckOutDir]

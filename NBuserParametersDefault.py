@@ -52,7 +52,8 @@ PROJECTS = [
   'CppAD',
   'OS',
   'CoinAll',
-  'ADOL-C'
+  'ADOL-C',
+  'metslib'
 ]
 
 #----------------------------------------------------------------------
@@ -295,6 +296,10 @@ BUILDS = {
        { 'Reference' : 'Ipopt' }
      ],
    'ADOL-C' : 
+     [
+       { 'Reference' : 'CoinUtils' }
+     ],
+   'metslib' : 
      [
        { 'Reference' : 'CoinUtils' }
      ]

@@ -29,6 +29,7 @@ execfile(NBcommandline.getParameterFile())
 #----------------------------------------------------------------------
 PROJECT_EMAIL_ADDRS = {}
 SLN_BLD_TEST = {}
+CFG_BLD_POSTCHECKOUT = {}
 CFG_BLD_TEST = {}
 CFG_BLD_INSTALL = {}
 CFG_BLD_VALGRIND_TEST = {}
@@ -528,6 +529,24 @@ CFG_BLD_TEST['ADOL-C']=[
                   ]
 
 #CFG_BLD_INSTALL['ADOL-C']=[
+#                  {'dir':'',
+#                   'cmd': MAKECMD+' install' } ]
+
+#does not have references to third party packages
+
+#----------------------------------------------------------------------
+PROJECT_EMAIL_ADDRS['metslib'] = 'mirko _DOT_ maischberger _AT_ gmail _DOT_ com'
+
+CFG_BLD_POSTCHECKOUT['metslib'] = [ './autogen.sh' ]
+
+CFG_BLD_TEST['metslib']=[
+                  {'dir':'',
+                   'cmd': MAKECMD+' test',
+                   'check':[ NBcheckResult.rc0 ] },
+                  ]
+
+#do not install because it installs into /usr/local
+#CFG_BLD_INSTALL['metslib']=[
 #                  {'dir':'',
 #                   'cmd': MAKECMD+' install' } ]
 

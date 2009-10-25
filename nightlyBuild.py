@@ -182,6 +182,17 @@ for p in PROJECTS :
 	configuration.pop('BuildDirSuffix')
 
       #--------------------------------------------------------------------
+      # Setup command to be executed after checkout of project
+      #--------------------------------------------------------------------
+      
+      configuration['postCheckout']={}
+      if NBprojectConfig.CFG_BLD_POSTCHECKOUT.has_key(p) :
+        configuration['postCheckout'] = NBprojectConfig.CFG_BLD_POSTCHECKOUT[p][:]
+      else :
+        # If no postCheckout commands, remove from configuration
+        configuration.pop('postCheckout')
+
+      #--------------------------------------------------------------------
       # Setup usage of 3rd Party code
       # If not specified, use the moderate setting 'allowed'
       #--------------------------------------------------------------------
