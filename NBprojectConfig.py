@@ -551,3 +551,19 @@ CFG_BLD_TEST['metslib']=[
 #                   'cmd': MAKECMD+' install' } ]
 
 #does not have references to third party packages
+
+#----------------------------------------------------------------------
+PROJECT_EMAIL_ADDRS['MOCHA'] = 'dchaws _AT_ gmail _DOT_ com'
+
+CFG_BLD_TEST['MOCHA']=[
+#                  {'dir':'',
+#                   'cmd': MAKECMD+' test',
+#                   'check':[ NBcheckResult.rc0 ] },
+                  ]
+
+#do not install because it installs into /usr/local
+#CFG_BLD_INSTALL['MOCHA']=[
+#                  {'dir':'',
+#                   'cmd': MAKECMD+' install' } ]
+
+#does not have references to third party packages

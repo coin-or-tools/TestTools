@@ -53,7 +53,8 @@ PROJECTS = [
   'OS',
   'CoinAll',
   'ADOL-C',
-  'metslib'
+  'metslib',
+  'MOCHA'
 ]
 
 #----------------------------------------------------------------------
@@ -300,6 +301,10 @@ BUILDS = {
        { 'Reference' : 'CoinUtils' }
      ],
    'metslib' : 
+     [
+       { 'Reference' : 'CoinUtils' }
+     ],
+   'MOCHA' :
      [
        { 'Reference' : 'CoinUtils' }
      ]
