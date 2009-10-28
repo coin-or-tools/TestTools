@@ -562,8 +562,8 @@ CFG_BLD_TEST['MOCHA']=[
                   ]
 
 #do not install because it installs into /usr/local
-#CFG_BLD_INSTALL['MOCHA']=[
-#                  {'dir':'',
-#                   'cmd': MAKECMD+' install' } ]
+CFG_BLD_INSTALL['MOCHA']=[
+                  {'dir':'',
+                   'cmd': MAKECMD+' install' } ]
 
 #does not have references to third party packages
