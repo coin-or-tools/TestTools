@@ -192,6 +192,9 @@ def run(configuration) :
     svnCheckOutUrl='https://projects.coin-or.org/svn/CoinBinary/'+\
                  configuration['project']+'/'+\
                  configuration['svnVersion']
+  if configuration['project'] == 'Cbc_reeng' :
+    svnCheckOutUrl='https://projects.coin-or.org/svn/Cbc/'+\
+                 configuration['svnVersion']
 
 
   buildDir=svnVersionFlattened
