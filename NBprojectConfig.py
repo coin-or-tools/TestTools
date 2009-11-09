@@ -210,7 +210,7 @@ CFG_BLD_INSTALL['Cgl']=[
 #does not have references to third party packages
 
 #----------------------------------------------------------------------
-PROJECT_EMAIL_ADDRS['Cbc'] = 'jjforre _AT_ us _DOT_ ibm _DOT_ com'
+PROJECT_EMAIL_ADDRS['Cbc'] = 'bca _AT_ list _DOT_ coin-or _DOT_ org'
 
 CFG_BLD_TEST['Cbc']=[
                   {'dir':'',
@@ -569,36 +569,3 @@ CFG_BLD_INSTALL['MOCHA']=[
 #does not have references to third party packages
 
 #----------------------------------------------------------------------
-PROJECT_EMAIL_ADDRS['Cbc_reeng'] = 'ted _AT_ lehigh_DOT_edu'
-
-CFG_BLD_TEST['Cbc_reeng']=[
-                  {'dir':'',
-                   'cmd': MAKECMD+' test',
-                   'check':[ NBcheckResult.rc0,
-                             NBcheckResult.cbcMakeTestSuccessMessage ] },
-                  {'dir': os.path.join('Cbc','src'),
-                   'cmd': '.'+os.sep+'cbc -unitTest -dirMiplib=_MIPLIB3DIR_ -miplib',
-                   'check':[ NBcheckResult.rc0to2 ] },
-                  {'dir':'Cbc/src',
-                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./cbc -unitTest',
-                   'check':[ NBcheckResult.valgrindErrorMessage,
-                             NBcheckResult.valgrindLeakMessage ] } ]
-
-
-CFG_BLD_INSTALL['Cbc_reeng']=[
-                  {'dir':'',
-                   'cmd': MAKECMD+' install' } ]
-
-
-CFG_BLD_INSTALL['Cbc_reeng']=[
-                  {'dir':'',
-                   'cmd': MAKECMD+' install' } ]
-
-SLN_BLD_TEST['Cbc_reeng']=[
-                  {'dir':r'Cbc\MSVisualStudio\\'+MSVS_VERSION+'\cbcSolve\Release',
-                   'cmd':'cbcSolve -dirSample=_SAMPLEDIR_ -unitTest -dirMiplib=_MIPLIB3DIR_ -miplib',
-                   'check':[ NBcheckResult.rc0to2 ] },
-                  {'dir':r'Cbc\MSVisualStudio\\'+MSVS_VERSION+'\cbcSolve\Debug',
-                   'cmd':'cbcSolve -dirSample=_SAMPLEDIR_ -unitTest -dirMiplib=_MIPLIB3DIR_ -miplib',
-                   'check':[ NBcheckResult.rc0to2 ] } ]
-
