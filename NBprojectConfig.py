@@ -459,7 +459,7 @@ SLN_BLD_TEST['GAMSlinks']=[ ]
 #does have references to third party packages
 
 #----------------------------------------------------------------------
-#PROJECT_EMAIL_ADDRS['CoinMP'] = 'bjarni _AT_ maximalsoftware _DOT_ com'
+PROJECT_EMAIL_ADDRS['CoinMP'] = 'bjarni _AT_ maximalsoftware _DOT_ com'
 
 CFG_BLD_TEST['CoinMP']=[
                   {'dir':'',
