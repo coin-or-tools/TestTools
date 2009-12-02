@@ -73,11 +73,24 @@ def endWithWoodw(result,project) :
 # 'cbc_clp solved 2 out of 2 and took XX.XX seconds.'
 def cbcMakeTestSuccessMessage(result,project) :
   retVal=None
-  reexp=r"(.|\n)*cbc_clp solved 2 out of 2 and took (\d*\.?\d*) seconds."
-  msgTail = result['stdout'][-600:]
-  if not re.compile(reexp).match(msgTail,1) :
+  cbcDesiredMessage = "cbc_clp solved 2 out of 2 and took"
+  gamsTestDesiredMessage = "Finished - there have been 0 errors and 0 warnings."
+
+  # gamsTest might now be run, so the desired message may not be at the bottom of the output.
+
+  # reexp=r"(.|\n)*cbc_clp solved 2 out of 2 and took (\d*\.?\d*) seconds."
+  # msgTail = result['stdout'][-600:]
+  # if not re.compile(reexp).match(msgTail,1) :
     # message not found, assume test failed
-    retVal = "Did not display message 'cbc_clp solved 2 out of 2 and took XX.XX seconds.'" 
+  #   retVal = "Did not display message 'cbc_clp solved 2 out of 2 and took XX.XX seconds.'" 
+
+  if result['stderr'].rfind(cbcDesiredMessage) == -1 and \
+     result['stdout'].rfind(cbcDesiredMessage) == -1 :
+    retVal = "Did not display the message: '" + desiredMessage + "'"
+  elif result['stderr'].rfind(gamsTestDesiredMessage) == -1 and \
+       result['stdout'].rfind(gamsTestDesiredMessage) == -1 :
+    retVal = "./gamsTest id not display the message: '" + gamsTestDesiredMessage + "'"
+  
   return retVal
 
 # Messages must not contain:
