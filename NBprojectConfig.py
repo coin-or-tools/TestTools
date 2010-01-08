@@ -421,11 +421,11 @@ CFG_BLD_TEST['Smi']=[
                   {'dir':'',
                    'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
-                             NBcheckResult.endWithStarDoneStar ] },
-                  {'dir':'Smi/test',
-                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
-                   'check': [ NBcheckResult.valgrindErrorMessage,
-                              NBcheckResult.valgrindLeakMessage] } ]
+                             NBcheckResult.endWithStarDoneStar ] }
+#                  {'dir':'Smi/test',
+#                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
+#                   'check': [ NBcheckResult.valgrindErrorMessage,
+#                              NBcheckResult.valgrindLeakMessage] } ]
 
 CFG_BLD_INSTALL['Smi']=[
                   {'dir':'',
