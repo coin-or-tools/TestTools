@@ -425,7 +425,8 @@ CFG_BLD_TEST['Smi']=[
 #                  {'dir':'Smi/test',
 #                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
 #                   'check': [ NBcheckResult.valgrindErrorMessage,
-#                              NBcheckResult.valgrindLeakMessage] } ]
+#                              NBcheckResult.valgrindLeakMessage] } 
+]
 
 CFG_BLD_INSTALL['Smi']=[
                   {'dir':'',
