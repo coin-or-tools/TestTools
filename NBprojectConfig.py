@@ -395,16 +395,21 @@ PROJECT_EMAIL_ADDRS['CppAD'] = 'bradbell _AT_ seanet _DOT_ com'
 
 CFG_BLD_TEST['CppAD']=[
                   {'dir':'',
-                   'cmd': os.path.join('.','example','example'),
-                   'check':[ NBcheckResult.rc0 ] }, 
-                  {'dir':'',
-                   'cmd': os.path.join('.','test_more','test_more'),
+                   'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0 ] },
-# currently valgrind complains about the use of uninitialized data in some code that looks perfectly fine
-# therefore we do not include the error check here so far 
+#                  {'dir':'',
+#                   'cmd': os.path.join('.','example','example'),
+#                   'check':[ NBcheckResult.rc0 ] }, 
+#                  {'dir':'',
+#                   'cmd': os.path.join('.','test_more','test_more'),
+#                   'check':[ NBcheckResult.rc0 ] },
                   {'dir':'example',
                    'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./example',
-                   'check': [ NBcheckResult.valgrindLeakMessage ] } ]
+                   'check': [ NBcheckResult.valgrindErrorMessage, NBcheckResult.valgrindLeakMessage ] },
+                  {'dir':'test_more',
+                   'cmd': 'valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./test_more',
+                   'check': [ NBcheckResult.valgrindErrorMessage, NBcheckResult.valgrindLeakMessage ] }
+                ]
 
 #take out make install for CppAD since it does not confirm to usual coin procedure (it installs into $HOME/include by default!)
 #CFG_BLD_INSTALL['CppAD']=[
