@@ -210,7 +210,7 @@ CFG_BLD_INSTALL['Cgl']=[
 #does not have references to third party packages
 
 #----------------------------------------------------------------------
-PROJECT_EMAIL_ADDRS['Cbc'] = 'bca _AT_ list _DOT_ coin-or _DOT_ org'
+PROJECT_EMAIL_ADDRS['Cbc'] = 'tkr2 _AT_ lehigh _DOT_ edu'
 
 CFG_BLD_TEST['Cbc']=[
                   {'dir':'',
