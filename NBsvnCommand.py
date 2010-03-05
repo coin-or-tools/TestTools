@@ -74,10 +74,10 @@ def latestVersion(project,sr) :
     latestVersion=handle.read()
     handle.close()
   except urllib2.URLError, why:
-    errMsg='  Warning: URLError exception caught while retrieving '+url+': '+str(why)+'.  '+errMsg
+    errMsg='  Warning: URLError exception caught while retrieving '+url+': '+str(why)+'.  '+errMsg+'\n'
     chromeFailed=True
   except httplib.HTTPException, why:
-    errMsg='  Warning: HTTPException caught while retrieving '+url+': '+str(why)+'.  '+errMsg
+    errMsg='  Warning: HTTPException caught while retrieving '+url+': '+str(why)+'.  '+errMsg+'\n'
     chromeFailed=True
 
   if not chromeFailed :
@@ -98,11 +98,11 @@ def latestVersion(project,sr) :
     html=handle.read()
     handle.close()
   except urllib2.URLError, why:
-    errMsg='  Warning: URLError exception caught while retrieving '+url+': '+str(why)+'.  '+errMsg
+    errMsg='  Warning: URLError exception caught while retrieving '+url+': '+str(why)+'.  '+errMsg+'\n'
     NBlogMessages.writeMessage(errMsg)
     return False
   except httplib.HTTPException, why:
-    errMsg='  Warning: HTTPException caught while retrieving '+url+': '+str(why)+'.  '+errMsg
+    errMsg='  Warning: HTTPException caught while retrieving '+url+': '+str(why)+'.  '+errMsg+'\n'
     NBlogMessages.writeMessage(errMsg)
     return False
 
