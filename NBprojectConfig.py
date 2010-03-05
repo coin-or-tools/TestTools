@@ -332,8 +332,9 @@ CFG_BLD_TEST['OS']=[
                              NBcheckResult.standardSuccessMessage ] },
                   {'dir':'OS/test',
                    'cmd': ' valgrind --tool=memcheck --leak-check=full  --show-reachable=yes ./unitTest',
-                   'check': [ NBcheckResult.valgrindErrorMessage,
-                              NBcheckResult.valgrindLeakMessage ] } ]
+                   'check': [ NBcheckResult.valgrindErrorMessage
+#                             ,NBcheckResult.valgrindLeakMessage 
+                            ] } ]
 
 CFG_BLD_INSTALL['OS']=[
                   {'dir':'',
