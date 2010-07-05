@@ -74,12 +74,7 @@ CFG_BLD_TEST['DyLP']=[
                    'cmd': MAKECMD+' test',
                    'check':[ NBcheckResult.rc0,
                              NBcheckResult.standardSuccessMessage,
-                             NBcheckResult.noSolverInterfaceTestingIssueMessage ] },
-                  {'dir': os.path.join('Osi','test'),
-                   'cmd': '.'+os.sep+'unitTest -testOsiSolverInterface -netlibDir=_NETLIBDIR_ -cerr2cout',
-                   'check':[ NBcheckResult.rc0,
-                             NBcheckResult.standardSuccessMessage,
-                             NBcheckResult.noSolverInterfaceTestingIssueMessage] } ]
+                             NBcheckResult.noSolverInterfaceTestingIssueMessage ] } ]
 
 CFG_BLD_INSTALL['DyLP']=[
                   {'dir':'',
