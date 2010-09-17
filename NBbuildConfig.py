@@ -717,6 +717,12 @@ def run(configuration) :
           if os.path.isdir( "bin") :
             #NBlogMessages.writeMessage('  copy bin directory')
             shutil.copytree("bin", os.path.join(archiveDir, "bin"), True)
+			
+
+          # if the ApplicationsTemplate directory is there, copy it
+          if os.path.isdir( "ApplicationTemplates") :
+            #NBlogMessages.writeMessage('  copy ApplicationTemplates directory to ApplicationTemplates')
+            shutil.copytree("ApplicationTemplates", os.path.join(archiveDir, "ApplicationTemplates"), True)
 
           # if the share directory is there, copy it
           if os.path.isdir( "share") :
