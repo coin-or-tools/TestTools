@@ -740,7 +740,7 @@ def run(configuration) :
           tarFileName = archiveName+".tgz"
           zipFileName = archiveName+".zip"
 
-          tarCmd = 'tar  --exclude=.svn -czvf   '
+          tarCmd = 'tar  --exclude=.svn   --exclude=config.*  -czvf   '
           if sys.platform == 'win32' :
             zipCmd = 'zip -r '
           else :
