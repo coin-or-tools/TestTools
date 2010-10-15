@@ -487,7 +487,7 @@ SLN_BLD_TEST['CoinMP']=[
 #does not have references to third party packages
 
 #----------------------------------------------------------------------
-PROJECT_EMAIL_ADDRS['Couenne'] = 'belotti _AT_ lehigh _DOT_ edu'
+PROJECT_EMAIL_ADDRS['Couenne'] = 'pbelott _AT_ clemson _DOT_ edu'
 
 CFG_BLD_TEST['Couenne']=[
                   {'dir':'',
