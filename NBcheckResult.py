@@ -74,7 +74,7 @@ def endWithWoodw(result,project) :
 def cbcMakeTestSuccessMessage(result,project) :
   retVal=None
   cbcDesiredMessage = "cbc_clp solved 2 out of 2 and took"
-  gamsTestDesiredMessage = "Finished - there have been 0 errors and 0 warnings."
+  gamsTestDesiredMessage = "Finished - there have been 0 errors"
 
   # gamsTest might now be run, so the desired message may not be at the bottom of the output.
 
