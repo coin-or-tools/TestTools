@@ -237,7 +237,7 @@ SLN_BLD_TEST['Cbc']=[
                    'check':[ NBcheckResult.rc0to2 ] } ]
 
 #----------------------------------------------------------------------
-PROJECT_EMAIL_ADDRS['Ipopt'] = 'andreasw _AT_ watson _DOT_ ibm _DOT_ com'
+PROJECT_EMAIL_ADDRS['Ipopt'] = 'waechter _AT_ iems _DOT_ northwestern _DOT_ edu'
 
 CFG_BLD_TEST['Ipopt']=[
                   {'dir':'',
