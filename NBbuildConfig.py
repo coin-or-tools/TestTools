@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# -*- coding: utf-8 -*-
 
 #------------------------------------------------------------------------
 # This file is distributed under the Common Public License.
@@ -202,15 +203,15 @@ def run(configuration) :
       buildDir += '-'+configuration['BuildDirSuffix']
     else :
       if len( configuration['configOptions']['unique']) > 150 and importedHashlib :
-	buildDir += hashlib.md5( configuration['configOptions']['unique']).hexdigest()
+        buildDir += hashlib.md5( configuration['configOptions']['unique']).hexdigest()
       else:
-	buildDir+=configuration['configOptions']['unique']
+        buildDir+=configuration['configOptions']['unique']
       for d in configuration['SkipProjects'] :
-	buildDir+="No"+d
+        buildDir+="No"+d
       if configuration['ThirdParty']=='yes' :
-	buildDir+='-AllThirdParty'
+        buildDir+='-AllThirdParty'
       if configuration['ThirdParty']=='no' :
-	buildDir+='-NoThirdParty'
+        buildDir+='-NoThirdParty'
       buildDir=cleanUpName(buildDir)
       if buildDir==svnVersionFlattened : buildDir+='-default'
     
@@ -713,16 +714,15 @@ def run(configuration) :
             #NBlogMessages.writeMessage('  copy examples makefile directory ' + examplesMakefileDir)
             shutil.copytree(examplesDir, os.path.join(archiveDir, 'examplesMakefiles'), True)
 
+          # copy the examples directory in base directory, if there
+          if os.path.isdir( "examples") :
+            #NBlogMessages.writeMessage('  copy examples directory to examples')
+            shutil.copytree("examples", os.path.join(archiveDir, "examples"), True)
+
           # if the bin directory is there, copy it
           if os.path.isdir( "bin") :
             #NBlogMessages.writeMessage('  copy bin directory')
             shutil.copytree("bin", os.path.join(archiveDir, "bin"), True)
-			
-
-          # if the ApplicationsTemplate directory is there, copy it
-          if os.path.isdir( "ApplicationTemplates") :
-            #NBlogMessages.writeMessage('  copy ApplicationTemplates directory to ApplicationTemplates')
-            shutil.copytree("ApplicationTemplates", os.path.join(archiveDir, "ApplicationTemplates"), True)
 
           # if the share directory is there, copy it
           if os.path.isdir( "share") :
@@ -730,9 +730,6 @@ def run(configuration) :
             shutil.copytree("share", os.path.join(archiveDir, "share"), True)
           
           shutil.copy(os.path.join(SCRIPT_PATH,"NBReadMe.txt"), os.path.join(archiveDir,"README"))
-
-          if configuration['project'] == 'CoinAll' and os.path.isdir(os.path.join(SCRIPT_PATH, "CoinAllExamples")) :
-            shutil.copytree(os.path.join(SCRIPT_PATH, "CoinAllExamples"), os.path.join(archiveDir,"CoinAllExamples"), True)
           
           # tar and/or zip them up
           os.chdir(binariesDir)
