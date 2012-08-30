@@ -51,7 +51,7 @@ dataDirs=['Netlib','miplib3','Sample']
 for d in dataDirs :
   dataDir=os.path.join(dataBaseDir,d)
   if not os.path.isdir(dataDir) :
-    svnCmd='svn checkout https://projects.coin-or.org/svn/Data/releases/1.0.4/'+d+' '+d
+    svnCmd='svn checkout https://projects.coin-or.org/svn/Data/releases/1.0.4/'+d+' --non-interactive --trust-server-cert  '+d
     svnResult=NBsvnCommand.run(svnCmd,dataBaseDir,'Data')
     if svnResult['returnCode'] != 0 :
       sys.exit(1)

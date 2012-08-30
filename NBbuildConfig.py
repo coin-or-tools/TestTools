@@ -188,11 +188,11 @@ def run(configuration) :
 
   svnCheckOutUrl='https://projects.coin-or.org/svn/'+\
                  configuration['project']+'/'+\
-                 configuration['svnVersion']
+                 configuration['svnVersion']  + ' --non-interactive ' + '--trust-server-cert '
   if configuration['project'] == 'CoinAll' :
     svnCheckOutUrl='https://projects.coin-or.org/svn/CoinBinary/'+\
                  configuration['project']+'/'+\
-                 configuration['svnVersion']
+                 configuration['svnVersion'] + '--non-interactive' + '--trust-server-cert'
 
 
 
