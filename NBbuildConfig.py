@@ -192,7 +192,7 @@ def run(configuration) :
   if configuration['project'] == 'CoinAll' :
     svnCheckOutUrl='https://projects.coin-or.org/svn/CoinBinary/'+\
                  configuration['project']+'/'+\
-                 configuration['svnVersion'] + '--non-interactive' + '--trust-server-cert'
+                 configuration['svnVersion'] + ' --non-interactive ' + ' --trust-server-cert '
 
 
 
