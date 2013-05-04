@@ -316,7 +316,7 @@ def run(configuration) :
         return
       runConfigure = True
     else :
-      svnCmd='svn update'
+      svnCmd='svn update --non-interactive  --trust-server-cert '
       commandHistory+=[ svnCmd ]
       svnResult=NBsvnCommand.run(svnCmd,projectCheckOutDir,configuration['project'])
       if svnResult['returnCode'] != 0 :
