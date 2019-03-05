@@ -1,4 +1,5 @@
 * text=auto !eol
+.coin-or/projDesc.xml -text
 /NBReadMe.txt -text
 /NBcommandline.py -text
 /README -text
