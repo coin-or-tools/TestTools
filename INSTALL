@@ -68,3 +68,72 @@ Hints for  running nightlyBuild on windows with cygwin and gcc:
      cd /cygdrive/f/jp/COIN/testTools; ./nightlyBuild.py
 
 
+-----------------------
+
+Microsoft Visual C++ V8
+
+ * nightlyBuild.py uses [VCBUILD](http://msdn2.microsoft.com/en-us/library/hw9dzw3c(VS.80).aspx) to build all projects in the solution (.sln) file. 
+ * The Window's control panel `Scheduled Tasks` is used to run nightyBuild once per day.  The scheduled task is `nightlyBuild.cmd` where this file contains:
+```
+call "E:\Microsoft Visual Studio 8\Common7\Tools\vsvars32.bat"
+set LIB=E:\Microsoft Platform SDK for Windows Server 2003 R2\Lib
+set LIB=E:\Microsoft Visual Studio 8\VC\lib;%LIB%
+set INCLUDE=E:\Microsoft Platform SDK for Windows Server 2003 R2\Include;%INCLUDE%
+f:
+cd \testScripts\
+nightlyBuild.py
+``` 
+   The Platform SDK is added to the path because project OS requires it.
+
+
+-----------------------
+
+powerPC
+
+ * Ipopt, Bonmin, & OS need to be configured with `ADD_CFLAGS="-DNO_fpu_control"`. This can be done by configuring Ipopt in `NBuserParameters.py` with:
+```
+   'Ipopt' :
+     [
+       { 'SvnVersion': 'trunk', 'OptLevel': 'Default', 'ThirdParty':'Yes',
+         'AdditionalConfigOptions': 'ADD_CFLAGS="-DNO_fpu_control"' }
+     ]
+```
+
+-----------------------
+
+Windows Cygwin
+
+ * The Window's control panel `Scheduled Tasks` is used to run nightyBuild once per day.  The scheduled task is `nightlyBuild.cmd` where this file contains:
+```
+set PATH=F:\Programs\cygwin\bin;%PATH%
+F:
+chdir F:\Programs\cygwin\bin
+bash --login -s <f:\\jp\COIN\\testScripts\\nightlyBuild.sh
+``` 
+   The `Start in` directory is the directory containing `nightlyBuild.cmd` which in this case is `f:\jp\COIN\testScripts`.
+
+
+ * The file `nightlyBuild.sh` contains:
+```
+cd /cygdrive/f/jp/COIN/testScripts;
+./nightlyBuild.py
+```
+
+-----------------------
+
+xlC
+* Configure needs to be run with `ADD_CXXFLAGS="--qrtti"`. This can be done by configuring CoinUtils in `NBuserParameters.py` with:
+```
+    'CoinUtils' :
+     [
+       { 'SvnVersion':'trunk', 'OptLevel':'Default', 'ThirdParty':'No', 'AdditionalConfigOptions':'ADD_CXXFLAGS="-qrtti"'}
+     ]
+```
+ * Configure for SYMPHONY needs also have CXXFLAGS of `qsourcetype=c++`. This can be done by configuring SYMPHONY in `NBuserParameters.py` with:
+```
+   'SYMPHONY' :
+     [
+       { 'SvnVersion':'trunk', 'OptLevel':'Default', 'ThirdParty':'No',
+         'AdditionalConfigOptions':'ADD_CXXFLAGS="-qsourcetype=c++ -qrtti"'}
+     ]
+```
